@@ -1,3 +1,5 @@
+import type { ClinicalScreeningResult } from '../ml/clinicalScreening';
+
 export type Role = 'mother' | 'worker' | 'supervisor';
 
 export interface User {
@@ -70,23 +72,75 @@ export interface Supervisor {
 
 export interface MLPrediction {
   riskCategory: 'Low' | 'Moderate' | 'High';
-  confidenceScore: number;
+  confidenceScore?: number;
   decisionPath: string[];
   contributingFeatures: {
     featureName: string;
+    featureKey?: string;
     inputValue: number;
     condition: string;
     threshold: number;
     unit: string;
     impact: 'increases_risk' | 'lowers_risk' | 'neutral';
+    deltaHighRisk?: number;
+    deltaLowRisk?: number;
     description: string;
+    descriptionEn?: string;
+    descriptionHi?: string;
+    descriptionOr?: string;
   }[];
+  featuresContributingToIncreasedRisk?: {
+    featureName: string;
+    featureKey?: string;
+    inputValue: number;
+    condition: string;
+    threshold: number;
+    unit: string;
+    impact: 'increases_risk';
+    deltaHighRisk?: number;
+    description: string;
+    descriptionEn?: string;
+    descriptionHi?: string;
+    descriptionOr?: string;
+  }[];
+  featuresContributingToDecreasedRisk?: {
+    featureName: string;
+    featureKey?: string;
+    inputValue: number;
+    condition: string;
+    threshold: number;
+    unit: string;
+    impact: 'lowers_risk';
+    deltaLowRisk?: number;
+    description: string;
+    descriptionEn?: string;
+    descriptionHi?: string;
+    descriptionOr?: string;
+  }[];
+  evaluatedModelFeatures?: {
+    featureKey: string;
+    featureName: string;
+    featureNameHi: string;
+    featureNameOr: string;
+    recordedValue: number;
+    unit: string;
+    normalReference: string;
+    isEvaluatedInPath: boolean;
+    impactOnPrediction: 'increases_risk' | 'lowers_risk' | 'neutral';
+  }[];
+  summaryExplanation?: {
+    en: string;
+    hi: string;
+    or: string;
+  };
+  distributionNote?: string;
   modelVersion: string;
   preprocessingVersion: string;
   explanationMethod: string;
   limitationsNote: string;
   leafClassDistribution?: { Low: number; Moderate: number; High: number };
   leafTotalSamples?: number;
+  terminalLeafSamples?: number;
 }
 
 export interface MaternalAssessment {
@@ -153,6 +207,7 @@ export interface MaternalAssessment {
 
   ruleBasedDangerIdentified: boolean;
   ruleBasedAlertDetails: string[];
+  clinicalScreeningResult?: ClinicalScreeningResult;
   supervisorReviewStatus: 'pending' | 'signed_off' | 'clarification_requested';
   supervisorNotes?: string;
   isSynthetic: boolean;
@@ -216,6 +271,7 @@ export interface DirectMessage {
   timestamp: string;
   delivered: boolean;
   read: boolean;
+  motherId?: string;
 }
 
 export interface VillageAllocation {

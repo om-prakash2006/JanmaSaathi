@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useData } from '../../context/DataContext';
 import { MaternalAssessment } from '../../types';
 import { evaluateMaternalRiskLocally } from '../../ml/mlEngine';
+import { evaluateClinicalObservations } from '../../ml/clinicalScreening';
 import { useLanguage } from '../../context/LanguageContext';
 
 interface WorkerNewAssessmentScreenProps {
@@ -31,6 +32,7 @@ export const WorkerNewAssessmentScreen: React.FC<WorkerNewAssessmentScreenProps>
   const [diastolicBP, setDiastolicBP] = useState(76);
   const [heartRate, setHeartRate] = useState(78);
   const [bodyTemp, setBodyTemp] = useState(98.4);
+  const [bodyWeight, setBodyWeight] = useState<string>('');
   const [bloodGlucose, setBloodGlucose] = useState(94);
   const [hemoglobin, setHemoglobin] = useState(11.6);
   const [fetalHeartRate, setFetalHeartRate] = useState(142);
@@ -67,6 +69,12 @@ export const WorkerNewAssessmentScreen: React.FC<WorkerNewAssessmentScreenProps>
     e.preventDefault();
     setIsSubmitting(true);
     setSubmissionError(null);
+
+    if (bodyWeight !== '' && (Number(bodyWeight) < 30 || Number(bodyWeight) > 200 || isNaN(Number(bodyWeight)))) {
+      setSubmissionError('Body weight must be a valid numerical value between 30 and 200 kg.');
+      setIsSubmitting(false);
+      return;
+    }
 
     const ruleAlerts: string[] = [];
     if (Number(systolicBP) >= 140 || Number(diastolicBP) >= 90) {
@@ -166,7 +174,10 @@ export const WorkerNewAssessmentScreen: React.FC<WorkerNewAssessmentScreenProps>
       });
 
       if (localEval.success && localEval.modelPrediction) {
-        modelPredictionData = localEval.modelPrediction;
+        modelPredictionData = {
+          ...localEval.modelPrediction,
+          riskCategory: localEval.modelPrediction.predictedCategory,
+        };
         featureExplanationsData = localEval.modelPrediction.contributingFeatures || [];
         mlResultPayload = {
           status: 'success',
@@ -179,6 +190,24 @@ export const WorkerNewAssessmentScreen: React.FC<WorkerNewAssessmentScreenProps>
         return;
       }
     }
+
+    // Independent clinical danger-sign screening execution
+    const clinicalScreening = evaluateClinicalObservations(
+      {
+        gestationalWeek: Number(gestationalWeek),
+        systolicBP: Number(systolicBP),
+        diastolicBP: Number(diastolicBP),
+        heartRate: Number(heartRate),
+        bodyTemp: Number(bodyTemp),
+        hemoglobin: Number(hemoglobin),
+        fundalHeight: Number(fundalHeight),
+        fetalHeartRate: Number(fetalHeartRate),
+        fetalMovementStatus,
+        dangerSigns: selectedDangerSigns,
+        symptomsNotes,
+      },
+      (modelPredictionData?.riskCategory || 'Low') as 'Low' | 'Moderate' | 'High'
+    );
 
     try {
       const newAssessment = await addAssessment({
@@ -203,6 +232,7 @@ export const WorkerNewAssessmentScreen: React.FC<WorkerNewAssessmentScreenProps>
         normalizedModelInputs: normalizedInputsData,
         modelPrediction: modelPredictionData,
         featureExplanations: featureExplanationsData,
+        clinicalScreeningResult: clinicalScreening,
         supplementaryDangerObservations: {
           haemoglobinGdl: Number(hemoglobin),
           bleeding: selectedDangerSigns.some((s) => s.toLowerCase().includes('bleeding')),
@@ -210,13 +240,17 @@ export const WorkerNewAssessmentScreen: React.FC<WorkerNewAssessmentScreenProps>
           reducedFetalMovement: fetalMovementStatus !== 'normal',
           clinicalNotes: symptomsNotes,
         },
-        modelVersion: modelPredictionData?.modelVersion || '1.0.0',
-        preprocessingVersion: modelPredictionData?.preprocessingVersion || '1.0.0',
-        explanationMethod: 'Decision Path Tree Analysis',
+        modelVersion: modelPredictionData?.modelVersion || '1.0.1-audited',
+        preprocessingVersion: modelPredictionData?.preprocessingVersion || '1.0.1',
+        explanationMethod: 'Decision Path Tree Attribution (TreeSHAP / Saabas)',
         assessedAt: new Date().toISOString(),
         mlScreeningResult: mlResultPayload,
-        ruleBasedDangerIdentified: ruleAlerts.length > 0,
-        ruleBasedAlertDetails: ruleAlerts,
+        ruleBasedDangerIdentified: clinicalScreening.hasUrgentDangerSigns || ruleAlerts.length > 0,
+        ruleBasedAlertDetails: [
+          ...clinicalScreening.urgentFindings.map((u) => u.findingTitleEn),
+          ...clinicalScreening.concerningFindings.map((c) => c.findingTitleEn),
+          ...ruleAlerts,
+        ],
         supervisorReviewStatus: 'pending',
       });
 
@@ -395,6 +429,21 @@ export const WorkerNewAssessmentScreen: React.FC<WorkerNewAssessmentScreenProps>
                 step="0.1"
                 value={bodyTemp}
                 onChange={(e) => setBodyTemp(Number(e.target.value))}
+                className="w-full h-11 px-3 rounded-lg bg-surface-container-lowest border border-outline-variant font-sans text-xs text-on-surface"
+              />
+            </div>
+            <div>
+              <label className="font-sans text-xs font-semibold text-on-surface block mb-1">
+                Body Weight (kg)
+              </label>
+              <input
+                type="number"
+                step="0.1"
+                min={30}
+                max={200}
+                placeholder="Enter body weight"
+                value={bodyWeight}
+                onChange={(e) => setBodyWeight(e.target.value)}
                 className="w-full h-11 px-3 rounded-lg bg-surface-container-lowest border border-outline-variant font-sans text-xs text-on-surface"
               />
             </div>

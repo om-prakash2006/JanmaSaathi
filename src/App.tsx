@@ -12,6 +12,7 @@ import { LoginScreen } from './screens/auth/LoginScreen';
 import { MotherHomeScreen } from './screens/mother/MotherHomeScreen';
 import { MotherJourneyScreen } from './screens/mother/MotherJourneyScreen';
 import { MotherConnectScreen } from './screens/mother/MotherConnectScreen';
+import { MotherWellnessScreen } from './screens/mother/MotherWellnessScreen';
 import { MotherProfileScreen } from './screens/mother/MotherProfileScreen';
 
 import { WorkerHomeScreen } from './screens/worker/WorkerHomeScreen';
@@ -78,6 +79,12 @@ const MainAppContent: React.FC = () => {
               />
             )}
             {motherTab === 'journey' && <MotherJourneyScreen />}
+            {motherTab === 'wellness' && (
+              <MotherWellnessScreen
+                onNavigateToConnect={() => setMotherTab('connect')}
+                onOpenProfile={() => setMotherTab('profile')}
+              />
+            )}
             {motherTab === 'connect' && <MotherConnectScreen />}
             {motherTab === 'profile' && <MotherProfileScreen />}
           </>

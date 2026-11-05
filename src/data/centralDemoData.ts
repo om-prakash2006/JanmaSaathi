@@ -402,11 +402,13 @@ export const DEMO_APPOINTMENTS: Appointment[] = [
 ];
 
 export const DEMO_MESSAGES: DirectMessage[] = [
+  // Priya Sharma (MCP-2026-0894)
   {
     id: 'MSG-001',
     senderId: 'HW-44120',
     senderName: 'Sunita Devi',
     senderRole: 'worker',
+    motherId: 'MCP-2026-0894',
     text: "Namaste Priya, remember to bring your MCP card for Thursday's checkup at Rampur Health Post.",
     timestamp: 'Yesterday 4:15 PM',
     delivered: true,
@@ -417,6 +419,7 @@ export const DEMO_MESSAGES: DirectMessage[] = [
     senderId: 'MCP-2026-0894',
     senderName: 'Priya Sharma',
     senderRole: 'mother',
+    motherId: 'MCP-2026-0894',
     text: 'Namaste Sunita ji, yes I have kept it ready. Also drinking plenty of water as you advised.',
     timestamp: 'Yesterday 4:32 PM',
     delivered: true,
@@ -427,10 +430,83 @@ export const DEMO_MESSAGES: DirectMessage[] = [
     senderId: 'HW-44120',
     senderName: 'Sunita Devi',
     senderRole: 'worker',
+    motherId: 'MCP-2026-0894',
     text: 'Very good. If you feel any dizziness or discomfort, message me or tap Request Callback immediately.',
     timestamp: 'Yesterday 4:40 PM',
     delivered: true,
     read: true,
+  },
+
+  // Meena Devi (MCP-2026-0412) - High Risk, has unread messages
+  {
+    id: 'MSG-004',
+    senderId: 'HW-44120',
+    senderName: 'Sunita Devi',
+    senderRole: 'worker',
+    motherId: 'MCP-2026-0412',
+    text: 'Namaste Meena, how are you feeling today? Please remember to rest on your left side.',
+    timestamp: 'Today 8:30 AM',
+    delivered: true,
+    read: true,
+  },
+  {
+    id: 'MSG-005',
+    senderId: 'MCP-2026-0412',
+    senderName: 'Meena Devi',
+    senderRole: 'mother',
+    motherId: 'MCP-2026-0412',
+    text: 'Namaste Didi, my blood pressure reading was high yesterday. I am taking the prescribed medicine.',
+    timestamp: 'Today 9:15 AM',
+    delivered: true,
+    read: false,
+  },
+  {
+    id: 'MSG-006',
+    senderId: 'MCP-2026-0412',
+    senderName: 'Meena Devi',
+    senderRole: 'mother',
+    motherId: 'MCP-2026-0412',
+    text: 'Can you please check my blood pressure during your afternoon home visit?',
+    timestamp: 'Today 9:40 AM',
+    delivered: true,
+    read: false,
+  },
+
+  // Anjali Soren (MCP-2026-0689)
+  {
+    id: 'MSG-007',
+    senderId: 'MCP-2026-0689',
+    senderName: 'Anjali Soren',
+    senderRole: 'mother',
+    motherId: 'MCP-2026-0689',
+    text: 'Didi, I felt mild lower backache after morning chores. Baby movements are active and normal.',
+    timestamp: 'Yesterday 6:00 PM',
+    delivered: true,
+    read: true,
+  },
+  {
+    id: 'MSG-008',
+    senderId: 'HW-44120',
+    senderName: 'Sunita Devi',
+    senderRole: 'worker',
+    motherId: 'MCP-2026-0689',
+    text: 'Good to hear baby is active. Avoid lifting buckets or heavy loads. I will examine you tomorrow.',
+    timestamp: 'Yesterday 6:25 PM',
+    delivered: true,
+    read: true,
+  },
+
+  // Kavita Bai (MCP-2026-0914) - Has unread message
+  {
+    id: 'MSG-009',
+    senderId: 'MCP-2026-0914',
+    senderName: 'Kavita Bai',
+    senderRole: 'mother',
+    motherId: 'MCP-2026-0914',
+    text: 'Didi, I missed the ANC checkup last week because of family travel. When can I get my booster dose?',
+    timestamp: 'Today 8:00 AM',
+    delivered: true,
+    read: false,
   },
 ];
 

@@ -46,6 +46,7 @@ import {
 import { saveLocalDraft, getLocalDrafts } from '../utils/indexedDB';
 import { triggerBackgroundSync, initAutoSyncTriggers } from '../utils/syncManager';
 import { evaluateMaternalRiskLocally } from '../ml/mlEngine';
+import { evaluateClinicalObservations } from '../ml/clinicalScreening';
 
 interface DataContextType {
   supervisor: Supervisor;
@@ -107,8 +108,11 @@ interface DataContextType {
     text: string,
     senderRole: 'mother' | 'worker',
     senderId: string,
-    senderName: string
+    senderName: string,
+    motherId?: string
   ) => Promise<void>;
+
+  markMessagesAsRead: (motherId: string) => Promise<void>;
 
   registerMother: (data: Omit<Mother, 'id' | 'isSynthetic'>) => Promise<Mother>;
 
@@ -447,7 +451,28 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         if (localEval.success && localEval.modelPrediction) {
           newAssessment.modelPrediction = localEval.modelPrediction as any;
+          newAssessment.featureExplanations = localEval.modelPrediction.contributingFeatures;
         }
+      }
+
+      // Independent Clinical Danger-Sign Screening evaluation
+      if (!newAssessment.clinicalScreeningResult) {
+        newAssessment.clinicalScreeningResult = evaluateClinicalObservations(
+          {
+            gestationalWeek: newAssessment.gestationalWeek,
+            systolicBP: newAssessment.systolicBP,
+            diastolicBP: newAssessment.diastolicBP,
+            heartRate: newAssessment.heartRate,
+            bodyTemp: newAssessment.bodyTemp,
+            hemoglobin: newAssessment.hemoglobin,
+            fundalHeight: newAssessment.fundalHeight,
+            fetalHeartRate: newAssessment.fetalHeartRate,
+            fetalMovementStatus: newAssessment.fetalMovementStatus,
+            dangerSigns: newAssessment.dangerSigns || [],
+            symptomsNotes: newAssessment.symptomsNotes,
+          },
+          newAssessment.modelPrediction?.riskCategory || 'Low'
+        );
       }
 
       // 1. Guaranteed local storage write in IndexedDB
@@ -645,15 +670,18 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       text: string,
       senderRole: 'mother' | 'worker',
       senderId: string,
-      senderName: string
+      senderName: string,
+      motherId?: string
     ): Promise<void> => {
       const newMsgId = `MSG-${Date.now().toString().slice(-5)}`;
+      const targetMotherId = motherId || (senderRole === 'mother' ? senderId : 'MCP-2026-0894');
 
       const newMsg: DirectMessage = {
         id: newMsgId,
         senderId,
         senderName,
         senderRole,
+        motherId: targetMotherId,
         text,
         timestamp: 'Just now',
         delivered: true,
@@ -670,6 +698,19 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       setMessages((prev) => [...prev, newMsg]);
       triggerBackgroundSync();
+    },
+    []
+  );
+
+  const markMessagesAsRead = useCallback(
+    async (motherId: string): Promise<void> => {
+      setMessages((prev) =>
+        prev.map((m) =>
+          (m.motherId === motherId || m.senderId === motherId) && !m.read
+            ? { ...m, read: true }
+            : m
+        )
+      );
     },
     []
   );
@@ -748,6 +789,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateReferralStatus,
         allocateWorker,
         sendMessage,
+        markMessagesAsRead,
         registerMother,
         resetToDefaultData,
       }}
