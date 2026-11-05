@@ -84,7 +84,7 @@ export const SupervisorWorkersScreen: React.FC<SupervisorWorkersScreenProps> = (
                     </span>
                   </div>
                   <span className="font-sans text-xs text-secondary block mt-0.5">
-                    Staff Code: {worker.staffCode}
+                    {t('staffCodeLabel')}: {worker.staffCode}
                   </span>
                   <span className="font-sans text-xs text-secondary flex items-center gap-1 mt-0.5">
                     <span className="material-symbols-outlined text-[14px]">call</span>
@@ -108,7 +108,7 @@ export const SupervisorWorkersScreen: React.FC<SupervisorWorkersScreenProps> = (
 
             <div className="p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/30 space-y-1 text-xs text-secondary">
               <div className="flex items-center justify-between">
-                <span>Facility:</span>
+                <span>{t('facilityLabel')}:</span>
                 <strong className="text-on-surface">{worker.assignedSubCentre}</strong>
               </div>
               <div className="flex items-center justify-between">

@@ -67,7 +67,7 @@ export const WorkerHomeScreen: React.FC<WorkerHomeScreenProps> = ({
               {t('recordAssessment')}
             </h2>
             <p className="font-sans text-xs text-on-primary/80 leading-relaxed">
-              Record a mother's health observations, identify danger signs, and perform explainable maternal screening.
+              {t('recordAssessmentDesc')}
             </p>
           </div>
           <div className="pt-space-xs flex flex-col gap-space-sm">
@@ -191,12 +191,12 @@ export const WorkerHomeScreen: React.FC<WorkerHomeScreenProps> = ({
               </span>
             </div>
             <p className="font-sans text-xs text-tertiary">
-              Post-visit blood pressure check & IFA restock. Elevated BP recorded.
+              {t('meenaDeviNote')}
             </p>
             <div className="pt-1 flex items-center justify-between text-xs">
               <span className="text-error font-semibold flex items-center gap-1">
                 <span className="material-symbols-outlined text-[14px]">schedule</span>
-                Due: Today
+                {t('dueToday')}
               </span>
               <button
                 onClick={() => onSelectMother('MCP-2025-0412')}
@@ -220,12 +220,12 @@ export const WorkerHomeScreen: React.FC<WorkerHomeScreenProps> = ({
               </span>
             </div>
             <p className="font-sans text-xs text-tertiary">
-              Third trimester danger sign follow-up review.
+              {t('anjaliSorenNote')}
             </p>
             <div className="pt-1 flex items-center justify-between text-xs">
               <span className="text-secondary flex items-center gap-1">
                 <span className="material-symbols-outlined text-[14px]">calendar_today</span>
-                Due: Tomorrow
+                {t('dueTomorrow')}
               </span>
               <button
                 onClick={() => onSelectMother('MCP-2025-0689')}
@@ -261,7 +261,7 @@ export const WorkerHomeScreen: React.FC<WorkerHomeScreenProps> = ({
             <div className="space-y-1 text-xs text-secondary">
               <div className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[16px] text-primary-container">location_on</span>
-                <span>Village Rampur, Sector 4 (Home Visit)</span>
+                <span>{t('homeVisitDesc')}</span>
               </div>
             </div>
             <div className="pt-1 flex justify-end gap-2">

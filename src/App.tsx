@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { DataProvider, useData } from './context/DataContext';
-import { LanguageProvider } from './context/LanguageContext';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { GlobalHeader } from './components/layout/GlobalHeader';
 import { MotherBottomNav, MotherTab } from './components/layout/MotherBottomNav';
 import { WorkerBottomNav, WorkerTab } from './components/layout/WorkerBottomNav';
@@ -32,6 +32,7 @@ import { MaternalAssessment } from './types';
 const MainAppContent: React.FC = () => {
   const { role } = useAuth();
   const { assessments } = useData();
+  const { t } = useLanguage();
 
   // Navigation states per role
   const [motherTab, setMotherTab] = useState<MotherTab>('home');
@@ -143,7 +144,7 @@ const MainAppContent: React.FC = () => {
                 {workerTab === 'assessments' && (
                   <div className="space-y-space-md">
                     <div className="flex items-center justify-between">
-                      <h1 className="font-serif text-2xl text-primary">Maternal Assessments</h1>
+                      <h1 className="font-serif text-2xl text-primary">{t('maternalAssessmentsTitle')}</h1>
                       <button
                         onClick={() => {
                           setTargetMotherId(undefined);
@@ -151,7 +152,7 @@ const MainAppContent: React.FC = () => {
                         }}
                         className="px-3 py-1.5 rounded-lg bg-primary-container text-on-primary text-xs font-semibold"
                       >
-                        + New Assessment
+                        {t('newMaternalAssessment')}
                       </button>
                     </div>
                     <div className="space-y-space-sm">
@@ -165,10 +166,10 @@ const MainAppContent: React.FC = () => {
                             <span className="text-xs text-secondary">{a.recordedAt}</span>
                           </div>
                           <div className="text-xs text-secondary flex justify-between">
-                            <span>BP: {a.systolicBP}/{a.diastolicBP} mmHg</span>
-                            <span>Week {a.gestationalWeek}</span>
+                            <span>{t('vitalsBP')}: {a.systolicBP}/{a.diastolicBP} mmHg</span>
+                            <span>{t('weekLabel', { num: a.gestationalWeek })}</span>
                             <span className="text-primary font-semibold">
-                              {a.ruleBasedDangerIdentified ? 'Flagged' : 'Normal'}
+                              {a.ruleBasedDangerIdentified ? t('flaggedForReview') : t('filterLowRisk')}
                             </span>
                           </div>
                           <button
@@ -178,7 +179,7 @@ const MainAppContent: React.FC = () => {
                             }}
                             className="text-xs text-primary-container font-semibold hover:underline"
                           >
-                            View Clinical Decision Result
+                            {t('viewClinicalResult')}
                           </button>
                         </div>
                       ))}

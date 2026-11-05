@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { TRANSLATIONS, Language, CLINICAL_GLOSSARY } from '../i18n/translations';
 import { auth, db } from '../lib/firebase';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
 export type { Language };
 
@@ -26,6 +26,29 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
     return 'en';
   });
+
+  // Synchronize language preference from Firestore when user logs in or switches account
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        try {
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          if (userDoc.exists()) {
+            const data = userDoc.data();
+            if (data?.languagePreference && ['en', 'hi', 'or'].includes(data.languagePreference)) {
+              setLanguageState(data.languagePreference as Language);
+              if (typeof window !== 'undefined') {
+                localStorage.setItem(LANG_STORAGE_KEY, data.languagePreference);
+              }
+            }
+          }
+        } catch (err) {
+          console.warn('Language preference load notice:', err);
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   const setLanguage = async (lang: Language) => {
     setLanguageState(lang);

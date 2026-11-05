@@ -26,19 +26,19 @@ export const MotherHomeScreen: React.FC<MotherHomeScreenProps> = ({
   const [callbackRequested, setCallbackRequested] = useState(false);
 
   const availableSymptoms = [
-    'Mild Swelling in Feet / Hands',
-    'Routine Well-being Check-in',
-    'Nausea or Morning Sickness',
-    'Backache / Pelvic Pressure',
-    'Mild Fatigue',
-    'Supplements Query',
+    { key: 'symptomMildSwelling', label: t('symptomMildSwelling') },
+    { key: 'symptomRoutineCheckin', label: t('symptomRoutineCheckin') },
+    { key: 'symptomNausea', label: t('symptomNausea') },
+    { key: 'symptomBackache', label: t('symptomBackache') },
+    { key: 'symptomFatigue', label: t('symptomFatigue') },
+    { key: 'symptomSupplements', label: t('symptomSupplements') },
   ];
 
-  const toggleSymptom = (sym: string) => {
-    if (symptomList.includes(sym)) {
-      setSymptomList(symptomList.filter((s) => s !== sym));
+  const toggleSymptom = (symKey: string) => {
+    if (symptomList.includes(symKey)) {
+      setSymptomList(symptomList.filter((s) => s !== symKey));
     } else {
-      setSymptomList([...symptomList, sym]);
+      setSymptomList([...symptomList, symKey]);
     }
   };
 
@@ -46,11 +46,13 @@ export const MotherHomeScreen: React.FC<MotherHomeScreenProps> = ({
     e.preventDefault();
     if (!observations.trim() && symptomList.length === 0) return;
 
+    const readableSymptoms = symptomList.map((key) => t(key));
+
     await addHealthUpdate({
       motherId: mother.id,
       motherName: mother.name,
-      observations: observations.trim() || symptomList.join(', '),
-      symptoms: symptomList,
+      observations: observations.trim() || readableSymptoms.join(', '),
+      symptoms: readableSymptoms,
       notes: notes.trim() || 'Logged via Mother Portal check-in.',
     });
 
@@ -119,7 +121,7 @@ export const MotherHomeScreen: React.FC<MotherHomeScreenProps> = ({
               </span>
               <div className="flex items-baseline gap-space-xs mt-0.5">
                 <span className="font-serif text-xl font-bold text-primary">
-                  Week {mother.gestationalAgeWeeks}
+                  {t('weekLabel', { num: mother.gestationalAgeWeeks })}
                 </span>
                 <span className="font-sans text-xs text-tertiary">· {t('trimester2')}</span>
               </div>
@@ -140,11 +142,11 @@ export const MotherHomeScreen: React.FC<MotherHomeScreenProps> = ({
               ></div>
             </div>
             <div className="flex justify-between items-center text-secondary font-sans text-xs">
-              <span>Week 1</span>
+              <span>{t('weekLabel', { num: 1 })}</span>
               <span className="font-semibold text-primary">
-                Day {mother.gestationalAgeDays} of 280
+                {t('dayOf280', { current: mother.gestationalAgeDays, total: 280 })}
               </span>
-              <span>Week 40</span>
+              <span>{t('weekLabel', { num: 40 })}</span>
             </div>
           </div>
 
@@ -335,19 +337,19 @@ export const MotherHomeScreen: React.FC<MotherHomeScreenProps> = ({
                   </label>
                   <div className="flex flex-wrap gap-1.5">
                     {availableSymptoms.map((sym) => {
-                      const selected = symptomList.includes(sym);
+                      const selected = symptomList.includes(sym.key);
                       return (
                         <button
-                          key={sym}
+                          key={sym.key}
                           type="button"
-                          onClick={() => toggleSymptom(sym)}
+                          onClick={() => toggleSymptom(sym.key)}
                           className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors cursor-pointer ${
                             selected
                               ? 'bg-primary-container text-on-primary border-primary-container'
                               : 'bg-surface-container text-on-surface border-outline-variant hover:border-primary-container'
                           }`}
                         >
-                          {sym}
+                          {sym.label}
                         </button>
                       );
                     })}

@@ -60,7 +60,7 @@ export const SupervisorAssignScreen: React.FC<SupervisorAssignScreenProps> = ({
             <span>{t('back')}</span>
           </button>
           <span className="font-sans text-xs text-secondary font-bold">
-            Step {step} of 5
+            {t('stepOf', { current: step, total: 5 })}
           </span>
         </div>
         <h1 className="font-serif text-2xl text-on-surface font-normal tracking-tight mt-2">
@@ -232,7 +232,7 @@ export const SupervisorAssignScreen: React.FC<SupervisorAssignScreenProps> = ({
 
               <div>
                 <label className="font-sans text-xs font-semibold text-on-surface block mb-1">
-                  Specify Hamlets / Wards *
+                  {t('specifyHamlets')}
                 </label>
                 <textarea
                   rows={3}
@@ -337,7 +337,7 @@ export const SupervisorAssignScreen: React.FC<SupervisorAssignScreenProps> = ({
                 onClick={() => setStep(step + 1)}
                 className="flex-1 h-12 rounded-lg bg-primary-container text-on-primary font-sans text-xs font-bold hover:opacity-95 shadow-sm flex items-center justify-center gap-1 cursor-pointer"
               >
-                <span>Continue</span>
+                <span>{t('continue')}</span>
                 <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
               </button>
             ) : (

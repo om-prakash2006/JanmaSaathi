@@ -62,7 +62,7 @@ export const SupervisorOverviewScreen: React.FC<SupervisorOverviewScreenProps> =
               {t('allocateWorker')}
             </h2>
             <p className="font-sans text-xs text-on-primary/80 leading-relaxed">
-              Deploy frontline workers to service areas and balance caseloads with safe atomic allocation.
+              {t('allocateWorkerDesc')}
             </p>
           </div>
           <div className="pt-space-xs">
@@ -98,7 +98,7 @@ export const SupervisorOverviewScreen: React.FC<SupervisorOverviewScreenProps> =
                 {workers.length}
               </span>
               <span className="font-sans text-xs text-secondary">
-                ({unassignedWorkers.length} unassigned)
+                {t('unassignedCount', { count: unassignedWorkers.length })}
               </span>
             </div>
           </div>

@@ -11,10 +11,10 @@ export const MotherConnectScreen: React.FC = () => {
   const [callbackRequested, setCallbackRequested] = useState(false);
 
   const suggestedQueries = [
-    'Ask about diet & nutrition',
-    'Appointment query',
-    'Medication guidance',
-    'Fetal movements question',
+    { key: 'queryDietNutrition', text: t('queryDietNutrition') },
+    { key: 'queryAppointment', text: t('queryAppointment') },
+    { key: 'queryMedication', text: t('queryMedication') },
+    { key: 'queryFetalMovements', text: t('queryFetalMovements') },
   ];
 
   const handleSend = async (e: React.FormEvent) => {
@@ -24,8 +24,8 @@ export const MotherConnectScreen: React.FC = () => {
     setInputText('');
   };
 
-  const handleQuickSend = (query: string) => {
-    setInputText(query);
+  const handleQuickSend = (queryText: string) => {
+    setInputText(queryText);
   };
 
   return (
@@ -182,17 +182,17 @@ export const MotherConnectScreen: React.FC = () => {
           {/* Suggested Inquiries */}
           <div className="pt-2">
             <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-secondary block mb-1.5">
-              Suggested Inquiries
+              {t('suggestedInquiries')}
             </span>
             <div className="flex flex-wrap gap-1.5">
               {suggestedQueries.map((q) => (
                 <button
-                  key={q}
+                  key={q.key}
                   type="button"
-                  onClick={() => handleQuickSend(q)}
+                  onClick={() => handleQuickSend(q.text)}
                   className="px-2.5 py-1 rounded-full text-[11px] bg-surface-container-high text-on-surface border border-outline-variant/40 hover:border-primary-container cursor-pointer"
                 >
-                  {q}
+                  {q.text}
                 </button>
               ))}
             </div>

@@ -215,7 +215,7 @@ export const WorkerPatientsScreen: React.FC<WorkerPatientsScreenProps> = ({
 
         {filteredMothers.length === 0 && (
           <div className="text-center py-12 text-secondary font-sans text-xs">
-            No mothers found matching the selected criteria.
+            {t('noPatientsFound')}
           </div>
         )}
       </section>
@@ -238,14 +238,14 @@ export const WorkerPatientsScreen: React.FC<WorkerPatientsScreenProps> = ({
               <div className="p-3 rounded-lg bg-error-container/80 border border-error/30 text-xs text-error font-medium flex items-start gap-2">
                 <span className="material-symbols-outlined text-[16px] shrink-0 mt-0.5">error</span>
                 <div className="flex-1">
-                  <p className="font-semibold">Persistence Rejection:</p>
+                  <p className="font-semibold">{t('persistenceRejection')}:</p>
                   <p className="mt-0.5">{registerError}</p>
                 </div>
               </div>
             )}
 
             <div className="p-2.5 rounded-lg bg-surface-container border border-outline-variant/60 flex items-center justify-between">
-              <span className="text-[11px] text-secondary font-medium">Phase 1 Test Record:</span>
+              <span className="text-[11px] text-secondary font-medium">Demo:</span>
               <button
                 type="button"
                 onClick={() => {
@@ -258,7 +258,7 @@ export const WorkerPatientsScreen: React.FC<WorkerPatientsScreenProps> = ({
                 }}
                 className="text-[11px] font-semibold text-primary-container hover:underline cursor-pointer"
               >
-                Autofill Synthetic Demo Mother
+                {t('demoRegistrationQuickFill')}
               </button>
             </div>
 

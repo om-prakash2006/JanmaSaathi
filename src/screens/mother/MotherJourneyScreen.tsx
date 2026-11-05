@@ -18,53 +18,53 @@ export const MotherJourneyScreen: React.FC = () => {
   const timelineEvents = [
     {
       id: 'EVT-01',
-      date: '12 November 2026',
-      title: 'ANC 3 Checkup & Vitals',
-      subtitle: 'Sub-Centre Rampur Health Post',
-      provider: 'Sunita Devi (Health Worker)',
+      date: '12 Nov 2026',
+      title: t('anc3CheckupTitle'),
+      subtitle: t('anc3CheckupSubtitle'),
+      provider: `${mother.assignedWorkerName} (${t('roleWorker')})`,
       status: t('statusScheduled'),
       statusType: 'upcoming',
-      details: 'Routine third antenatal visit: blood pressure measurement, fundal height estimation, fetal heart auscultation, and iron-folic acid restock.',
+      details: t('anc3CheckupDetails'),
     },
     ...healthUpdates.filter((u) => u.motherId === mother.id).map((u) => ({
       id: u.healthUpdateId,
       date: u.submittedAt.split('·')[0].trim(),
-      title: u.reviewStatus === 'reviewed' ? 'Maternal Health Update Reviewed' : 'Self-Reported Well-Being Check-in',
+      title: u.reviewStatus === 'reviewed' ? t('updateReviewedTitle') : t('selfReportedCheckinTitle'),
       subtitle: u.observations,
-      provider: u.reviewedBy || 'Self-submitted (Pending Review)',
+      provider: u.reviewedBy || `${t('statusPending')} (${t('roleWorker')})`,
       status: u.reviewStatus === 'reviewed' ? t('statusReviewed') : t('statusPending'),
       statusType: u.reviewStatus === 'reviewed' ? 'completed' : 'pending',
       details: u.reviewNotes || u.notes,
     })),
     {
       id: 'EVT-04',
-      date: '17 September 2026',
-      title: 'Second Antenatal Checkup (ANC 2) & Ultrasound',
-      subtitle: 'Rampur Primary Health Centre',
-      provider: 'Dr. Sharma / Sunita Devi',
+      date: '17 Sep 2026',
+      title: t('anc2CheckupTitle'),
+      subtitle: t('anc2CheckupSubtitle'),
+      provider: `Dr. Sharma / ${mother.assignedWorkerName}`,
       status: t('statusCompleted'),
       statusType: 'completed',
-      details: 'Blood pressure normal (116/74 mmHg), fetal heartbeat verified (140 bpm), ultrasound confirmed single intrauterine pregnancy with adequate amniotic fluid.',
+      details: t('anc2CheckupDetails'),
     },
     {
       id: 'EVT-05',
-      date: '16 July 2026',
-      title: 'First Antenatal Checkup (ANC 1) & Blood Tests',
-      subtitle: 'Sub-Centre Rampur Health Post',
-      provider: 'Sunita Devi (Health Worker)',
+      date: '16 Jul 2026',
+      title: t('anc1CheckupTitle'),
+      subtitle: t('anc3CheckupSubtitle'),
+      provider: `${mother.assignedWorkerName} (${t('roleWorker')})`,
       status: t('statusCompleted'),
       statusType: 'completed',
-      details: 'Routine baseline screening, haemoglobin check (11.8 g/dL), blood typing (B positive), Tetanus Toxoid Dose 1 administered.',
+      details: t('anc1CheckupDetails'),
     },
     {
       id: 'EVT-06',
-      date: '15 June 2026',
-      title: 'Pregnancy Registered & MCP Card Issued',
-      subtitle: 'Village Rampur Sub-Centre',
-      provider: 'Sunita Devi (Health Worker)',
+      date: '15 Jun 2026',
+      title: t('regMcpIssuedTitle'),
+      subtitle: t('anc3CheckupSubtitle'),
+      provider: `${mother.assignedWorkerName} (${t('roleWorker')})`,
       status: t('statusCompleted'),
       statusType: 'completed',
-      details: 'Initial pregnancy registration with Village Rampur Sub-Centre. Mother and Child Protection (MCP) card issued with ID MCP-2026-0894.',
+      details: t('regMcpIssuedDetails'),
     },
   ];
 
@@ -89,10 +89,10 @@ export const MotherJourneyScreen: React.FC = () => {
             </span>
             <div className="flex items-baseline gap-space-xs mt-0.5">
               <span className="font-serif text-xl font-bold text-primary">
-                Week {mother.gestationalAgeWeeks}
+                {t('weekLabel', { num: mother.gestationalAgeWeeks })}
               </span>
               <span className="font-sans text-xs text-tertiary">
-                (Day {mother.gestationalAgeDays} of 280)
+                ({t('dayOf280', { current: mother.gestationalAgeDays, total: 280 })})
               </span>
             </div>
           </div>
@@ -115,9 +115,9 @@ export const MotherJourneyScreen: React.FC = () => {
             ></div>
           </div>
           <div className="flex justify-between items-center text-secondary font-sans text-xs">
-            <span>Week 1</span>
-            <span className="font-bold text-primary">Week {mother.gestationalAgeWeeks}</span>
-            <span>Week 40</span>
+            <span>{t('weekLabel', { num: 1 })}</span>
+            <span className="font-bold text-primary">{t('weekLabel', { num: mother.gestationalAgeWeeks })}</span>
+            <span>{t('weekLabel', { num: 40 })}</span>
           </div>
         </div>
 
@@ -219,17 +219,17 @@ export const MotherJourneyScreen: React.FC = () => {
                 <span className="material-symbols-outlined text-[22px]">description</span>
               </div>
               <div className="flex flex-col">
-                <span className="font-sans text-xs font-bold text-on-surface">ANC 2 Assessment Record</span>
+                <span className="font-sans text-xs font-bold text-on-surface">{t('anc2DocTitle')}</span>
                 <span className="font-sans text-[11px] text-secondary">17 Sep 2026 · Dr. Sharma</span>
               </div>
             </div>
             <button
               onClick={() =>
                 setPreviewDoc({
-                  title: 'ANC 2 Assessment Record',
-                  provider: 'Dr. Sharma · Rampur PHC',
+                  title: t('anc2DocTitle'),
+                  provider: `Dr. Sharma · Rampur PHC`,
                   date: '17 September 2026',
-                  summary: 'Routine second trimester checkup. Fetal development is concordant with gestational age. No signs of hypertension, pre-eclampsia, or gestational diabetes.',
+                  summary: t('anc2DocSummary'),
                   vitals: [
                     'Blood Pressure: 116/74 mmHg (Normal)',
                     'Fetal Heart Rate: 140 bpm (Healthy)',
@@ -251,17 +251,17 @@ export const MotherJourneyScreen: React.FC = () => {
                 <span className="material-symbols-outlined text-[22px]">lab_profile</span>
               </div>
               <div className="flex flex-col">
-                <span className="font-sans text-xs font-bold text-on-surface">Baseline Laboratory Report</span>
+                <span className="font-sans text-xs font-bold text-on-surface">{t('labReportTitle')}</span>
                 <span className="font-sans text-[11px] text-secondary">16 Jul 2026 · Rampur PHC</span>
               </div>
             </div>
             <button
               onClick={() =>
                 setPreviewDoc({
-                  title: 'Baseline Laboratory Report',
+                  title: t('labReportTitle'),
                   provider: 'Rampur Primary Health Centre Lab',
                   date: '16 July 2026',
-                  summary: 'Comprehensive first-trimester baseline blood and urine investigations. Haemoglobin recorded within satisfactory clinical range.',
+                  summary: t('labReportSummary'),
                   vitals: [
                     'Haemoglobin (Hb): 11.8 g/dL (Normal adult pregnancy baseline)',
                     'Blood Group & Rh: B Positive (Rh +ve)',

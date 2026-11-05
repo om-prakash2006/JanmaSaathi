@@ -1,11 +1,11 @@
 {
-  "projectId": "prismatic-silicon-nggh3",
-  "appId": "1:378610434533:web:0b89995b01255985502f0c",
+  "projectId": "outr-janmasaathi",
+  "appId": "1:12503123299:web:1ec9775245e417f1d2ff56",
   "apiKey": "AIzaSyDAVDSDmzyhde8bJqmEmalmwPGJm1E3PeA",
-  "authDomain": "prismatic-silicon-nggh3.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-janmasaathi-939606ab-f26b-4f12-8be6-b4f893b984ab",
-  "storageBucket": "prismatic-silicon-nggh3.firebasestorage.app",
-  "messagingSenderId": "378610434533",
+  "authDomain": "outr-janmasaathi.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-janmasaathi-8e8b2a1f-7b17-42e6-bc8e-284c5c28d2df",
+  "storageBucket": "outr-janmasaathi.firebasestorage.app",
+  "messagingSenderId": "12503123299",
   "measurementId": "",
   "oAuthClientId": "378610434533-elj5demfvuurloe57u7dvmti2k5golcq.apps.googleusercontent.com",
   "recaptchaSiteKey": ""

@@ -53,7 +53,11 @@ export const SupervisorReportsScreen: React.FC = () => {
                         : 'bg-surface-variant text-on-surface-variant'
                     }`}
                   >
-                    {item.supervisorReviewStatus.replace('_', ' ')}
+                    {item.supervisorReviewStatus === 'signed_off'
+                      ? t('statusReviewed')
+                      : item.supervisorReviewStatus === 'clarification_requested'
+                      ? t('addClarification')
+                      : t('statusPending')}
                   </span>
                 </div>
                 <span className="font-sans text-xs text-secondary block mt-0.5">
@@ -68,21 +72,21 @@ export const SupervisorReportsScreen: React.FC = () => {
             {/* Vitals summary bar */}
             <div className="grid grid-cols-4 gap-1.5 text-center text-xs">
               <div className="bg-surface-container-low p-1.5 rounded-lg border border-outline-variant/20">
-                <span className="text-[10px] text-secondary block">Gestation</span>
-                <strong className="text-on-surface">Wk {item.gestationalWeek}</strong>
+                <span className="text-[10px] text-secondary block">{t('vitalsGestation')}</span>
+                <strong className="text-on-surface">{t('weekLabel', { num: item.gestationalWeek })}</strong>
               </div>
               <div className="bg-surface-container-low p-1.5 rounded-lg border border-outline-variant/20">
-                <span className="text-[10px] text-secondary block">BP</span>
+                <span className="text-[10px] text-secondary block">{t('vitalsBP')}</span>
                 <strong className={item.systolicBP >= 140 ? 'text-primary font-bold' : 'text-on-surface'}>
                   {item.systolicBP}/{item.diastolicBP}
                 </strong>
               </div>
               <div className="bg-surface-container-low p-1.5 rounded-lg border border-outline-variant/20">
-                <span className="text-[10px] text-secondary block">HR</span>
+                <span className="text-[10px] text-secondary block">{t('vitalsHR')}</span>
                 <strong className="text-on-surface">{item.heartRate} bpm</strong>
               </div>
               <div className="bg-surface-container-low p-1.5 rounded-lg border border-outline-variant/20">
-                <span className="text-[10px] text-secondary block">Glucose</span>
+                <span className="text-[10px] text-secondary block">{t('vitalsGlucose')}</span>
                 <strong className="text-on-surface">{item.bloodGlucose} mg</strong>
               </div>
             </div>
@@ -90,7 +94,7 @@ export const SupervisorReportsScreen: React.FC = () => {
             {/* Clinical observations & danger alerts */}
             <div className="p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/30 space-y-1 text-xs text-secondary">
               <p>
-                <strong className="text-on-surface">Field Observation:</strong> {item.symptomsNotes}
+                <strong className="text-on-surface">{t('fieldObservationLabel')}:</strong> {item.symptomsNotes}
               </p>
             </div>
 
@@ -103,7 +107,7 @@ export const SupervisorReportsScreen: React.FC = () => {
                 }}
                 className="text-xs font-semibold text-primary-container hover:underline cursor-pointer"
               >
-                {selectedAssessmentId === item.id ? t('close') : 'Add Clarification'}
+                {selectedAssessmentId === item.id ? t('close') : t('addClarification')}
               </button>
 
               <div className="flex items-center gap-2">
@@ -112,7 +116,7 @@ export const SupervisorReportsScreen: React.FC = () => {
                     onClick={() => handleSignOff(item.id)}
                     className="px-3 py-1 rounded-lg bg-primary-container text-on-primary text-[11px] font-semibold shadow-sm hover:opacity-95 cursor-pointer"
                   >
-                    Clinical Sign-Off
+                    {t('clinicalSignOff')}
                   </button>
                 )}
               </div>
@@ -125,7 +129,7 @@ export const SupervisorReportsScreen: React.FC = () => {
                   rows={2}
                   value={reviewNotes}
                   onChange={(e) => setReviewNotes(e.target.value)}
-                  placeholder="Feedback or Clarification Request..."
+                  placeholder={t('clarificationPlaceholder')}
                   className="w-full p-2 rounded-lg bg-surface-container-lowest border border-outline-variant font-sans text-xs text-on-surface"
                 />
                 <button

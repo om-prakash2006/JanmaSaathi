@@ -41,7 +41,7 @@ export const WorkerMoreScreen: React.FC = () => {
           {t('navMore')}
         </h1>
         <p className="font-sans text-xs text-secondary mt-0.5">
-          Health Worker workspace utilities and clinical references
+          {t('workerUtilitiesSubtitle')}
         </p>
       </section>
 
@@ -75,7 +75,7 @@ export const WorkerMoreScreen: React.FC = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-primary-container text-[20px]">calculate</span>
-              <span className="font-sans text-sm font-bold text-on-surface">LMP / EDD Calculator</span>
+              <span className="font-sans text-sm font-bold text-on-surface">{t('calculatorTitle')}</span>
             </div>
             <button
               onClick={() => setActiveCalculator(!activeCalculator)}
@@ -142,9 +142,9 @@ export const WorkerMoreScreen: React.FC = () => {
 
         <div className="space-y-2">
           {[
-            { id: 'en' as Language, label: 'English', sub: 'Default' },
-            { id: 'hi' as Language, label: 'हिंदी (Hindi)', sub: 'मानक भाषा' },
-            { id: 'or' as Language, label: 'ଓଡ଼ିଆ (Odia)', sub: 'ଆଞ୍ଚଳିକ ଭାଷା' },
+            { id: 'en' as Language, label: 'English', sub: t('langDefault') },
+            { id: 'hi' as Language, label: 'हिंदी (Hindi)', sub: t('langStandard') },
+            { id: 'or' as Language, label: 'ଓଡ଼ିଆ (Odia)', sub: t('langRegional') },
           ].map((langItem) => {
             const isSelected = language === langItem.id;
             return (
@@ -176,7 +176,7 @@ export const WorkerMoreScreen: React.FC = () => {
       {/* 4. Demonstration Data Tools */}
       <section className="bg-surface-container rounded-xl p-space-md border border-outline-variant/40 shadow-sm space-y-3">
         <span className="font-sans text-xs font-bold uppercase tracking-wider text-secondary">
-          Demonstration Baseline State
+          {t('demoBaselineState')}
         </span>
 
         {resetMessage && (
@@ -188,18 +188,18 @@ export const WorkerMoreScreen: React.FC = () => {
 
         {showResetConfirm ? (
           <div className="p-3 rounded-lg bg-surface-container-high border border-outline-variant space-y-2">
-            <span className="font-sans text-xs font-bold text-on-surface block">Reset all demo records back to baseline?</span>
+            <span className="font-sans text-xs font-bold text-on-surface block">{t('confirmResetTitle')}</span>
             <div className="flex gap-2">
               <button
                 onClick={async () => {
                   await resetToDefaultData();
                   setShowResetConfirm(false);
-                  setResetMessage('Demonstration dataset reset to initial baseline.');
+                  setResetMessage(t('resetSuccessMsg'));
                   setTimeout(() => setResetMessage(null), 4000);
                 }}
                 className="px-3 py-1.5 rounded-lg bg-primary-container text-on-primary text-xs font-semibold hover:opacity-95 cursor-pointer"
               >
-                Confirm Reset
+                {t('confirmResetBtn')}
               </button>
               <button
                 onClick={() => setShowResetConfirm(false)}
@@ -214,7 +214,7 @@ export const WorkerMoreScreen: React.FC = () => {
             onClick={() => setShowResetConfirm(true)}
             className="px-3 py-1.5 rounded-lg border border-outline-variant text-xs font-semibold text-secondary hover:bg-surface-container-high transition-colors cursor-pointer"
           >
-            Reset Demo Data to Initial Baseline
+            {t('resetBaselineBtn')}
           </button>
         )}
       </section>

@@ -131,9 +131,9 @@ export const MotherProfileScreen: React.FC = () => {
 
         <div className="space-y-2">
           {[
-            { id: 'en' as Language, label: 'English', sub: 'Default' },
-            { id: 'hi' as Language, label: 'हिंदी (Hindi)', sub: 'मानक भाषा' },
-            { id: 'or' as Language, label: 'ଓଡ଼ିଆ (Odia)', sub: 'ଆଞ୍ଚଳିକ ଭାଷା' },
+            { id: 'en' as Language, label: 'English', sub: t('langDefault') },
+            { id: 'hi' as Language, label: 'हिंदी (Hindi)', sub: t('langStandard') },
+            { id: 'or' as Language, label: 'ଓଡ଼ିଆ (Odia)', sub: t('langRegional') },
           ].map((langItem) => {
             const isSelected = language === langItem.id;
             return (
@@ -172,23 +172,23 @@ export const MotherProfileScreen: React.FC = () => {
           {[
             {
               key: 'appointments' as const,
-              title: 'Antenatal Appointment Reminders',
-              desc: 'Discreet alerts 24h & 2h before visits',
+              title: t('notifApptTitle'),
+              desc: t('notifApptDesc'),
             },
             {
               key: 'responses' as const,
-              title: 'Health Update Responses',
-              desc: 'Alert when Health Worker reviews symptom reports',
+              title: t('notifResponseTitle'),
+              desc: t('notifResponseDesc'),
             },
             {
               key: 'followups' as const,
-              title: 'Health Worker Follow-ups',
-              desc: 'Scheduled check-in confirmations & visits',
+              title: t('notifFollowupTitle'),
+              desc: t('notifFollowupDesc'),
             },
             {
               key: 'tips' as const,
-              title: 'Guidance & Care Tips',
-              desc: 'Trimester-specific nutritional and wellness guidance',
+              title: t('notifTipsTitle'),
+              desc: t('notifTipsDesc'),
             },
           ].map((item) => (
             <div key={item.key} className="flex items-center justify-between py-1">

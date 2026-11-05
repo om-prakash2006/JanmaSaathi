@@ -71,13 +71,13 @@ export const SupervisorReferralsScreen: React.FC = () => {
                 <span>{item.referredToFacility}</span>
               </div>
               <p className="text-tertiary">
-                <strong>Indication:</strong> {item.reasonForReferral}
+                <strong>{t('referralIndication')}:</strong> {item.reasonForReferral}
               </p>
             </div>
 
             {item.supervisorRemarks && (
               <div className="p-2 rounded-lg bg-secondary-container/30 border border-outline-variant/30 text-[11px] text-tertiary">
-                <strong>Supervisor Remark:</strong> {item.supervisorRemarks}
+                <strong>{t('supervisorRemarkLabel')}:</strong> {item.supervisorRemarks}
               </div>
             )}
 
@@ -90,7 +90,7 @@ export const SupervisorReferralsScreen: React.FC = () => {
                 }}
                 className="text-xs font-semibold text-primary-container hover:underline cursor-pointer"
               >
-                {selectedReferralId === item.id ? t('cancel') : 'Add Clinical Notes'}
+                {selectedReferralId === item.id ? t('cancel') : t('addClinicalNotes')}
               </button>
 
               <div className="flex items-center gap-2">
@@ -101,7 +101,7 @@ export const SupervisorReferralsScreen: React.FC = () => {
                     }}
                     className="px-2.5 py-1 rounded-lg border border-outline-variant text-[11px] font-semibold text-secondary hover:bg-surface-container-high cursor-pointer"
                   >
-                    Mark Resolved
+                    {t('markResolved')}
                   </button>
                 )}
                 {item.status === 'initiated' && (
@@ -109,7 +109,7 @@ export const SupervisorReferralsScreen: React.FC = () => {
                     onClick={() => handleAcknowledge(item.id)}
                     className="px-3 py-1 rounded-lg bg-primary-container text-on-primary text-[11px] font-semibold shadow-sm hover:opacity-95 cursor-pointer"
                   >
-                    Acknowledge
+                    {t('acknowledge')}
                   </button>
                 )}
               </div>

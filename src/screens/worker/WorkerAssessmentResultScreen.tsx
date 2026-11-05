@@ -60,13 +60,13 @@ export const WorkerAssessmentResultScreen: React.FC<WorkerAssessmentResultScreen
         {/* Metadata Chips */}
         <div className="grid grid-cols-2 gap-space-sm pt-space-xs">
           <div className="bg-surface-container-lowest p-2.5 rounded-lg border border-outline-variant/30 flex flex-col">
-            <span className="font-sans text-[11px] text-secondary">Assessment ID</span>
+            <span className="font-sans text-[11px] text-secondary">{t('assessmentId')}</span>
             <span className="font-sans text-xs font-bold text-on-surface truncate">
               {assessment.id}
             </span>
           </div>
           <div className="bg-surface-container-lowest p-2.5 rounded-lg border border-outline-variant/30 flex flex-col">
-            <span className="font-sans text-[11px] text-secondary">Timestamp</span>
+            <span className="font-sans text-[11px] text-secondary">{t('timestamp')}</span>
             <span className="font-sans text-xs font-bold text-on-surface truncate">
               {assessment.recordedAt}
             </span>
@@ -113,7 +113,7 @@ export const WorkerAssessmentResultScreen: React.FC<WorkerAssessmentResultScreen
             </div>
 
             <div className="p-2.5 rounded-lg bg-surface-container border border-outline-variant/40 text-[11px] text-tertiary leading-relaxed">
-              <strong className="text-secondary block mb-0.5">Clinical Disclaimer:</strong>
+              <strong className="text-secondary block mb-0.5">{t('clinicalDisclaimer')}:</strong>
               {t('disclaimerText')}
             </div>
           </div>

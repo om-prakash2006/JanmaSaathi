@@ -42,21 +42,21 @@ export const WorkerNewAssessmentScreen: React.FC<WorkerNewAssessmentScreenProps>
   );
 
   const dangerSignOptions = [
-    'Severe or persistent headache',
-    'Visual disturbances (blurriness, spots)',
-    'Vaginal bleeding or spotting',
-    'High fever with chills (> 100.4°F)',
-    'Reduced or absent fetal movements',
-    'Severe epigastric / abdominal pain',
-    'Sudden marked swelling of face & hands',
-    'Convulsions or seizures',
+    { key: 'dangerHeadache', label: t('dangerHeadache') },
+    { key: 'dangerVisual', label: t('dangerVisual') },
+    { key: 'dangerBleeding', label: t('dangerBleeding') },
+    { key: 'dangerFever', label: t('dangerFever') },
+    { key: 'dangerFetalMovement', label: t('dangerFetalMovement') },
+    { key: 'dangerAbdominalPain', label: t('dangerAbdominalPain') },
+    { key: 'dangerSwelling', label: t('dangerSwelling') },
+    { key: 'dangerConvulsions', label: t('dangerConvulsions') },
   ];
 
-  const toggleDangerSign = (sign: string) => {
-    if (selectedDangerSigns.includes(sign)) {
-      setSelectedDangerSigns(selectedDangerSigns.filter((s) => s !== sign));
+  const toggleDangerSign = (signKey: string) => {
+    if (selectedDangerSigns.includes(signKey)) {
+      setSelectedDangerSigns(selectedDangerSigns.filter((s) => s !== signKey));
     } else {
-      setSelectedDangerSigns([...selectedDangerSigns, sign]);
+      setSelectedDangerSigns([...selectedDangerSigns, signKey]);
     }
   };
 
@@ -249,7 +249,7 @@ export const WorkerNewAssessmentScreen: React.FC<WorkerNewAssessmentScreenProps>
           {t('recordAssessment')}
         </h1>
         <p className="font-sans text-xs text-secondary">
-          7-section standard clinical assessment protocol for field health workers.
+          {t('clinicalProtocolSubtitle')}
         </p>
       </section>
 
@@ -323,7 +323,7 @@ export const WorkerNewAssessmentScreen: React.FC<WorkerNewAssessmentScreenProps>
             </div>
             <div>
               <label className="font-sans text-xs font-semibold text-on-surface block mb-1">
-                Symphysis-Fundal Height (cm)
+                {t('fundalHeight')}
               </label>
               <input
                 type="number"
@@ -408,7 +408,7 @@ export const WorkerNewAssessmentScreen: React.FC<WorkerNewAssessmentScreenProps>
               4
             </span>
             <h2 className="font-serif text-base text-on-surface font-bold">
-              Laboratory & Point-of-Care Tests
+              {t('labTestsTitle')}
             </h2>
           </div>
 
@@ -446,7 +446,7 @@ export const WorkerNewAssessmentScreen: React.FC<WorkerNewAssessmentScreenProps>
               5
             </span>
             <h2 className="font-serif text-base text-on-surface font-bold">
-              {t('fetalHeartRate')}
+              {t('fetalWellbeingTitle')}
             </h2>
           </div>
 
@@ -465,16 +465,16 @@ export const WorkerNewAssessmentScreen: React.FC<WorkerNewAssessmentScreenProps>
             </div>
             <div>
               <label className="font-sans text-xs font-semibold text-on-surface block mb-1">
-                Fetal Movements *
+                {t('fetalMovement')} *
               </label>
               <select
                 value={fetalMovementStatus}
                 onChange={(e) => setFetalMovementStatus(e.target.value as any)}
                 className="w-full h-11 px-3 rounded-lg bg-surface-container-lowest border border-outline-variant font-sans text-xs text-on-surface"
               >
-                <option value="normal">Normal (Active)</option>
-                <option value="reduced">Reduced Movements</option>
-                <option value="absent">Absent / Not Felt</option>
+                <option value="normal">{t('fetalNormal')}</option>
+                <option value="reduced">{t('fetalReduced')}</option>
+                <option value="absent">{t('fetalAbsent')}</option>
               </select>
             </div>
           </div>
@@ -495,11 +495,11 @@ export const WorkerNewAssessmentScreen: React.FC<WorkerNewAssessmentScreenProps>
 
           <div className="grid grid-cols-1 gap-2 pt-1">
             {dangerSignOptions.map((sign) => {
-              const isChecked = selectedDangerSigns.includes(sign);
+              const isChecked = selectedDangerSigns.includes(sign.key);
               return (
                 <label
-                  key={sign}
-                  onClick={() => toggleDangerSign(sign)}
+                  key={sign.key}
+                  onClick={() => toggleDangerSign(sign.key)}
                   className={`p-2.5 rounded-lg border text-xs flex items-center gap-2.5 cursor-pointer transition-colors ${
                     isChecked
                       ? 'bg-primary-container/10 border-primary-container text-primary-container font-semibold'
@@ -515,7 +515,7 @@ export const WorkerNewAssessmentScreen: React.FC<WorkerNewAssessmentScreenProps>
                   >
                     {isChecked && '✓'}
                   </span>
-                  <span>{sign}</span>
+                  <span>{sign.label}</span>
                 </label>
               );
             })}
@@ -584,7 +584,7 @@ export const WorkerNewAssessmentScreen: React.FC<WorkerNewAssessmentScreenProps>
             {isSubmitting ? (
               <>
                 <span className="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
-                <span>Evaluating...</span>
+                <span>{t('evaluatingVitals')}</span>
               </>
             ) : (
               <>
