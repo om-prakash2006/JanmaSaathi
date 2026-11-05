@@ -1,0 +1,600 @@
+{
+  "modelVersion": "1.0.1-audited",
+  "preprocessingVersion": "1.0.1",
+  "trainedAt": "2026-11-05T07:48:24.779Z",
+  "featureNames": [
+    "Age",
+    "SystolicBP",
+    "DiastolicBP",
+    "Blood Sugar",
+    "Body Temp",
+    "Heart Rate"
+  ],
+  "classLabels": [
+    "Low",
+    "Moderate",
+    "High"
+  ],
+  "imputationPolicy": "Fold-isolated median imputation for training; Live inference strictly validates heart rate range [30, 200] bpm without silent replacement.",
+  "auditSummary": {
+    "totalRows": 1014,
+    "uniqueCompleteRows": 452,
+    "uniqueFeatureProfiles": 416,
+    "conflictingProfilesCount": 35,
+    "ambiguousRowsCount": 215,
+    "invalidHeartRateRowsCount": 2
+  },
+  "metrics": {
+    "decisionTreeUnpruned": {
+      "accuracy": 0.6472,
+      "balancedAccuracy": 0.6456,
+      "macroF1": 0.6431,
+      "perClass": {
+        "Low": {
+          "precision": 0.6548,
+          "recall": 0.7748,
+          "f1": 0.7098,
+          "support": 404
+        },
+        "Moderate": {
+          "precision": 0.4982,
+          "recall": 0.4048,
+          "f1": 0.4466,
+          "support": 336
+        },
+        "High": {
+          "precision": 0.7893,
+          "recall": 0.7574,
+          "f1": 0.773,
+          "support": 272
+        }
+      },
+      "confusionMatrix": [
+        [
+          313,
+          87,
+          4
+        ],
+        [
+          149,
+          136,
+          51
+        ],
+        [
+          16,
+          50,
+          206
+        ]
+      ]
+    },
+    "decisionTreePruned": {
+      "accuracy": 0.6482,
+      "balancedAccuracy": 0.6418,
+      "macroF1": 0.6308,
+      "perClass": {
+        "Low": {
+          "precision": 0.631,
+          "recall": 0.8465,
+          "f1": 0.723,
+          "support": 404
+        },
+        "Moderate": {
+          "precision": 0.5167,
+          "recall": 0.3214,
+          "f1": 0.3963,
+          "support": 336
+        },
+        "High": {
+          "precision": 0.7893,
+          "recall": 0.7574,
+          "f1": 0.773,
+          "support": 272
+        }
+      },
+      "confusionMatrix": [
+        [
+          342,
+          58,
+          4
+        ],
+        [
+          177,
+          108,
+          51
+        ],
+        [
+          23,
+          43,
+          206
+        ]
+      ]
+    },
+    "decisionTreeClassWeighted": {
+      "accuracy": 0.6482,
+      "balancedAccuracy": 0.6583,
+      "macroF1": 0.665,
+      "perClass": {
+        "Low": {
+          "precision": 0.7184,
+          "recall": 0.5495,
+          "f1": 0.6227,
+          "support": 404
+        },
+        "Moderate": {
+          "precision": 0.5,
+          "recall": 0.7232,
+          "f1": 0.5912,
+          "support": 336
+        },
+        "High": {
+          "precision": 0.8802,
+          "recall": 0.7022,
+          "f1": 0.7812,
+          "support": 272
+        }
+      },
+      "confusionMatrix": [
+        [
+          222,
+          180,
+          2
+        ],
+        [
+          69,
+          243,
+          24
+        ],
+        [
+          18,
+          63,
+          191
+        ]
+      ]
+    }
+  },
+  "selectedModel": "ClassWeightedDecisionTree",
+  "treeRoot": {
+    "id": 488,
+    "isLeaf": false,
+    "featureIndex": 3,
+    "featureName": "Blood Sugar",
+    "threshold": 9.5,
+    "left": {
+      "id": 489,
+      "isLeaf": false,
+      "featureIndex": 1,
+      "featureName": "SystolicBP",
+      "threshold": 132.5,
+      "left": {
+        "id": 490,
+        "isLeaf": false,
+        "featureIndex": 4,
+        "featureName": "Body Temp",
+        "threshold": 99.5,
+        "left": {
+          "id": 491,
+          "isLeaf": false,
+          "featureIndex": 3,
+          "featureName": "Blood Sugar",
+          "threshold": 7.05,
+          "left": {
+            "id": 492,
+            "isLeaf": false,
+            "featureIndex": 2,
+            "featureName": "DiastolicBP",
+            "threshold": 49.5,
+            "left": {
+              "id": 493,
+              "isLeaf": true,
+              "prediction": "Low",
+              "classCounts": [
+                12,
+                0,
+                0
+              ],
+              "samples": 12,
+              "gini": 0
+            },
+            "right": {
+              "id": 494,
+              "isLeaf": true,
+              "prediction": "Moderate",
+              "classCounts": [
+                153,
+                151,
+                6
+              ],
+              "samples": 310,
+              "gini": 0.47843749999999996
+            },
+            "prediction": "Moderate",
+            "classCounts": [
+              165,
+              151,
+              6
+            ],
+            "samples": 322,
+            "gini": 0.48689189189189186
+          },
+          "right": {
+            "id": 495,
+            "isLeaf": false,
+            "featureIndex": 1,
+            "featureName": "SystolicBP",
+            "threshold": 129.5,
+            "left": {
+              "id": 496,
+              "isLeaf": true,
+              "prediction": "Low",
+              "classCounts": [
+                196,
+                46,
+                7
+              ],
+              "samples": 249,
+              "gini": 0.45028747449197326
+            },
+            "right": {
+              "id": 497,
+              "isLeaf": true,
+              "prediction": "Moderate",
+              "classCounts": [
+                0,
+                16,
+                0
+              ],
+              "samples": 16,
+              "gini": 0
+            },
+            "prediction": "Low",
+            "classCounts": [
+              196,
+              62,
+              7
+            ],
+            "samples": 265,
+            "gini": 0.4898541900336485
+          },
+          "prediction": "Moderate",
+          "classCounts": [
+            361,
+            213,
+            13
+          ],
+          "samples": 587,
+          "gini": 0.5194599722991691
+        },
+        "right": {
+          "id": 498,
+          "isLeaf": false,
+          "featureIndex": 5,
+          "featureName": "Heart Rate",
+          "threshold": 67.5,
+          "left": {
+            "id": 499,
+            "isLeaf": false,
+            "featureIndex": 3,
+            "featureName": "Blood Sugar",
+            "threshold": 7.6,
+            "left": {
+              "id": 500,
+              "isLeaf": true,
+              "prediction": "Low",
+              "classCounts": [
+                8,
+                4,
+                4
+              ],
+              "samples": 16,
+              "gini": 0.6528
+            },
+            "right": {
+              "id": 501,
+              "isLeaf": true,
+              "prediction": "High",
+              "classCounts": [
+                0,
+                0,
+                8
+              ],
+              "samples": 8,
+              "gini": 0
+            },
+            "prediction": "High",
+            "classCounts": [
+              8,
+              4,
+              12
+            ],
+            "samples": 24,
+            "gini": 0.631117604090577
+          },
+          "right": {
+            "id": 502,
+            "isLeaf": false,
+            "featureIndex": 4,
+            "featureName": "Body Temp",
+            "threshold": 102.5,
+            "left": {
+              "id": 503,
+              "isLeaf": true,
+              "prediction": "Moderate",
+              "classCounts": [
+                28,
+                82,
+                27
+              ],
+              "samples": 137,
+              "gini": 0.4540606508875741
+            },
+            "right": {
+              "id": 504,
+              "isLeaf": true,
+              "prediction": "Low",
+              "classCounts": [
+                3,
+                0,
+                0
+              ],
+              "samples": 3,
+              "gini": 0
+            },
+            "prediction": "Moderate",
+            "classCounts": [
+              31,
+              82,
+              27
+            ],
+            "samples": 140,
+            "gini": 0.4654989780103771
+          },
+          "prediction": "Moderate",
+          "classCounts": [
+            39,
+            86,
+            39
+          ],
+          "samples": 164,
+          "gini": 0.5219370526302698
+        },
+        "prediction": "Moderate",
+        "classCounts": [
+          400,
+          299,
+          52
+        ],
+        "samples": 751,
+        "gini": 0.5469907741543362
+      },
+      "right": {
+        "id": 505,
+        "isLeaf": false,
+        "featureIndex": 3,
+        "featureName": "Blood Sugar",
+        "threshold": 6.75,
+        "left": {
+          "id": 506,
+          "isLeaf": true,
+          "prediction": "Moderate",
+          "classCounts": [
+            0,
+            5,
+            0
+          ],
+          "samples": 5,
+          "gini": 0
+        },
+        "right": {
+          "id": 507,
+          "isLeaf": true,
+          "prediction": "High",
+          "classCounts": [
+            0,
+            0,
+            46
+          ],
+          "samples": 46,
+          "gini": 0
+        },
+        "prediction": "High",
+        "classCounts": [
+          0,
+          5,
+          46
+        ],
+        "samples": 51,
+        "gini": 0.24106908900340618
+      },
+      "prediction": "Moderate",
+      "classCounts": [
+        400,
+        304,
+        98
+      ],
+      "samples": 802,
+      "gini": 0.5825912853127835
+    },
+    "right": {
+      "id": 508,
+      "isLeaf": false,
+      "featureIndex": 1,
+      "featureName": "SystolicBP",
+      "threshold": 135,
+      "left": {
+        "id": 509,
+        "isLeaf": false,
+        "featureIndex": 0,
+        "featureName": "Age",
+        "threshold": 41,
+        "left": {
+          "id": 510,
+          "isLeaf": false,
+          "featureIndex": 2,
+          "featureName": "DiastolicBP",
+          "threshold": 92.5,
+          "left": {
+            "id": 511,
+            "isLeaf": true,
+            "prediction": "High",
+            "classCounts": [
+              0,
+              0,
+              46
+            ],
+            "samples": 46,
+            "gini": 0
+          },
+          "right": {
+            "id": 512,
+            "isLeaf": true,
+            "prediction": "High",
+            "classCounts": [
+              0,
+              2,
+              7
+            ],
+            "samples": 9,
+            "gini": 0.41999999999999993
+          },
+          "prediction": "High",
+          "classCounts": [
+            0,
+            2,
+            53
+          ],
+          "samples": 55,
+          "gini": 0.10140306122448961
+        },
+        "right": {
+          "id": 513,
+          "isLeaf": false,
+          "featureIndex": 5,
+          "featureName": "Heart Rate",
+          "threshold": 83,
+          "left": {
+            "id": 514,
+            "isLeaf": false,
+            "featureIndex": 3,
+            "featureName": "Blood Sugar",
+            "threshold": 12.5,
+            "left": {
+              "id": 515,
+              "isLeaf": true,
+              "prediction": "Moderate",
+              "classCounts": [
+                0,
+                6,
+                0
+              ],
+              "samples": 6,
+              "gini": 0
+            },
+            "right": {
+              "id": 516,
+              "isLeaf": true,
+              "prediction": "Moderate",
+              "classCounts": [
+                0,
+                18,
+                23
+              ],
+              "samples": 41,
+              "gini": 0.49680000000000013
+            },
+            "prediction": "Moderate",
+            "classCounts": [
+              0,
+              24,
+              23
+            ],
+            "samples": 47,
+            "gini": 0.47572536627405915
+          },
+          "right": {
+            "id": 517,
+            "isLeaf": false,
+            "featureIndex": 0,
+            "featureName": "Age",
+            "threshold": 49,
+            "left": {
+              "id": 518,
+              "isLeaf": true,
+              "prediction": "High",
+              "classCounts": [
+                4,
+                6,
+                14
+              ],
+              "samples": 24,
+              "gini": 0.5845217112642205
+            },
+            "right": {
+              "id": 519,
+              "isLeaf": true,
+              "prediction": "High",
+              "classCounts": [
+                0,
+                0,
+                2
+              ],
+              "samples": 2,
+              "gini": 0
+            },
+            "prediction": "High",
+            "classCounts": [
+              4,
+              6,
+              16
+            ],
+            "samples": 26,
+            "gini": 0.5663667820069205
+          },
+          "prediction": "Moderate",
+          "classCounts": [
+            4,
+            30,
+            39
+          ],
+          "samples": 73,
+          "gini": 0.5336227492570363
+        },
+        "prediction": "High",
+        "classCounts": [
+          4,
+          32,
+          92
+        ],
+        "samples": 128,
+        "gini": 0.47532720389399685
+      },
+      "right": {
+        "id": 520,
+        "isLeaf": true,
+        "prediction": "High",
+        "classCounts": [
+          0,
+          0,
+          82
+        ],
+        "samples": 82,
+        "gini": 0
+      },
+      "prediction": "High",
+      "classCounts": [
+        4,
+        32,
+        174
+      ],
+      "samples": 210,
+      "gini": 0.35812821679913165
+    },
+    "prediction": "Moderate",
+    "classCounts": [
+      404,
+      336,
+      272
+    ],
+    "samples": 1012,
+    "gini": 0.6435098710816242
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "JanmaSaathi",
+  "description": "Your companion for safer motherhood. An AI-assisted, offline-first maternal healthcare platform for rural communities.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

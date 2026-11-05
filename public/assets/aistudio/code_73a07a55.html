@@ -1,0 +1,401 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;1,9..40,400&amp;family=Noto+Serif:wght@400;600&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-tertiary-fixed-variant": "#52434a", "surface-container-highest": "#e3e3d7", "inverse-on-surface": "#f1f1e5", "on-secondary-container": "#7b4e5f", "on-error": "#ffffff", "on-secondary": "#ffffff", "secondary-fixed": "#ffd9e4", "on-primary": "#ffffff", "on-tertiary": "#ffffff", "on-tertiary-container": "#c1acb5", "on-secondary-fixed-variant": "#643a4a", "error": "#ba1a1a", "on-primary-fixed-variant": "#8c054b", "primary": "#600032", "on-surface-variant": "#574147", "on-primary-container": "#ff8fb6", "surface-bright": "#fafaee", "tertiary-fixed": "#f3dde6", "secondary-fixed-dim": "#f0b7ca", "outline-variant": "#ddbfc6", "tertiary": "#382a31", "inverse-primary": "#ffb0c9", "primary-fixed": "#ffd9e2", "outline": "#8a7177", "tertiary-container": "#4f4048", "surface-container": "#efefe3", "surface": "#fafaee", "surface-dim": "#dadbcf", "on-secondary-fixed": "#32101f", "inverse-surface": "#2f3129", "primary-fixed-dim": "#ffb0c9", "on-tertiary-fixed": "#24181f", "secondary-container": "#ffc5d8", "secondary": "#7e5162", "surface-variant": "#e3e3d7", "surface-container-high": "#e9e9dd", "tertiary-fixed-dim": "#d6c1ca", "background": "#fafaee", "on-background": "#1a1c15", "surface-tint": "#ad2863", "surface-container-lowest": "#ffffff", "primary-container": "#890149", "on-error-container": "#93000a", "surface-container-low": "#f4f4e8", "on-surface": "#1a1c15", "error-container": "#ffdad6", "on-primary-fixed": "#3e001e" }, borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, spacing: { "space-2xl": "2rem", "space-xl": "1.5rem", "margin-desktop": "2.5rem", "space-sm": "0.5rem", "margin": "1rem", "space-3xl": "3rem", "gutter": "1rem", "space-lg": "1rem", "space-md": "0.75rem", "gutter-desktop": "1.5rem", "space-xs": "0.25rem" }, fontFamily: { "body-sm": ["DM Sans"], "headline-lg": ["Noto Serif"], "title-md": ["DM Sans"], "title-lg": ["DM Sans"], "body-md": ["DM Sans"], "headline-lg-mobile": ["Noto Serif"], "body-lg": ["DM Sans"], "display": ["Noto Serif"], "headline-sm": ["Noto Serif"], "label-md": ["DM Sans"], "label-lg": ["DM Sans"], "headline-md": ["Noto Serif"] }, fontSize: { "body-sm": ["0.875rem", { "lineHeight": "1.375rem", "fontWeight": "400" }], "headline-lg": ["2.25rem", { "lineHeight": "2.75rem", "letterSpacing": "-0.015em", "fontWeight": "400" }], "title-md": ["1rem", { "lineHeight": "1.5rem", "fontWeight": "600" }], "title-lg": ["1.125rem", { "lineHeight": "1.625rem", "fontWeight": "600" }], "body-md": ["1rem", { "lineHeight": "1.5rem", "fontWeight": "400" }], "headline-lg-mobile": ["1.75rem", { "lineHeight": "2.25rem", "letterSpacing": "-0.01em", "fontWeight": "400" }], "body-lg": ["1.125rem", { "lineHeight": "1.75rem", "fontWeight": "400" }], "display": ["3rem", { "lineHeight": "3.5rem", "letterSpacing": "-0.02em", "fontWeight": "400" }], "headline-sm": ["1.25rem", { "lineHeight": "1.75rem", "fontWeight": "400" }], "label-md": ["0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.02em", "fontWeight": "600" }], "label-lg": ["0.875rem", { "lineHeight": "1.25rem", "letterSpacing": "0.01em", "fontWeight": "600" }], "headline-md": ["1.5rem", { "lineHeight": "2rem", "fontWeight": "400" }] } } } };</script><style>@layer base { html, body { width: 100%; margin: 0; padding: 0; min-height: 100%; } body { overscroll-behavior-y: none; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style></head><body class="bg-surface text-on-surface antialiased flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(48,35,42,0.04)]"><div class="px-4 pt-3 pb-2 flex items-center justify-between border-b border-secondary/20"><div class="flex items-center gap-2.5"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUxfv0flYGWRA3PEfmOaPFQyqqHL8etM6kYA4N7XfMyRqwQZKQtQjAmraU-zhNeubxL4Zs9hyuZNbkohoXmQB1Yt2w8t273JpZxQZ6wFbfZkvKB9tny-zDeTJRs9IK99NMxlIGtVtKeh2SeUb1sA4hYkfPbAo93n5PCUaZjO4TOL5daYjN7rpqlsHPHUTezxB_3q43QKgEgMJWNPRZN8xs71d-vwGbQgverjVM9QX8WSOTgGfa5_uM" alt="JanmaSaathi Logo" class="w-8 h-8 object-contain"><div class="flex flex-col"><span class="text-primary font-bold text-base tracking-tight font-serif leading-none" style="color: #890149; font-family: 'DM Serif Display', Georgia, serif;">JanmaSaathi</span><span class="text-[9px] font-bold tracking-widest text-[#30232A]/70 uppercase font-sans mt-0.5" style="letter-spacing: 0.08em;">MATERNAL CARE COMPANION</span></div></div><button type="button" aria-label="Profile" class="w-8 h-8 flex items-center justify-center rounded-full text-[#30232A]/80 hover:bg-[#D9A2B5]/20 transition-colors"><svg class="w-5 h-5 text-[#30232A]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></button></div></header><main class="flex-1 flex flex-col relative w-full pt-16 bg-surface pb-24"><div class="flex flex-col w-full">
+<!-- Pinned Offline Sync Status Notice -->
+
+<div class="w-full px-margin py-space-md flex flex-col gap-space-lg max-w-xl mx-auto">
+<!-- Back Link & Breadcrumb -->
+<div class="flex items-center justify-between">
+<a class="inline-flex items-center gap-space-xs text-primary-container hover:text-primary transition-colors py-space-xs" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span class="font-label-lg text-label-lg font-title-md">Back to Assessments</span>
+</a>
+<span class="font-label-md text-label-md text-on-surface-variant">Step 4 of 4 Completed</span>
+</div>
+<!-- Section 1: Assessment Success Confirmation -->
+<div class="bg-surface-container-low rounded-xl p-space-lg flex flex-col gap-space-md shadow-sm">
+<div class="flex items-start gap-space-md">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center flex-shrink-0 text-primary-container">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: &quot;FILL&quot; 1;">check_circle</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-label-md text-label-md uppercase tracking-wider text-secondary">Record Confirmed</span>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface leading-tight">Thank You!</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Maternal assessment saved successfully.</p>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+        The recorded observations are stored securely in local device memory and are ready for instant triage, screening interpretation, and clinical supervisor review.
+      </p>
+<!-- Metadata Chips -->
+<div class="grid grid-cols-2 gap-space-sm pt-space-xs">
+<div class="bg-surface-container-lowest p-space-sm rounded-lg flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant">Assessment ID</span>
+<span class="font-body-sm text-body-sm font-title-md text-on-surface truncate">ASMT-2025-0894-03</span>
+</div>
+<div class="bg-surface-container-lowest p-space-sm rounded-lg flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant">Recorded Timestamp</span>
+<span class="font-body-sm text-body-sm font-title-md text-on-surface truncate">04 Jun 2025 · 10:45 AM</span>
+</div>
+<div class="bg-surface-container-lowest p-space-sm rounded-lg flex flex-col col-span-2">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant">Patient Profile</span>
+<span class="font-label-md text-label-md text-secondary">Verified ID</span>
+</div>
+<span class="font-title-md text-title-md text-on-surface">Priya Sharma <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">(MCP-2025-0894)</span></span>
+</div>
+</div>
+</div>
+<!-- Section 2: Patient Summary (Compact) -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg flex flex-col gap-space-md shadow-sm">
+<div class="flex items-center justify-between gap-space-xs flex-wrap">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-primary-container">person_heart</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Mother Summary</h2>
+</div>
+<span class="bg-secondary-fixed text-on-secondary-fixed-variant px-space-sm py-0.5 rounded-full font-label-md text-label-md tracking-normal">
+          Synthetic Demonstration Record
+        </span>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-sm">
+<div class="bg-surface-container-low p-space-sm rounded-lg">
+<span class="font-label-md text-label-md text-on-surface-variant">Age</span>
+<p class="font-title-md text-title-md text-on-surface">26 yrs</p>
+</div>
+<div class="bg-surface-container-low p-space-sm rounded-lg">
+<span class="font-label-md text-label-md text-on-surface-variant">Gestation</span>
+<p class="font-title-md text-title-md text-on-surface">Week 24 <span class="text-body-sm font-normal text-on-surface-variant">(T2)</span></p>
+</div>
+<div class="bg-surface-container-low p-space-sm rounded-lg col-span-2 sm:col-span-2">
+<span class="font-label-md text-label-md text-on-surface-variant">Assigned Hamlet</span>
+<p class="font-title-md text-title-md text-on-surface truncate">Village Rampur, Sector 4</p>
+</div>
+</div>
+</div>
+<!-- Section 3: UCI-Based ML Screening Result -->
+<div class="bg-surface-container-low rounded-xl p-space-lg flex flex-col gap-space-md shadow-sm">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-secondary">analytics</span>
+<span class="font-label-md text-label-md uppercase tracking-wider text-secondary">Clinical Decision Support</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface leading-snug">AI-Assisted Maternal Risk Screening</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Decision-support classification based on UCI Maternal Health Risk model.</p>
+</div>
+<!-- Prominent Classification Badge / Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant">Algorithmic Assessment</span>
+<span class="font-headline-md text-headline-md text-on-surface font-title-lg">Low Risk</span>
+</div>
+<div class="flex items-center gap-1.5 bg-secondary-fixed text-on-secondary-fixed px-space-md py-1.5 rounded-full">
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+<span class="font-label-lg text-label-lg font-semibold">Low Risk Baseline</span>
+</div>
+</div>
+<!-- 3-Tier Risk Gauge Visual -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between font-label-md text-label-md text-on-surface-variant">
+<span class="text-on-surface font-semibold">● Low Risk</span>
+<span class="">Mid Risk</span>
+<span class="">High Risk</span>
+</div>
+<div class="w-full h-2.5 bg-surface-container rounded-full overflow-hidden flex">
+<div class="h-full bg-primary-container rounded-l-full" style="width: 33.3%;"></div>
+<div class="h-full bg-surface-container" style="width: 33.3%;"></div>
+<div class="h-full bg-surface-container" style="width: 33.4%;"></div>
+</div>
+</div>
+<div class="bg-surface-container-low p-space-sm rounded-lg flex flex-col gap-1">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-secondary">model_training</span>
+<span class="font-label-md text-label-md text-on-surface font-title-md">Trained UCI Maternal Health Risk Decision Support Model</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Classification based on 6 physiological parameters recorded during today's visit. Not a medical diagnosis. Model output is designed strictly as decision support for frontline Health Workers.
+          </p>
+</div>
+</div>
+</div>
+<!-- Section 4: Explainable AI — Why This Result? -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg flex flex-col gap-space-md shadow-sm">
+<div class="flex flex-col gap-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Understanding the Screening Result</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Feature attribution and parameter contributions to the model output:</p>
+</div>
+<!-- 6 UCI Features Grid -->
+<div class="flex flex-col gap-space-sm">
+<!-- Feature 1: Age -->
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-secondary">cake</span>
+<span class="font-title-md text-title-md text-on-surface">Age</span>
+</div>
+<span class="font-title-md text-title-md text-on-surface">26 <span class="font-body-sm text-body-sm text-on-surface-variant">yrs</span></span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Optimal maternal age range (18–35), normal baseline risk factor.
+          </p>
+<div class="flex items-center gap-space-xs mt-1">
+<span class="bg-secondary-fixed text-on-secondary-fixed-variant px-space-xs py-0.5 rounded font-label-md text-label-md">Normal Range: 18–35</span>
+<span class="font-label-md text-label-md text-primary-container font-semibold">Aligned with Low Risk</span>
+</div>
+</div>
+<!-- Feature 2: Systolic BP -->
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-secondary">speed</span>
+<span class="font-title-md text-title-md text-on-surface">Systolic Blood Pressure</span>
+</div>
+<span class="font-title-md text-title-md text-on-surface">118 <span class="font-body-sm text-body-sm text-on-surface-variant">mmHg</span></span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Within normal target range (90–120 mmHg). No gestational hypertension indicators.
+          </p>
+<div class="flex items-center gap-space-xs mt-1">
+<span class="bg-secondary-fixed text-on-secondary-fixed-variant px-space-xs py-0.5 rounded font-label-md text-label-md">Target: 90–120 mmHg</span>
+<span class="font-label-md text-label-md text-primary-container font-semibold">Aligned with Low Risk</span>
+</div>
+</div>
+<!-- Feature 3: Diastolic BP -->
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-secondary">vital_signs</span>
+<span class="font-title-md text-title-md text-on-surface">Diastolic Blood Pressure</span>
+</div>
+<span class="font-title-md text-title-md text-on-surface">76 <span class="font-body-sm text-body-sm text-on-surface-variant">mmHg</span></span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Within normal target range (60–80 mmHg). Stable vascular resistance.
+          </p>
+<div class="flex items-center gap-space-xs mt-1">
+<span class="bg-secondary-fixed text-on-secondary-fixed-variant px-space-xs py-0.5 rounded font-label-md text-label-md">Target: 60–80 mmHg</span>
+<span class="font-label-md text-label-md text-primary-container font-semibold">Aligned with Low Risk</span>
+</div>
+</div>
+<!-- Feature 4: Blood Glucose -->
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-secondary">water_drop</span>
+<span class="font-title-md text-title-md text-on-surface">Blood Glucose (Random)</span>
+</div>
+<span class="font-title-md text-title-md text-on-surface">94 <span class="font-body-sm text-body-sm text-on-surface-variant">mg/dL</span></span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Within expected physiological range (&lt;140 mg/dL). No hyperglycaemic markers observed.
+          </p>
+<div class="flex items-center gap-space-xs mt-1">
+<span class="bg-secondary-fixed text-on-secondary-fixed-variant px-space-xs py-0.5 rounded font-label-md text-label-md">Target: &lt;140 mg/dL</span>
+<span class="font-label-md text-label-md text-primary-container font-semibold">Aligned with Low Risk</span>
+</div>
+</div>
+<!-- Feature 5: Body Temperature -->
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-secondary">thermostat</span>
+<span class="font-title-md text-title-md text-on-surface">Body Temperature</span>
+</div>
+<span class="font-title-md text-title-md text-on-surface">98.4 <span class="font-body-sm text-body-sm text-on-surface-variant">°F</span></span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Afebrile / normal body temperature (97–99 °F). No infection symptoms.
+          </p>
+<div class="flex items-center gap-space-xs mt-1">
+<span class="bg-secondary-fixed text-on-secondary-fixed-variant px-space-xs py-0.5 rounded font-label-md text-label-md">Normal: 97–99 °F</span>
+<span class="font-label-md text-label-md text-primary-container font-semibold">Aligned with Low Risk</span>
+</div>
+</div>
+<!-- Feature 6: Heart Rate -->
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-secondary">favorite</span>
+<span class="font-title-md text-title-md text-on-surface">Heart Rate</span>
+</div>
+<span class="font-title-md text-title-md text-on-surface">78 <span class="font-body-sm text-body-sm text-on-surface-variant">bpm</span></span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Normal resting pulse rate (60–100 bpm). Normal maternal haemodynamic adaptation.
+          </p>
+<div class="flex items-center gap-space-xs mt-1">
+<span class="bg-secondary-fixed text-on-secondary-fixed-variant px-space-xs py-0.5 rounded font-label-md text-label-md">Resting: 60–100 bpm</span>
+<span class="font-label-md text-label-md text-primary-container font-semibold">Aligned with Low Risk</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 5: Additional Maternal Danger Signs (Critical Safety Separation) -->
+<div class="bg-surface-container-high rounded-xl p-space-lg flex flex-col gap-space-md shadow-sm">
+<div class="flex items-start gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center flex-shrink-0 text-primary-container mt-0.5">
+<span class="material-symbols-outlined text-[20px]">shield_with_heart</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs flex-wrap">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Additional Maternal Danger Signs</h3>
+<span class="bg-secondary-fixed text-on-secondary-fixed-variant px-space-xs py-0.5 rounded font-label-md text-label-md">Manual Clinical Check</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+            Evaluated independently from the UCI ML prediction. Safety Protocol: A Low Risk ML classification must <strong class="text-on-surface">NEVER</strong> suppress or override an independently identified danger sign.
+          </p>
+</div>
+</div>
+<!-- Observations checklist -->
+<div class="bg-surface-container-lowest rounded-lg p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-primary-container" style="font-variation-settings: &quot;FILL&quot; 1;">check</span>
+<span class="font-title-md text-title-md text-on-surface">Haemoglobin (Hb)</span>
+</div>
+<span class="font-title-md text-title-md text-on-surface">11.2 <span class="font-body-sm text-body-sm text-on-surface-variant">g/dL</span></span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant pl-7 -mt-1">
+          Measured by Health Worker · Optimal threshold (≥11.0 g/dL). Non-anaemic.
+        </p>
+<div class="w-full h-px bg-surface-container"></div>
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-primary-container" style="font-variation-settings: &quot;FILL&quot; 1;">check</span>
+<span class="font-title-md text-title-md text-on-surface">Vaginal Bleeding / Spotting</span>
+</div>
+<span class="font-label-lg text-label-lg text-on-surface bg-surface-container px-space-sm py-0.5 rounded">None Reported</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant pl-7 -mt-1">
+          Reported by Mother &amp; Verified · No acute concern.
+        </p>
+<div class="w-full h-px bg-surface-container"></div>
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-primary-container" style="font-variation-settings: &quot;FILL&quot; 1;">check</span>
+<span class="font-title-md text-title-md text-on-surface">Severe Facial / Pedal Swelling</span>
+</div>
+<span class="font-label-lg text-label-lg text-on-surface bg-surface-container px-space-sm py-0.5 rounded">Absent</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant pl-7 -mt-1">
+          Health Worker observed · No pedal or facial edema detected.
+        </p>
+<div class="w-full h-px bg-surface-container"></div>
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-primary-container" style="font-variation-settings: &quot;FILL&quot; 1;">check</span>
+<span class="font-title-md text-title-md text-on-surface">Reduced Fetal Movement</span>
+</div>
+<span class="font-label-lg text-label-lg text-on-surface bg-surface-container px-space-sm py-0.5 rounded">Normal</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant pl-7 -mt-1">
+          Reported by Mother · Active fetal movements confirmed throughout last 12 hours.
+        </p>
+</div>
+<!-- Verified Safety Summary Banner -->
+<div class="bg-secondary-container/40 p-space-md rounded-lg flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[24px] text-primary-container flex-shrink-0" style="font-variation-settings: &quot;FILL&quot; 1;">verified_user</span>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">No Acute Danger Signs Documented Today</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">
+            If danger signs develop at any time, initiate emergency referral protocol immediately regardless of ML score.
+          </span>
+</div>
+</div>
+</div>
+<!-- Section 6: Recommended Health Worker Actions (Next Steps) -->
+<div class="flex flex-col gap-space-md pt-space-xs">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Next Steps</h3>
+<span class="font-label-md text-label-md text-on-surface-variant">Routine Protocol</span>
+</div>
+<!-- Action Card 1: Referral -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col gap-space-sm shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-primary-container">forward</span>
+<span class="font-title-md text-title-md text-on-surface">Secondary Facility Referral</span>
+</div>
+<span class="font-label-md text-label-md text-secondary">Optional</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Prepare referral dossier for Primary Health Centre (PHC) clinician review if required by local guidelines or mother request.
+        </p>
+<button class="w-full h-12 bg-primary-container text-on-primary rounded-xl font-label-lg text-label-lg font-title-md flex items-center justify-center gap-space-xs hover:bg-primary active:scale-[0.98] transition-all shadow-sm" id="btn-create-referral" type="button">
+<span class="material-symbols-outlined text-[20px]">share</span>
+<span class="">Create Referral</span>
+</button>
+</div>
+<!-- Action Card 2: Report to Supervisor -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md flex flex-col gap-space-sm shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-secondary">send</span>
+<span class="font-title-md text-title-md text-on-surface">Supervisor Queue</span>
+</div>
+<span class="font-label-md text-label-md text-secondary">Recommended</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Queue summary dossier for Block Facilitator / Supervisor review during upcoming weekly audit.
+        </p>
+<button class="w-full h-12 bg-surface-container text-primary-container rounded-xl font-label-lg text-label-lg font-title-md flex items-center justify-center gap-space-xs hover:bg-secondary-container active:scale-[0.98] transition-all" id="btn-submit-supervisor" type="button">
+<span class="material-symbols-outlined text-[20px]">send_time_extension</span>
+<span class="">Submit Report to Supervisor</span>
+</button>
+</div>
+<!-- Tertiary Action: View Full Details -->
+<button class="w-full py-space-sm text-on-surface hover:text-primary-container font-label-lg text-label-lg flex items-center justify-center gap-space-xs transition-colors" id="btn-view-details" type="button">
+<span class="material-symbols-outlined text-[18px]">description</span>
+<span class="underline underline-offset-4">View Full Assessment Details</span>
+</button>
+</div>
+<!-- Section 7: Clinical Safety Note -->
+
+</div>
+<!-- Interactive Feedback Toast Container -->
+<div class="fixed bottom-20 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-space-lg py-space-sm rounded-full shadow-lg flex items-center gap-space-xs opacity-0 pointer-events-none transition-all duration-300 z-50 max-w-xs text-center" id="toast-notification">
+<span class="material-symbols-outlined text-[18px] text-secondary-fixed">check_circle</span>
+<span class="font-label-md text-label-md" id="toast-message">Action completed successfully</span>
+</div>
+</div>
+<script>
+  (function () {
+    const toast = document.getElementById('toast-notification');
+    const toastMsg = document.getElementById('toast-message');
+
+    function showToast(message) {
+      if (!toast || !toastMsg) return;
+      toastMsg.textContent = message;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 3200);
+    }
+
+    const refBtn = document.getElementById('btn-create-referral');
+    if (refBtn) {
+      refBtn.addEventListener('click', function () {
+        showToast('Referral dossier initiated for Priya Sharma.');
+      });
+    }
+
+    const supBtn = document.getElementById('btn-submit-supervisor');
+    if (supBtn) {
+      supBtn.addEventListener('click', function () {
+        showToast('Assessment queued for Block Facilitator review.');
+      });
+    }
+
+    const detailsBtn = document.getElementById('btn-view-details');
+    if (detailsBtn) {
+      detailsBtn.addEventListener('click', function () {
+        showToast('Loading comprehensive 18-point clinical audit...');
+      });
+    }
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_12px_rgba(48,35,42,0.05)]" data-active-classes="text-primary-container font-semibold"><div class="flex items-center justify-around h-16 px-space-xs max-w-lg mx-auto"><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] px-space-xs text-on-surface-variant hover:text-on-surface transition-colors" data-path="home" href="#"><span class="material-symbols-outlined text-[22px]">home</span><span class="font-label-md text-label-md mt-0.5">Home</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] px-space-xs text-on-surface-variant hover:text-on-surface transition-colors" data-path="patients" href="#"><span class="material-symbols-outlined text-[22px]">group</span><span class="font-label-md text-label-md mt-0.5">Patients</span></a><a aria-current="page" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] px-space-xs transition-colors text-primary-container font-semibold" data-path="assessments" href="#"><span class="material-symbols-outlined text-[22px]">assignment</span><span class="font-label-md text-label-md mt-0.5">Assessments</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] px-space-xs text-on-surface-variant hover:text-on-surface transition-colors" data-path="referrals" href="#"><span class="material-symbols-outlined text-[22px]">emergency_share</span><span class="font-label-md text-label-md mt-0.5">Referrals</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] px-space-xs text-on-surface-variant hover:text-on-surface transition-colors" data-path="more" href="#"><span class="material-symbols-outlined text-[22px]">more_horiz</span><span class="font-label-md text-label-md mt-0.5">More</span></a></div></nav>
+
+
+
+</body></html>

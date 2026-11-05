@@ -1,0 +1,612 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><style>@layer base{html,body{width:100%;margin:0;padding:0;background-color:#fafaee;color:#1a1c15;}body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;1,9..40,400&amp;family=Noto+Serif:ital,wght@0,400;0,600;1,400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "tertiary-fixed-dim": "#d6c1ca", "secondary-container": "#ffc5d8", "on-surface-variant": "#574147", "error": "#ba1a1a", "secondary-fixed": "#ffd9e4", "on-background": "#1a1c15", "primary-container": "#890149", "secondary": "#7e5162", "on-secondary-fixed": "#32101f", "on-tertiary-fixed": "#24181f", "on-error-container": "#93000a", "primary": "#600032", "on-primary": "#ffffff", "on-secondary": "#ffffff", "surface-bright": "#fafaee", "inverse-primary": "#ffb0c9", "outline-variant": "#ddbfc6", "tertiary-fixed": "#f3dde6", "secondary-fixed-dim": "#f0b7ca", "outline": "#8a7177", "on-tertiary-fixed-variant": "#52434a", "surface-container-low": "#f4f4e8", "surface": "#fafaee", "tertiary-container": "#4f4048", "surface-container-high": "#e9e9dd", "on-tertiary": "#ffffff", "surface-variant": "#e3e3d7", "on-primary-container": "#ff8fb6", "error-container": "#ffdad6", "on-error": "#ffffff", "on-secondary-fixed-variant": "#643a4a", "surface-container-lowest": "#ffffff", "on-secondary-container": "#7b4e5f", "background": "#fafaee", "surface-dim": "#dadbcf", "on-tertiary-container": "#c1acb5", "on-surface": "#1a1c15", "primary-fixed-dim": "#ffb0c9", "tertiary": "#382a31", "surface-tint": "#ad2863", "surface-container-highest": "#e3e3d7", "surface-container": "#efefe3", "on-primary-fixed": "#3e001e", "on-primary-fixed-variant": "#8c054b", "primary-fixed": "#ffd9e2", "inverse-on-surface": "#f1f1e5", "inverse-surface": "#2f3129" }, borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, spacing: { "space-xs": "0.25rem", "space-lg": "1rem", "gutter": "1rem", "space-xl": "1.5rem", "space-md": "0.75rem", "margin-desktop": "2.5rem", "gutter-desktop": "1.5rem", "space-2xl": "2rem", "space-sm": "0.5rem", "space-3xl": "3rem", "margin": "1rem" }, fontFamily: { "body-sm": ["DM Sans"], "label-lg": ["DM Sans"], "headline-lg": ["Noto Serif"], "body-lg": ["DM Sans"], "label-md": ["DM Sans"], "title-md": ["DM Sans"], "body-md": ["DM Sans"], "display": ["Noto Serif"], "headline-md": ["Noto Serif"], "headline-sm": ["Noto Serif"], "headline-lg-mobile": ["Noto Serif"], "title-lg": ["DM Sans"] }, fontSize: { "body-sm": ["0.875rem", { "lineHeight": "1.375rem", "fontWeight": "400" }], "label-lg": ["0.875rem", { "lineHeight": "1.25rem", "letterSpacing": "0.01em", "fontWeight": "600" }], "headline-lg": ["2.25rem", { "lineHeight": "2.75rem", "letterSpacing": "-0.015em", "fontWeight": "400" }], "body-lg": ["1.125rem", { "lineHeight": "1.75rem", "fontWeight": "400" }], "label-md": ["0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.02em", "fontWeight": "600" }], "title-md": ["1rem", { "lineHeight": "1.5rem", "fontWeight": "600" }], "body-md": ["1rem", { "lineHeight": "1.5rem", "fontWeight": "400" }], "display": ["3rem", { "lineHeight": "3.5rem", "letterSpacing": "-0.02em", "fontWeight": "400" }], "headline-md": ["1.5rem", { "lineHeight": "2rem", "fontWeight": "400" }], "headline-sm": ["1.25rem", { "lineHeight": "1.75rem", "fontWeight": "400" }], "headline-lg-mobile": ["1.75rem", { "lineHeight": "2.25rem", "letterSpacing": "-0.01em", "fontWeight": "400" }], "title-lg": ["1.125rem", { "lineHeight": "1.625rem", "fontWeight": "600" }] } } } };</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(48,35,42,0.05)]"><div class="px-4 pt-3 pb-2 flex items-center justify-between border-b border-secondary/20"><div class="flex items-center gap-2.5"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZaYVsGD_CbTuRpuf70OtLFz9UWcBtYfbF3ih_QgNmnPcHk7EHy9ZenFzsTCYxeO8aIbndlqUvd0pYUdxO4EL0cIsDrMirX8s8ec0q_4wBb4EpFljoMDILlRuC3JdvAUYO7BOIAfa9ip2CjK2ES2GxIsgjl7GkWWJL7OIRecg04u4kJkbZ_vnTJdnpLcJqnRVAluj4YJMelwvJ_6N2EJXV4br8s7WP2QNejPlG_YX5N4BrSSMnUZpk" alt="JanmaSaathi Logo" class="w-8 h-8 object-contain"><div class="flex flex-col min-w-0"><span class="text-primary font-bold text-base tracking-tight font-serif leading-none" style="color: #890149; font-family: 'DM Serif Display', Georgia, serif;">JanmaSaathi</span><span class="text-[9px] font-bold tracking-widest text-[#30232A]/70 uppercase font-sans mt-0.5" style="letter-spacing: 0.08em;">MATERNAL CARE COMPANION</span></div></div><button aria-label="Profile" type="button" class="w-8 h-8 flex items-center justify-center rounded-full text-[#30232A]/80 hover:bg-[#D9A2B5]/20"><svg class="w-5 h-5 text-[#30232A]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></button></div></header><main class="flex flex-col relative w-full bg-surface pt-16 pb-24 px-gutter min-h-screen"><div class="flex flex-col w-full">
+<!-- Offline / Sync Status Utility Bar -->
+<div class="w-full bg-surface-container-low px-gutter py-space-xs flex items-center justify-between mb-space-md rounded-lg">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">wifi_tethering</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Supervision Portal Live · Sync Connected</span>
+</div>
+<span class="font-label-md text-label-md text-primary font-semibold">Ledger Ref: DHM-2025-06</span>
+</div>
+<!-- Header & Navigation Context -->
+<div class="flex flex-col gap-space-sm mb-space-xl">
+<a class="inline-flex items-center gap-space-xs text-primary font-label-lg text-label-lg hover:underline w-fit" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span class="">Back to Health Workers</span>
+</a>
+<div class="flex items-center gap-space-md mt-space-xs">
+<img alt="JanmaSaathi Emblem Logo" class="w-12 h-12 object-contain shrink-0 rounded-lg bg-surface-container p-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv0lfGzmRSwuG2Gl0p-9_aq_qn1VuXq-hjHxGHMEB2-UwmbqoV_mqPClW1aU8T_NP7qppvSP7gDkZ3UfOJ_Eiwn1fT_YUJTpqQg9kEJJPj7El5yP5_o9tjpbimmjEaJSxekl9l9E2k2rQHwj5eEcDjTrHCaM9j-IfnPjIN3E-ktYGmAiNvnW5Xp2D7JS4IkOuvEdqEZcvDB_rjXmpg5DS1VYVet3pcIcaZyYtn-suRpR4cVOUqxOSf">
+<div class="flex flex-col min-w-0">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary font-normal leading-tight">Assign Health Worker</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Allocate villages, hamlets and mothers to your healthcare workforce.</p>
+</div>
+</div>
+<!-- Supervisor Jurisdiction Context Pill -->
+<div class="bg-surface-container px-space-md py-space-xs rounded-full flex items-center gap-space-xs w-fit max-w-full">
+<span class="material-symbols-outlined text-secondary text-[16px] shrink-0">verified_user</span>
+<span class="font-label-md text-label-md text-on-surface-variant truncate">
+        Supervisor: <strong class="text-on-surface">Dr. Rajesh Kumar (RK)</strong> · Rampur, Pipili &amp; Jatni
+      </span>
+</div>
+</div>
+<!-- Main Multi-step Assignment Form Container -->
+<div class="flex flex-col gap-space-xl" id="assignmentFormWorkflow">
+<!-- ========================================== -->
+<!-- SECTION A: Select Health Worker -->
+<!-- ========================================== -->
+<section class="bg-surface-container-lowest rounded-xl p-space-lg flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-md text-label-md">1</span>
+<h2 class="font-title-lg text-title-lg text-on-surface font-semibold">Select Health Worker</h2>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant">Step 1 of 5</span>
+</div>
+<!-- Search Input -->
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full bg-surface-container-low text-on-surface pl-10 pr-space-md py-space-sm rounded-lg font-body-md text-body-md placeholder:text-on-surface-variant focus:outline-none focus:bg-surface-container" id="hwSearch" placeholder="Search by name or Health Worker ID..." type="text">
+</div>
+<!-- Health Worker Cards List -->
+<div class="flex flex-col gap-space-sm" id="hwCardsList">
+<!-- Worker 1: Selected State (Pratima Behera HW-005) -->
+<div class="hw-card cursor-pointer bg-secondary-fixed/40 rounded-lg p-space-md flex flex-col gap-space-xs transition-colors" data-hw-id="HW-005" data-hw-name="Pratima Behera">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-title-md text-title-md shrink-0">
+                PB
+              </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-title-md text-title-md text-on-surface font-semibold truncate">Pratima Behera</span>
+<span class="font-label-md text-label-md bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full shrink-0">HW-005</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">call</span> +91 98765 43214
+                </span>
+</div>
+</div>
+<span class="hw-badge font-label-md text-label-md bg-primary text-on-primary px-space-sm py-1 rounded-full shrink-0 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check</span> Selected
+            </span>
+</div>
+<div class="flex items-center justify-between pt-space-xs mt-space-xs bg-surface-container-lowest/70 px-space-sm py-1 rounded">
+<span class="font-label-md text-label-md text-on-surface-variant">Status: <strong class="text-secondary font-semibold">Pending Allocation</strong></span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Currently Assigned: 0 mothers</span>
+</div>
+</div>
+<!-- Worker 2: Available State (Rashmita Nayak HW-006) -->
+<div class="hw-card cursor-pointer bg-surface-container-low hover:bg-surface-container rounded-lg p-space-md flex flex-col gap-space-xs transition-colors" data-hw-id="HW-006" data-hw-name="Rashmita Nayak">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-10 h-10 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center font-title-md text-title-md shrink-0">
+                RN
+              </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-title-md text-title-md text-on-surface font-semibold truncate">Rashmita Nayak</span>
+<span class="font-label-md text-label-md bg-surface-container-high text-on-surface px-2 py-0.5 rounded-full shrink-0">HW-006</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">call</span> +91 98765 43215
+                </span>
+</div>
+</div>
+<button class="hw-select-btn font-label-md text-label-md bg-surface-container-high text-on-surface px-space-sm py-1 rounded-full shrink-0" type="button">
+              Select
+            </button>
+</div>
+<div class="flex items-center justify-between pt-space-xs mt-space-xs bg-surface-container-lowest/50 px-space-sm py-1 rounded">
+<span class="font-label-md text-label-md text-on-surface-variant">Status: <span class="text-on-surface font-medium">Unassigned</span></span>
+<span class="font-label-md text-label-md text-on-surface-variant">Currently: 0 mothers</span>
+</div>
+</div>
+<!-- Worker 3: Active State (Requires Reassignment Sunita Devi HW-001) -->
+<div class="opacity-80 bg-surface-container-low rounded-lg p-space-md flex flex-col gap-space-xs" data-hw-id="HW-001" data-hw-name="Sunita Devi">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-10 h-10 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center font-title-md text-title-md shrink-0">
+                SD
+              </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-title-md text-title-md text-on-surface font-semibold truncate">Sunita Devi</span>
+<span class="font-label-md text-label-md bg-surface-container-high text-on-surface px-2 py-0.5 rounded-full shrink-0">HW-001</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Active · 24 mothers (Nuapada)</span>
+</div>
+</div>
+<span class="font-label-md text-label-md text-secondary bg-secondary-fixed/50 px-2 py-1 rounded-full shrink-0">
+              Assigned
+            </span>
+</div>
+<div class="flex items-center gap-1 bg-surface-container px-space-sm py-1 rounded text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary">info</span>
+<span class="">Requires Reassignment Authorization protocol</span>
+</div>
+</div>
+</div>
+<!-- Compact Selected Summary Badge -->
+<div class="bg-surface-container-low p-space-sm rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-xs text-on-surface">
+<span class="material-symbols-outlined text-[18px] text-primary">person_check</span>
+<span class="font-label-md text-label-md text-on-surface">Target Worker:</span>
+<span class="font-title-md text-title-md text-primary font-semibold" id="selectedWorkerDisplay">Pratima Behera (HW-005)</span>
+</div>
+<span class="font-label-md text-label-md bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-full">Ready</span>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- SECTION B: Assign Service Area -->
+<!-- ========================================== -->
+<section class="bg-surface-container-lowest rounded-xl p-space-lg flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-md text-label-md">2</span>
+<h2 class="font-title-lg text-title-lg text-on-surface font-semibold">Assign Service Area</h2>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant">Step 2 of 5</span>
+</div>
+<!-- District & Block scope -->
+<div class="grid grid-cols-2 gap-space-sm">
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface-variant">District (Scope)</label>
+<div class="bg-surface-container-low px-space-md py-space-sm rounded-lg text-on-surface font-title-md text-title-md flex items-center justify-between">
+<span class="">Khordha District</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">lock</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface-variant">Block (Jurisdiction)</label>
+<div class="bg-surface-container-low px-space-md py-space-sm rounded-lg text-on-surface font-title-md text-title-md flex items-center justify-between">
+<span class="">Rampur Block</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">arrow_drop_down</span>
+</div>
+</div>
+</div>
+<!-- Village Selector -->
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold">Assigned Village</label>
+<div class="flex items-center justify-between bg-surface-container-low px-space-md py-space-sm rounded-lg">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">location_on</span>
+<span class="font-title-md text-title-md text-on-surface">Nuapada Village (Cluster B)</span>
+</div>
+<button class="font-label-md text-label-md text-primary font-semibold hover:underline" type="button">
+            + Add Another Village
+          </button>
+</div>
+</div>
+<!-- Hamlets / Localities Multi-select -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-md text-label-md text-on-surface font-semibold">Hamlets &amp; Localities Within Village</label>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Select all designated wards/hamlets under this Health Worker's responsibility:</p>
+<div class="grid grid-cols-1 gap-2 mt-1" id="hamletsContainer">
+<!-- Hamlet 5 (Checked) -->
+<label class="flex items-center justify-between p-space-sm bg-surface-container-low rounded-lg cursor-pointer">
+<div class="flex items-center gap-space-sm">
+<input checked="" class="w-5 h-5 accent-primary-container rounded cursor-pointer" type="checkbox">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Hamlet 5 — East Tola</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Population ~420 · 24 Households</span>
+</div>
+</div>
+<span class="font-label-md text-label-md bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-full">Included</span>
+</label>
+<!-- Hamlet 6 (Checked) -->
+<label class="flex items-center justify-between p-space-sm bg-surface-container-low rounded-lg cursor-pointer">
+<div class="flex items-center gap-space-sm">
+<input checked="" class="w-5 h-5 accent-primary-container rounded cursor-pointer" type="checkbox">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Hamlet 6 — Majhi Sahi</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Population ~310 · 18 Households</span>
+</div>
+</div>
+<span class="font-label-md text-label-md bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-full">Included</span>
+</label>
+<!-- Hamlet 7 (Available) -->
+<label class="flex items-center justify-between p-space-sm bg-surface-container-low rounded-lg cursor-pointer">
+<div class="flex items-center gap-space-sm">
+<input class="w-5 h-5 accent-primary-container rounded cursor-pointer" type="checkbox">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Hamlet 7 — Station Pada</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Population ~550 · Unassigned</span>
+</div>
+</div>
+<span class="font-label-md text-label-md bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full">Available</span>
+</label>
+</div>
+</div>
+<!-- Additional Service Area Details / Notes -->
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="areaNotes">Additional Service Area Details / Infrastructure</label>
+<textarea class="w-full bg-surface-container-low text-on-surface p-space-sm rounded-lg font-body-sm text-body-sm focus:outline-none focus:bg-surface-container" id="areaNotes" rows="2">Sub-Centre attached: Nuapada Health Sub-Centre. Field rounds scheduled Tuesdays and Thursdays.</textarea>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- SECTION C: Allocate Mothers -->
+<!-- ========================================== -->
+<section class="bg-surface-container-lowest rounded-xl p-space-lg flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-md text-label-md">3</span>
+<h2 class="font-title-lg text-title-lg text-on-surface font-semibold">Allocate Mothers</h2>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant">Step 3 of 5</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Select the mothers who will be managed by this Health Worker for ANC visits and postpartum follow-up.</p>
+<!-- Search bar -->
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full bg-surface-container-low text-on-surface pl-10 pr-space-md py-space-sm rounded-lg font-body-md text-body-md placeholder:text-on-surface-variant focus:outline-none focus:bg-surface-container" placeholder="Search by mother's name or Patient ID..." type="text">
+</div>
+<!-- Filter chips -->
+<div class="flex items-center gap-space-xs overflow-x-auto pb-1">
+<button class="bg-primary text-on-primary font-label-md text-label-md px-3 py-1 rounded-full shrink-0" type="button">
+          All Unallocated (8)
+        </button>
+<button class="bg-surface-container-low text-on-surface font-label-md text-label-md px-3 py-1 rounded-full shrink-0 hover:bg-surface-container" type="button">
+          Nuapada Cluster (5)
+        </button>
+<button class="bg-surface-container-low text-on-surface font-label-md text-label-md px-3 py-1 rounded-full shrink-0 hover:bg-surface-container" type="button">
+          Transferred (3)
+        </button>
+</div>
+<!-- Selection Counter & Dismissible Chip Tray -->
+<div class="bg-surface-container-low p-space-sm rounded-lg flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface font-semibold" id="selectionCount">3 Mothers Selected for Allocation</span>
+<button class="font-label-md text-label-md text-primary hover:underline" id="clearAllMothersBtn" type="button">Clear all</button>
+</div>
+<div class="flex flex-wrap gap-1.5" id="chipTray">
+<span class="inline-flex items-center gap-1 font-label-md text-label-md bg-secondary-fixed text-on-secondary-fixed px-2.5 py-1 rounded-full">
+            Laxmi Patra (MCP-1042)
+            <button class="remove-chip-btn hover:text-error ml-1" data-id="MCP-2025-1042" type="button">✕</button>
+</span>
+<span class="inline-flex items-center gap-1 font-label-md text-label-md bg-secondary-fixed text-on-secondary-fixed px-2.5 py-1 rounded-full">
+            Sabita Majhi (MCP-1088)
+            <button class="remove-chip-btn hover:text-error ml-1" data-id="MCP-2025-1088" type="button">✕</button>
+</span>
+<span class="inline-flex items-center gap-1 font-label-md text-label-md bg-secondary-fixed text-on-secondary-fixed px-2.5 py-1 rounded-full">
+            Geeta Nayak (MCP-1102)
+            <button class="remove-chip-btn hover:text-error ml-1" data-id="MCP-2025-1102" type="button">✕</button>
+</span>
+</div>
+</div>
+<!-- Mother Selection List -->
+<div class="flex flex-col gap-space-sm" id="mothersList">
+<!-- Mother 1 (Selected) -->
+<label class="mother-row flex items-start gap-space-sm p-space-sm bg-surface-container-low rounded-lg cursor-pointer transition-colors" data-id="MCP-2025-1042" data-name="Laxmi Patra">
+<input checked="" class="mother-checkbox mt-1 w-5 h-5 accent-primary-container rounded cursor-pointer shrink-0" type="checkbox">
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center justify-between gap-space-xs">
+<span class="font-title-md text-title-md text-on-surface font-semibold truncate">Laxmi Patra</span>
+<span class="font-label-md text-label-md bg-surface-container-high text-on-surface px-2 py-0.5 rounded-full shrink-0">MCP-2025-1042</span>
+</div>
+<div class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface-variant flex-wrap mt-0.5">
+<span class="">Age 22</span>
+<span class="">·</span>
+<span class="font-semibold text-secondary">Week 14 (2nd Tri)</span>
+<span class="">·</span>
+<span class="">Nuapada, Hamlet 5</span>
+</div>
+<span class="font-label-md text-label-md text-secondary mt-1">Status: Unallocated</span>
+</div>
+</label>
+<!-- Mother 2 (Selected) -->
+<label class="mother-row flex items-start gap-space-sm p-space-sm bg-surface-container-low rounded-lg cursor-pointer transition-colors" data-id="MCP-2025-1088" data-name="Sabita Majhi">
+<input checked="" class="mother-checkbox mt-1 w-5 h-5 accent-primary-container rounded cursor-pointer shrink-0" type="checkbox">
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center justify-between gap-space-xs">
+<span class="font-title-md text-title-md text-on-surface font-semibold truncate">Sabita Majhi</span>
+<span class="font-label-md text-label-md bg-surface-container-high text-on-surface px-2 py-0.5 rounded-full shrink-0">MCP-2025-1088</span>
+</div>
+<div class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface-variant flex-wrap mt-0.5">
+<span class="">Age 27</span>
+<span class="">·</span>
+<span class="font-semibold text-secondary">Week 28 (3rd Tri)</span>
+<span class="">·</span>
+<span class="">Nuapada, Hamlet 6</span>
+</div>
+<span class="font-label-md text-label-md text-secondary mt-1">Status: Unallocated</span>
+</div>
+</label>
+<!-- Mother 3 (Selected) -->
+<label class="mother-row flex items-start gap-space-sm p-space-sm bg-surface-container-low rounded-lg cursor-pointer transition-colors" data-id="MCP-2025-1102" data-name="Geeta Nayak">
+<input checked="" class="mother-checkbox mt-1 w-5 h-5 accent-primary-container rounded cursor-pointer shrink-0" type="checkbox">
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center justify-between gap-space-xs">
+<span class="font-title-md text-title-md text-on-surface font-semibold truncate">Geeta Nayak</span>
+<span class="font-label-md text-label-md bg-surface-container-high text-on-surface px-2 py-0.5 rounded-full shrink-0">MCP-2025-1102</span>
+</div>
+<div class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface-variant flex-wrap mt-0.5">
+<span class="">Age 24</span>
+<span class="">·</span>
+<span class="font-semibold text-secondary">Week 8 (1st Tri)</span>
+<span class="">·</span>
+<span class="">Nuapada, Hamlet 5</span>
+</div>
+<span class="font-label-md text-label-md text-secondary mt-1">Status: Unallocated</span>
+</div>
+</label>
+<!-- Mother 4 (Unselected) -->
+<label class="mother-row flex items-start gap-space-sm p-space-sm bg-surface-container-low rounded-lg cursor-pointer transition-colors opacity-90" data-id="MCP-2025-0955" data-name="Rina Sethi">
+<input class="mother-checkbox mt-1 w-5 h-5 accent-primary-container rounded cursor-pointer shrink-0" type="checkbox">
+<div class="flex flex-col min-w-0 flex-1">
+<div class="flex items-center justify-between gap-space-xs">
+<span class="font-title-md text-title-md text-on-surface font-semibold truncate">Rina Sethi</span>
+<span class="font-label-md text-label-md bg-surface-container-high text-on-surface px-2 py-0.5 rounded-full shrink-0">MCP-2025-0955</span>
+</div>
+<div class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface-variant flex-wrap mt-0.5">
+<span class="">Age 30</span>
+<span class="">·</span>
+<span class="font-semibold text-secondary">Week 20</span>
+<span class="">·</span>
+<span class="">Hamlet 7</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant mt-1">Status: Unallocated</span>
+</div>
+</label>
+</div>
+<!-- Safety Governance Note -->
+<div class="flex items-start gap-space-xs bg-surface-container-low p-space-sm rounded-lg text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-secondary shrink-0 mt-0.5">gavel</span>
+<span class="font-body-sm text-body-sm">
+<strong>Safety Governance Note:</strong> Mothers already assigned to active Health Workers cannot be reallocated without an explicit supervisor transfer protocol.
+        </span>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- SECTION D: Assignment Details -->
+<!-- ========================================== -->
+<section class="bg-surface-container-lowest rounded-xl p-space-lg flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-md text-label-md">4</span>
+<h2 class="font-title-lg text-title-lg text-on-surface font-semibold">Assignment Details</h2>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant">Step 4 of 5</span>
+</div>
+<!-- Effective Date Picker Input -->
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="effectiveDate">Effective Deployment Date</label>
+<div class="relative w-full">
+<input class="w-full bg-surface-container-low text-on-surface pl-10 pr-space-md py-space-sm rounded-lg font-body-md text-body-md focus:outline-none focus:bg-surface-container" id="effectiveDate" type="text" value="10 June 2025">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary text-[20px]">calendar_today</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Immediate field deployment scheduled upon confirmation.</span>
+</div>
+<!-- Assignment Notes -->
+<div class="flex flex-col gap-1">
+<label class="font-label-md text-label-md text-on-surface font-semibold" for="assignmentNotes">Assignment Notes (Optional)</label>
+<textarea class="w-full bg-surface-container-low text-on-surface p-space-sm rounded-lg font-body-sm text-body-sm focus:outline-none focus:bg-surface-container" id="assignmentNotes" placeholder="Add clinical instructions, risk priority notes, or transition remarks..." rows="2">Primary focus on early ANC registrations and mapping high-risk pregnancies in eastern hamlets.</textarea>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- SECTION E: Review Assignment Dossier -->
+<!-- ========================================== -->
+<section class="bg-surface-container-lowest rounded-xl p-space-lg flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-md text-label-md">5</span>
+<h2 class="font-title-lg text-title-lg text-on-surface font-semibold">Review Assignment Dossier</h2>
+</div>
+<button class="font-label-md text-label-md text-primary font-semibold hover:underline" id="editSelectionsBtn" type="button">
+          Edit Selections
+        </button>
+</div>
+<!-- Structured Summary Card -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex flex-col gap-space-sm">
+<div class="grid grid-cols-1 gap-space-sm">
+<div class="flex items-start justify-between py-1 bg-surface-container-lowest/60 px-space-sm rounded">
+<span class="font-label-md text-label-md text-on-surface-variant">Health Worker</span>
+<span class="font-title-md text-title-md text-on-surface font-semibold text-right" id="summaryWorker">Pratima Behera (HW-005)</span>
+</div>
+<div class="flex items-start justify-between py-1 bg-surface-container-lowest/60 px-space-sm rounded">
+<span class="font-label-md text-label-md text-on-surface-variant">Jurisdiction</span>
+<span class="font-body-md text-body-md text-on-surface font-medium text-right">Khordha · Rampur Block</span>
+</div>
+<div class="flex items-start justify-between py-1 bg-surface-container-lowest/60 px-space-sm rounded">
+<span class="font-label-md text-label-md text-on-surface-variant">Allocated Area</span>
+<span class="font-body-md text-body-md text-on-surface font-medium text-right">Nuapada Village (Hamlets 5 &amp; 6)</span>
+</div>
+<div class="flex items-start justify-between py-1 bg-surface-container-lowest/60 px-space-sm rounded">
+<span class="font-label-md text-label-md text-on-surface-variant">Caseload</span>
+<span class="font-body-md text-body-md text-on-surface font-semibold text-right" id="summaryCaseload">3 Mothers (Laxmi Patra, Sabita Majhi, Geeta Nayak)</span>
+</div>
+<div class="flex items-start justify-between py-1 bg-surface-container-lowest/60 px-space-sm rounded">
+<span class="font-label-md text-label-md text-on-surface-variant">Effective Date</span>
+<span class="font-body-md text-body-md text-on-surface font-medium text-right">10 Jun 2025</span>
+</div>
+<div class="flex items-start justify-between py-1 bg-surface-container-lowest/60 px-space-sm rounded">
+<span class="font-label-md text-label-md text-on-surface-variant">Authorizing Supervisor</span>
+<span class="font-body-md text-body-md text-primary font-semibold text-right">Dr. Rajesh Kumar (RK-SUP-012)</span>
+</div>
+</div>
+</div>
+<!-- Confirmation CTA Button -->
+<div class="flex flex-col gap-space-xs mt-space-xs">
+<button class="w-full h-12 bg-primary-container text-on-primary rounded-xl font-title-md text-title-md font-semibold flex items-center justify-center gap-space-xs hover:opacity-95 transition-opacity" id="confirmAssignmentBtn" type="button">
+<span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
+<span class="">Confirm Assignment</span>
+</button>
+
+</div>
+</section>
+<!-- Interactive Success Banner / Modal State (Initially Hidden) -->
+<div class="hidden bg-surface-container-lowest rounded-xl p-space-xl flex flex-col items-center text-center gap-space-md shadow-md" id="successStateBox">
+<div class="w-16 h-16 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[36px] text-primary">task_alt</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Health Worker Assigned Successfully!</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+<strong class="text-on-surface">Pratima Behera (HW-005)</strong> is now allocated to Nuapada Village with 3 assigned mothers. Audit log entry recorded in District Health Mission ledger.
+        </p>
+</div>
+<div class="w-full bg-surface-container-low p-space-sm rounded-lg flex items-center justify-between text-left">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">verified</span>
+<span class="font-label-md text-label-md text-on-surface">Ledger Hash: #RK-2025-06-HW005-ACK</span>
+</div>
+<span class="font-label-md text-label-md bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-full">Signed</span>
+</div>
+<div class="flex flex-col w-full gap-space-sm mt-space-xs">
+<button class="w-full h-12 bg-primary text-on-primary rounded-xl font-title-md text-title-md font-semibold flex items-center justify-center gap-space-xs hover:opacity-95" type="button">
+<span class="">View Health Worker Dossier</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+<button class="w-full h-12 bg-surface-container-high text-on-surface rounded-xl font-title-md text-title-md font-semibold flex items-center justify-center gap-space-xs hover:bg-surface-variant" id="resetReturnBtn" type="button">
+<span class="">Return to Health Workers Directory</span>
+</button>
+</div>
+</div>
+<!-- Access Control & Audit Footer -->
+
+</div>
+</div>
+<script>
+  // Simple micro-interactions for demoing selection & submission
+  (function() {
+    const hwCards = document.querySelectorAll('.hw-card');
+    const selectedDisplay = document.getElementById('selectedWorkerDisplay');
+    const summaryWorker = document.getElementById('summaryWorker');
+    const confirmBtn = document.getElementById('confirmAssignmentBtn');
+    const successBox = document.getElementById('successStateBox');
+    const editBtn = document.getElementById('editSelectionsBtn');
+    const resetReturnBtn = document.getElementById('resetReturnBtn');
+
+    // Health Worker Card Selection
+    hwCards.forEach(card => {
+      card.addEventListener('click', () => {
+        hwCards.forEach(c => {
+          c.classList.remove('bg-secondary-fixed/40');
+          c.classList.add('bg-surface-container-low');
+          const badge = c.querySelector('.hw-badge');
+          if (badge) {
+            badge.outerHTML = '<button type="button" class="hw-select-btn font-label-md text-label-md bg-surface-container-high text-on-surface px-space-sm py-1 rounded-full shrink-0">Select</button>';
+          }
+        });
+
+        card.classList.remove('bg-surface-container-low');
+        card.classList.add('bg-secondary-fixed/40');
+        
+        const btn = card.querySelector('.hw-select-btn');
+        if (btn) {
+          btn.outerHTML = '<span class="hw-badge font-label-md text-label-md bg-primary text-on-primary px-space-sm py-1 rounded-full shrink-0 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">check</span> Selected</span>';
+        }
+
+        const name = card.getAttribute('data-hw-name');
+        const id = card.getAttribute('data-hw-id');
+        if (selectedDisplay) selectedDisplay.textContent = `${name} (${id})`;
+        if (summaryWorker) summaryWorker.textContent = `${name} (${id})`;
+      });
+    });
+
+    // Mother Selection Checkboxes
+    const motherCheckboxes = document.querySelectorAll('.mother-checkbox');
+    const countDisplay = document.getElementById('selectionCount');
+    const chipTray = document.getElementById('chipTray');
+    const summaryCaseload = document.getElementById('summaryCaseload');
+
+    function updateMotherSummary() {
+      const selected = [];
+      document.querySelectorAll('.mother-row').forEach(row => {
+        const cb = row.querySelector('.mother-checkbox');
+        if (cb && cb.checked) {
+          selected.push({
+            name: row.getAttribute('data-name'),
+            id: row.getAttribute('data-id')
+          });
+        }
+      });
+
+      if (countDisplay) {
+        countDisplay.textContent = `${selected.length} Mother${selected.length === 1 ? '' : 's'} Selected for Allocation`;
+      }
+
+      if (summaryCaseload) {
+        if (selected.length === 0) {
+          summaryCaseload.textContent = '0 Mothers selected';
+        } else {
+          const names = selected.map(s => s.name).join(', ');
+          summaryCaseload.textContent = `${selected.length} Mothers (${names})`;
+        }
+      }
+
+      // Rebuild chip tray
+      if (chipTray) {
+        chipTray.innerHTML = selected.map(s => `
+          <span class="inline-flex items-center gap-1 font-label-md text-label-md bg-secondary-fixed text-on-secondary-fixed px-2.5 py-1 rounded-full">
+            ${s.name} (${s.id.replace('MCP-2025-', 'MCP-')})
+            <button type="button" class="remove-chip-btn hover:text-error ml-1" data-id="${s.id}">✕</button>
+          </span>
+        `).join('');
+        attachChipListeners();
+      }
+    }
+
+    function attachChipListeners() {
+      document.querySelectorAll('.remove-chip-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const targetId = btn.getAttribute('data-id');
+          const row = document.querySelector(`.mother-row[data-id="${targetId}"]`);
+          if (row) {
+            const cb = row.querySelector('.mother-checkbox');
+            if (cb) cb.checked = false;
+            updateMotherSummary();
+          }
+        });
+      });
+    }
+
+    motherCheckboxes.forEach(cb => {
+      cb.addEventListener('change', updateMotherSummary);
+    });
+
+    attachChipListeners();
+
+    // Clear all mothers button
+    const clearAllBtn = document.getElementById('clearAllMothersBtn');
+    if (clearAllBtn) {
+      clearAllBtn.addEventListener('click', () => {
+        motherCheckboxes.forEach(cb => cb.checked = false);
+        updateMotherSummary();
+      });
+    }
+
+    // Smooth scroll for Edit Selections button
+    if (editBtn) {
+      editBtn.addEventListener('click', () => {
+        const firstSection = document.getElementById('assignmentFormWorkflow');
+        if (firstSection) firstSection.scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+
+    // Confirmation Action
+    if (confirmBtn && successBox) {
+      confirmBtn.addEventListener('click', () => {
+        confirmBtn.innerHTML = '<span class="material-symbols-outlined text-[20px] animate-spin">refresh</span> Signing & Allocating...';
+        setTimeout(() => {
+          confirmBtn.innerHTML = '<span class="material-symbols-outlined text-[20px]">assignment_turned_in</span> Confirm Assignment';
+          successBox.classList.remove('hidden');
+          successBox.scrollIntoView({ behavior: 'smooth' });
+        }, 600);
+      });
+    }
+
+    if (resetReturnBtn && successBox) {
+      resetReturnBtn.addEventListener('click', () => {
+        successBox.classList.add('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_12px_rgba(48,35,42,0.06)]" data-active-classes="text-primary-container font-semibold"><div class="flex justify-around items-center h-16 px-space-xs"><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-on-surface-variant hover:text-primary transition-colors" data-path="overview" href="#"><span class="material-symbols-outlined text-[22px]">dashboard</span><span class="font-label-md text-label-md tracking-tight mt-0.5">Overview</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-on-surface-variant hover:text-primary transition-colors" data-path="health-workers" href="#"><span class="material-symbols-outlined text-[22px]">badge</span><span class="font-label-md text-label-md tracking-tight mt-0.5">Workers</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-on-surface-variant hover:text-primary transition-colors" data-path="referrals" href="#"><span class="material-symbols-outlined text-[22px]">emergency_share</span><span class="font-label-md text-label-md tracking-tight mt-0.5">Referrals</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-on-surface-variant hover:text-primary transition-colors" data-path="reports" href="#"><span class="material-symbols-outlined text-[22px]">analytics</span><span class="font-label-md text-label-md tracking-tight mt-0.5">Reports</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-on-surface-variant hover:text-primary transition-colors" data-path="more" href="#"><span class="material-symbols-outlined text-[22px]">tune</span><span class="font-label-md text-label-md tracking-tight mt-0.5">More</span></a></div></nav>
+
+
+
+
+</body></html>

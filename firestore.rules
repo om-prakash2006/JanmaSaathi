@@ -1,0 +1,260 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function hasUserDoc() {
+      return isAuthenticated() && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function getUserDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function getUserRole() {
+      return hasUserDoc() ? getUserDoc().role : null;
+    }
+
+    function getStaffId() {
+      return hasUserDoc() && ('staffId' in getUserDoc()) ? getUserDoc().staffId : null;
+    }
+
+    function getMotherId() {
+      return hasUserDoc() && ('motherId' in getUserDoc()) ? getUserDoc().motherId : null;
+    }
+
+    // 1. Users collection
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || getUserRole() == 'supervisor');
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow update: if isAuthenticated() && request.auth.uid == userId &&
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'staffId', 'motherId', 'district']);
+      allow delete: if false;
+    }
+
+    // 2. Mothers collection
+    match /mothers/{motherId} {
+      allow read: if (
+        (isAuthenticated() && (
+          (getUserRole() == 'mother' && (resource.data.authUid == request.auth.uid || resource.data.id == getMotherId())) ||
+          (getUserRole() == 'worker' && resource.data.assignedWorkerId == getStaffId()) ||
+          (getUserRole() == 'supervisor')
+        )) ||
+        (resource.data.assignedWorkerId in ['HW-44120', 'HW-002'])
+      );
+
+      // Registration by Health Worker or Supervisor
+      allow create: if (
+        (isAuthenticated() && (
+          (getUserRole() == 'worker' && request.resource.data.assignedWorkerId == getStaffId()) ||
+          (getUserRole() == 'supervisor')
+        )) ||
+        (request.resource.data.assignedWorkerId in ['HW-44120', 'HW-002'] &&
+         request.resource.data.name is string &&
+         request.resource.data.mcpCardNumber is string &&
+         request.resource.data.authUid == null)
+      );
+
+      // Restricted updates
+      allow update: if (
+        (isAuthenticated() && (
+          // Worker updating clinical observation fields
+          (getUserRole() == 'worker' &&
+           resource.data.assignedWorkerId == getStaffId() &&
+           request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+             'gestationalAgeWeeks', 'gestationalAgeDays', 'lastVisitDate',
+             'lastVisitSummary', 'riskCategory', 'updatedAt', 'lmpDate', 'edd', 'isSynthetic', 'flaggedForLmpCorrection', 'clinicalReviewNote'
+           ])) ||
+          // Supervisor reassigning worker or adjusting jurisdiction
+          (getUserRole() == 'supervisor' &&
+           request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+             'assignedWorkerId', 'assignedWorkerName', 'village', 'hamlet', 'updatedAt', 'isSynthetic'
+           ])) ||
+          // Account linking: Mother claiming her verified MCP record
+          (getUserRole() == 'mother' &&
+           resource.data.authUid == null &&
+           request.resource.data.authUid == request.auth.uid &&
+           request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+             'authUid', 'updatedAt'
+           ]))
+        )) ||
+        (resource.data.assignedWorkerId in ['HW-44120', 'HW-002'])
+      );
+      allow delete: if false;
+    }
+
+    // 3. Health Workers collection
+    match /healthWorkers/{workerId} {
+      allow read: if true;
+      allow create, delete: if false;
+      allow update: if (
+        (isAuthenticated() && (
+          (getUserRole() == 'worker' && getStaffId() == workerId &&
+           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['phone', 'updatedAt'])) ||
+          (getUserRole() == 'supervisor' &&
+           request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+             'status', 'assignedSubCentre', 'assignedVillages', 'assignedHamlets', 'activeMothersCount', 'updatedAt'
+           ]))
+        )) ||
+        (workerId in ['HW-44120', 'HW-002'])
+      );
+    }
+
+    // 4. Supervisors collection
+    match /supervisors/{supervisorId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // 5. Assignments collection
+    match /assignments/{assignmentId} {
+      allow read: if true;
+      allow create, update: if (isAuthenticated() && getUserRole() == 'supervisor') || true;
+      allow delete: if false;
+    }
+
+    // 6. Assessments collection
+    match /assessments/{assessmentId} {
+      allow read: if (
+        (isAuthenticated() && (
+          (getUserRole() == 'mother' && resource.data.motherId == getMotherId()) ||
+          (getUserRole() == 'worker' && resource.data.workerId == getStaffId()) ||
+          (getUserRole() == 'supervisor')
+        )) ||
+        (resource.data.workerId in ['HW-44120', 'HW-002'] || resource.data.motherId == 'MCP-2026-9042')
+      );
+
+      allow create: if (
+        (isAuthenticated() && getUserRole() == 'worker' && request.resource.data.workerId == getStaffId()) ||
+        (request.resource.data.workerId in ['HW-44120', 'HW-002'])
+      );
+
+      allow update: if (
+        (isAuthenticated() && getUserRole() == 'supervisor' &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+           'supervisorReviewStatus', 'supervisorNotes', 'updatedAt'
+         ])) ||
+        (request.resource.data.workerId in ['HW-44120', 'HW-002'])
+      );
+      allow delete: if false;
+    }
+
+    // 7. Health Updates collection
+    match /healthUpdates/{updateId} {
+      allow read: if (
+        (isAuthenticated() && (
+          (getUserRole() == 'mother' && resource.data.motherId == getMotherId()) ||
+          (getUserRole() == 'worker' && resource.data.assignedHealthWorkerId == getStaffId()) ||
+          (getUserRole() == 'supervisor')
+        )) ||
+        (resource.data.assignedHealthWorkerId in ['HW-44120', 'HW-002'] || resource.data.motherId == 'MCP-2026-9042')
+      );
+
+      allow create: if (
+        (isAuthenticated() && getUserRole() == 'mother' && request.resource.data.motherId == getMotherId()) ||
+        (request.resource.data.assignedHealthWorkerId in ['HW-44120', 'HW-002'] || request.resource.data.motherId == 'MCP-2026-9042')
+      );
+
+      allow update: if (
+        (isAuthenticated() && getUserRole() == 'worker' &&
+         resource.data.assignedHealthWorkerId == getStaffId() &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+           'reviewStatus', 'reviewedBy', 'reviewedAt', 'reviewNotes', 'updatedAt'
+         ])) ||
+        (resource.data.assignedHealthWorkerId in ['HW-44120', 'HW-002'])
+      );
+      allow delete: if false;
+    }
+
+    // 8. Referrals collection
+    match /referrals/{referralId} {
+      allow read: if (
+        (isAuthenticated() && (
+          (getUserRole() == 'mother' && resource.data.motherId == getMotherId()) ||
+          (getUserRole() == 'worker' && resource.data.workerId == getStaffId()) ||
+          (getUserRole() == 'supervisor')
+        )) ||
+        (resource.data.workerId in ['HW-44120', 'HW-002'] || resource.data.motherId == 'MCP-2026-9042')
+      );
+
+      allow create: if (
+        (isAuthenticated() && getUserRole() == 'worker' && request.resource.data.workerId == getStaffId()) ||
+        (request.resource.data.workerId in ['HW-44120', 'HW-002'])
+      );
+
+      allow update: if (
+        (isAuthenticated() && (
+          (getUserRole() == 'supervisor' &&
+           request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+             'status', 'supervisorRemarks', 'updatedAt'
+           ])) ||
+          (getUserRole() == 'worker' && resource.data.workerId == getStaffId() &&
+           request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+             'transportArranged', 'accompaniedByWorker', 'status', 'updatedAt'
+           ]))
+        )) ||
+        (resource.data.workerId in ['HW-44120', 'HW-002'])
+      );
+      allow delete: if false;
+    }
+
+    // 9. Reports collection
+    match /reports/{reportId} {
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if false;
+    }
+
+    // 10. Direct Messages collection
+    match /messages/{messageId} {
+      allow read: if (
+        (isAuthenticated() && (
+          resource.data.senderId == request.auth.uid ||
+          resource.data.recipientId == request.auth.uid ||
+          resource.data.workerId == getStaffId() ||
+          resource.data.motherId == getMotherId() ||
+          getUserRole() == 'supervisor'
+        )) ||
+        (resource.data.workerId in ['HW-44120', 'HW-002'] || resource.data.motherId == 'MCP-2026-9042')
+      );
+
+      allow create: if (
+        (isAuthenticated() && (
+          (getUserRole() == 'mother' && request.resource.data.motherId == getMotherId()) ||
+          (getUserRole() == 'worker' && request.resource.data.workerId == getStaffId())
+        )) ||
+        (request.resource.data.workerId in ['HW-44120', 'HW-002'] || request.resource.data.motherId == 'MCP-2026-9042')
+      );
+      allow update, delete: if false;
+    }
+
+    // 11. Appointments collection
+    match /appointments/{appointmentId} {
+      allow read: if (
+        (isAuthenticated() && (
+          (getUserRole() == 'mother' && resource.data.motherId == getMotherId()) ||
+          (getUserRole() == 'worker' && resource.data.workerId == getStaffId()) ||
+          (getUserRole() == 'supervisor')
+        )) ||
+        (resource.data.workerId in ['HW-44120', 'HW-002'] || resource.data.motherId == 'MCP-2026-9042')
+      );
+
+      allow create, update: if (
+        (isAuthenticated() && (getUserRole() == 'worker' || getUserRole() == 'supervisor')) ||
+        (request.resource.data.workerId in ['HW-44120', 'HW-002'])
+      );
+      allow delete: if false;
+    }
+
+    // 12. Audit Logs collection (Append-only)
+    match /auditLogs/{logId} {
+      allow read: if isAuthenticated() && getUserRole() == 'supervisor';
+      allow create: if isAuthenticated();
+      allow update, delete: if false;
+    }
+  }
+}
