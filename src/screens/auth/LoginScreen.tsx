@@ -100,21 +100,21 @@ export const LoginScreen: React.FC = () => {
       {/* Global Header with Language Selector */}
       <GlobalHeader />
 
-      <main className="flex-1 flex flex-col relative w-full bg-surface px-margin pt-20 pb-20 max-w-lg mx-auto">
-        <div className="flex flex-col w-full max-w-[400px] mx-auto px-4 py-2 pb-8">
+      <main className="flex-1 flex flex-col justify-center relative w-full bg-surface px-4 sm:px-6 pt-20 pb-12 max-w-lg mx-auto">
+        <div className="flex flex-col w-full max-w-sm sm:max-w-md mx-auto py-2">
           {/* Official Emblem & Wordmark */}
-          <div className="flex flex-col items-center text-center mt-2 mb-4">
-            <div className="w-24 h-24 flex items-center justify-center">
+          <div className="flex flex-col items-center text-center my-2">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center">
               <img
                 alt="JanmaSaathi Emblem"
                 className="w-full h-full object-contain"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqcYasAZML1Fa6KJkcwGoVOSGmdPcfbjGn7Jy9ApOU4vL1Tfw3LJlOSd57TLN83HqWSbsIB3J9Xrp1PlOOsjoe6fEVZvi3OksqRLpZCBFSOkiYgXaiRC0ko_Dcm0zlbhZVdvO4XfiZ8EIAnwMNUAweTpebdW9R7_As01emoQ0Klj0hsF42cqnda7XS_bj0lbvFsDobCJJVlkWEAZxf1fZpvPgda2Q5R4ibnXahKqJqKT3Xu_p5E8oRgwSsWDBU1YuF"
               />
             </div>
-            <span className="font-serif text-2xl font-bold text-primary-container mt-1">
+            <span className="font-serif text-2xl sm:text-3xl font-bold text-primary-container mt-1">
               {t('appName')}
             </span>
-            <p className="font-sans text-xs text-secondary max-w-[280px] mt-0.5">
+            <p className="font-sans text-xs sm:text-sm text-secondary mt-0.5 px-2">
               {t('tagline')}
             </p>
           </div>

@@ -368,13 +368,22 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Save to IndexedDB object store
       await saveLocalDraft('healthUpdateDrafts', { ...newUpdate, id: newUpdateId });
 
-      try {
-        await createHealthUpdateRecord(newUpdate);
-        await logAuditEvent('CREATE_HEALTH_UPDATE', data.motherId, 'mother', 'healthUpdates', newUpdateId, {
-          observations: data.observations,
-        });
-      } catch (err) {
-        console.warn('Health update saved locally (queued for offline sync):', err);
+      if (typeof navigator !== 'undefined' && navigator.onLine) {
+        try {
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Firestore write timeout')), 1500)
+          );
+          await Promise.race([createHealthUpdateRecord(newUpdate), timeoutPromise]);
+          try {
+            await logAuditEvent('CREATE_HEALTH_UPDATE', data.motherId, 'mother', 'healthUpdates', newUpdateId, {
+              observations: data.observations,
+            });
+          } catch {
+            // secondary
+          }
+        } catch (err) {
+          console.warn('Health update saved locally (queued for offline sync):', err);
+        }
       }
 
       setHealthUpdates((prev) => [newUpdate, ...prev]);
@@ -482,17 +491,24 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       // 2. Online write attempt with Cloud Firestore
-      try {
-        await createAssessmentRecord(newAssessment);
+      if (typeof navigator !== 'undefined' && navigator.onLine) {
         try {
-          await logAuditEvent('CREATE_ASSESSMENT', assessmentData.workerId, 'worker', 'assessments', newId, {
-            motherId: assessmentData.motherId,
-          });
-        } catch {
-          // secondary
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Firestore write timeout')), 1500)
+          );
+          await Promise.race([createAssessmentRecord(newAssessment), timeoutPromise]);
+          try {
+            await logAuditEvent('CREATE_ASSESSMENT', assessmentData.workerId, 'worker', 'assessments', newId, {
+              motherId: assessmentData.motherId,
+            });
+          } catch {
+            // secondary
+          }
+        } catch (err: any) {
+          console.warn('Assessment saved locally (queued for offline sync):', err?.message);
         }
-      } catch (err: any) {
-        console.warn('Assessment saved locally (queued for offline sync):', err?.message);
+      } else {
+        console.log('Offline mode active: assessment saved in IndexedDB draft queue for background sync');
       }
 
       setAssessments((prev) => [newAssessment, ...prev]);
@@ -567,15 +583,24 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       await saveLocalDraft('referralDrafts', newReferral);
 
-      try {
-        await createReferralRecord(newReferral);
-        await logAuditEvent('CREATE_REFERRAL', referralData.workerId, 'worker', 'referrals', newId, {
-          motherId: referralData.motherId,
-          priority: referralData.priority,
-          facility: referralData.referredToFacility,
-        });
-      } catch (err) {
-        console.warn('Referral saved locally (queued for offline sync):', err);
+      if (typeof navigator !== 'undefined' && navigator.onLine) {
+        try {
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Firestore write timeout')), 1500)
+          );
+          await Promise.race([createReferralRecord(newReferral), timeoutPromise]);
+          try {
+            await logAuditEvent('CREATE_REFERRAL', referralData.workerId, 'worker', 'referrals', newId, {
+              motherId: referralData.motherId,
+              priority: referralData.priority,
+              facility: referralData.referredToFacility,
+            });
+          } catch {
+            // secondary
+          }
+        } catch (err) {
+          console.warn('Referral saved locally (queued for offline sync):', err);
+        }
       }
 
       setReferrals((prev) => [newReferral, ...prev]);

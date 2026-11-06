@@ -115,49 +115,59 @@ export const WorkerNewAssessmentScreen: React.FC<WorkerNewAssessmentScreenProps>
     let modelPredictionData: any = null;
     let featureExplanationsData: any = [];
 
-    try {
-      const response = await fetch('/api/predict', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          age: selectedMother.age || 24,
-          systolicBP: Number(systolicBP),
-          diastolicBP: Number(diastolicBP),
-          bloodSugar: Number(bloodGlucose),
-          bloodSugarUnit: 'mmol/L',
-          bodyTemp: Number(bodyTemp),
-          bodyTempUnit: '°F',
-          heartRate: Number(heartRate),
-          supplementaryObservations: {
-            haemoglobinGdl: Number(hemoglobin),
-            bleeding: selectedDangerSigns.some((s) => s.toLowerCase().includes('bleeding')),
-            swelling: selectedDangerSigns.some((s) => s.toLowerCase().includes('swelling')) ? 'Severe' : 'None',
-            reducedFetalMovement: fetalMovementStatus !== 'normal',
-            clinicalNotes: symptomsNotes,
-          },
-        }),
-      });
+    if (typeof navigator !== 'undefined' && navigator.onLine) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 1500);
 
-      const resData = await response.json();
-      if (resData.success && resData.modelPrediction) {
-        modelPredictionData = resData.modelPrediction;
-        featureExplanationsData = resData.modelPrediction.contributingFeatures || [];
-        originalMeasurementsData = resData.originalMeasurements;
-        normalizedInputsData = resData.normalizedModelInputs;
+        const response = await fetch('/api/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
+          body: JSON.stringify({
+            age: selectedMother.age || 24,
+            systolicBP: Number(systolicBP),
+            diastolicBP: Number(diastolicBP),
+            bloodSugar: Number(bloodGlucose),
+            bloodSugarUnit: 'mmol/L',
+            bodyTemp: Number(bodyTemp),
+            bodyTempUnit: '°F',
+            heartRate: Number(heartRate),
+            supplementaryObservations: {
+              haemoglobinGdl: Number(hemoglobin),
+              bleeding: selectedDangerSigns.some((s) => s.toLowerCase().includes('bleeding')),
+              swelling: selectedDangerSigns.some((s) => s.toLowerCase().includes('swelling')) ? 'Severe' : 'None',
+              reducedFetalMovement: fetalMovementStatus !== 'normal',
+              clinicalNotes: symptomsNotes,
+            },
+          }),
+        });
 
-        mlResultPayload = {
-          status: 'success',
-          riskCategory: resData.modelPrediction.riskCategory,
-          confidenceScore: resData.modelPrediction.confidenceScore,
-          explanation: resData.modelPrediction,
-        };
-      } else if (resData.validationErrors) {
-        setSubmissionError(`Validation Failed: ${resData.validationErrors.join(' ')}`);
-        setIsSubmitting(false);
-        return;
+        clearTimeout(timeoutId);
+
+        if (response.ok) {
+          const resData = await response.json();
+          if (resData.success && resData.modelPrediction) {
+            modelPredictionData = resData.modelPrediction;
+            featureExplanationsData = resData.modelPrediction.contributingFeatures || [];
+            originalMeasurementsData = resData.originalMeasurements;
+            normalizedInputsData = resData.normalizedModelInputs;
+
+            mlResultPayload = {
+              status: 'success',
+              riskCategory: resData.modelPrediction.riskCategory,
+              confidenceScore: resData.modelPrediction.confidenceScore,
+              explanation: resData.modelPrediction,
+            };
+          } else if (resData.validationErrors) {
+            setSubmissionError(`Validation Failed: ${resData.validationErrors.join(' ')}`);
+            setIsSubmitting(false);
+            return;
+          }
+        }
+      } catch (err: any) {
+        console.warn('Prediction API skipped or timed out (falling back to deterministic local offline inference):', err?.message);
       }
-    } catch (err: any) {
-      console.warn('Prediction API call notice (falling back to deterministic local offline inference):', err);
     }
 
     // Local deterministic offline ML inference fallback if API unavailable

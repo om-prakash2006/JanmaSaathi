@@ -67,7 +67,7 @@ const MainAppContent: React.FC = () => {
       />
 
       {/* Main Screen Container with responsive max-width to look authentic on mobile & desktop */}
-      <main className="flex-1 w-full max-w-lg mx-auto pt-20 pb-20 px-gutter">
+      <main className="flex-1 w-full max-w-lg mx-auto pt-20 pb-24 px-4 sm:px-6">
         {/* ROLE A: MOTHER */}
         {role === 'mother' && (
           <>
