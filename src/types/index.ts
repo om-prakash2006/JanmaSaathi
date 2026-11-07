@@ -2,6 +2,21 @@ import type { ClinicalScreeningResult } from '../ml/clinicalScreening';
 
 export type Role = 'mother' | 'worker' | 'supervisor';
 
+export interface LocalizedString {
+  en?: string;
+  hi?: string;
+  or?: string;
+}
+
+export interface TranslationMetadata {
+  originalText?: string;
+  sourceLanguage?: 'en' | 'hi' | 'or';
+  translations?: LocalizedString;
+  translationStatus?: 'reviewed' | 'machine' | 'pending' | 'source';
+  translationProvider?: string;
+  translatedAt?: string;
+}
+
 export interface User {
   id: string;
   name: string;
@@ -42,6 +57,11 @@ export interface Mother {
   gravidity?: number;
   lmpDate?: string;
   isSynthetic: boolean;
+  translations?: {
+    lastVisitSummary?: LocalizedString;
+    village?: LocalizedString;
+    hamlet?: LocalizedString;
+  };
 }
 
 export interface HealthWorker {
@@ -211,6 +231,11 @@ export interface MaternalAssessment {
   supervisorReviewStatus: 'pending' | 'signed_off' | 'clarification_requested';
   supervisorNotes?: string;
   isSynthetic: boolean;
+  translations?: {
+    symptomsNotes?: LocalizedString;
+    nutritionalAdvice?: LocalizedString;
+    supervisorNotes?: LocalizedString;
+  };
 }
 
 export interface HealthUpdate {
@@ -229,6 +254,14 @@ export interface HealthUpdate {
   reviewedAt?: string;
   reviewNotes?: string;
   isSynthetic: boolean;
+  translations?: {
+    observations?: LocalizedString;
+    notes?: LocalizedString;
+    reviewNotes?: LocalizedString;
+    symptoms?: LocalizedString[];
+  };
+  sourceLanguage?: 'en' | 'hi' | 'or';
+  originalText?: string;
 }
 
 export interface Referral {
@@ -247,6 +280,12 @@ export interface Referral {
   supervisorRemarks?: string;
   createdAt: string;
   isSynthetic: boolean;
+  translations?: {
+    reasonForReferral?: LocalizedString;
+    supervisorRemarks?: LocalizedString;
+    referredToFacility?: LocalizedString;
+  };
+  sourceLanguage?: 'en' | 'hi' | 'or';
 }
 
 export interface Appointment {
@@ -260,6 +299,11 @@ export interface Appointment {
   facility: string; // e.g. "Sub-Centre Rampur Health Post"
   notes: string;
   status: 'confirmed' | 'rescheduled' | 'completed';
+  translations?: {
+    title?: LocalizedString;
+    notes?: LocalizedString;
+    facility?: LocalizedString;
+  };
 }
 
 export interface DirectMessage {
@@ -272,6 +316,15 @@ export interface DirectMessage {
   delivered: boolean;
   read: boolean;
   motherId?: string;
+  receiverId?: string;
+  syncStatus?: 'pending_sync' | 'sending' | 'delivered' | 'failed';
+  retryCount?: number;
+  lastAttemptAt?: string;
+  translations?: {
+    text?: LocalizedString;
+  };
+  sourceLanguage?: 'en' | 'hi' | 'or';
+  originalText?: string;
 }
 
 export interface VillageAllocation {

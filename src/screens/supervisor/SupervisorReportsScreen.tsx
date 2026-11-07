@@ -4,7 +4,7 @@ import { useLanguage } from '../../context/LanguageContext';
 
 export const SupervisorReportsScreen: React.FC = () => {
   const { assessments, reviewAssessment } = useData();
-  const { t } = useLanguage();
+  const { t, formatName, formatNumber, localize } = useLanguage();
   const [selectedAssessmentId, setSelectedAssessmentId] = useState<string | null>(null);
   const [reviewNotes, setReviewNotes] = useState('');
 
@@ -42,7 +42,7 @@ export const SupervisorReportsScreen: React.FC = () => {
               <div>
                 <div className="flex items-center gap-2">
                   <span className="font-sans text-sm font-bold text-on-surface">
-                    {item.motherName} ({item.motherId})
+                    {formatName(item.motherName)} ({formatNumber(item.motherId)})
                   </span>
                   <span
                     className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
@@ -61,11 +61,11 @@ export const SupervisorReportsScreen: React.FC = () => {
                   </span>
                 </div>
                 <span className="font-sans text-xs text-secondary block mt-0.5">
-                  Ref: {item.id}
+                  {formatNumber(`Ref: ${item.id}`)}
                 </span>
               </div>
               <span className="font-sans text-xs text-secondary">
-                {item.recordedAt}
+                {formatNumber(item.recordedAt)}
               </span>
             </div>
 
@@ -78,23 +78,23 @@ export const SupervisorReportsScreen: React.FC = () => {
               <div className="bg-surface-container-low p-1.5 rounded-lg border border-outline-variant/20">
                 <span className="text-[10px] text-secondary block">{t('vitalsBP')}</span>
                 <strong className={item.systolicBP >= 140 ? 'text-primary font-bold' : 'text-on-surface'}>
-                  {item.systolicBP}/{item.diastolicBP}
+                  {formatNumber(item.systolicBP)}/{formatNumber(item.diastolicBP)}
                 </strong>
               </div>
               <div className="bg-surface-container-low p-1.5 rounded-lg border border-outline-variant/20">
                 <span className="text-[10px] text-secondary block">{t('vitalsHR')}</span>
-                <strong className="text-on-surface">{item.heartRate} bpm</strong>
+                <strong className="text-on-surface">{formatNumber(item.heartRate)} bpm</strong>
               </div>
               <div className="bg-surface-container-low p-1.5 rounded-lg border border-outline-variant/20">
                 <span className="text-[10px] text-secondary block">{t('vitalsGlucose')}</span>
-                <strong className="text-on-surface">{item.bloodGlucose} mg</strong>
+                <strong className="text-on-surface">{formatNumber(item.bloodGlucose)} mg</strong>
               </div>
             </div>
 
             {/* Clinical observations & danger alerts */}
             <div className="p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/30 space-y-1 text-xs text-secondary">
               <p>
-                <strong className="text-on-surface">{t('fieldObservationLabel')}:</strong> {item.symptomsNotes}
+                <strong className="text-on-surface">{t('fieldObservationLabel')}:</strong> {localize(item.symptomsNotes, item.translations?.symptomsNotes)}
               </p>
             </div>
 

@@ -4,7 +4,7 @@ import { useLanguage } from '../../context/LanguageContext';
 
 export const SupervisorReferralsScreen: React.FC = () => {
   const { referrals, updateReferralStatus } = useData();
-  const { t } = useLanguage();
+  const { t, formatName, formatNumber, localize } = useLanguage();
   const [selectedReferralId, setSelectedReferralId] = useState<string | null>(null);
   const [remarksText, setRemarksText] = useState('');
 
@@ -27,7 +27,7 @@ export const SupervisorReferralsScreen: React.FC = () => {
           {t('emergencyReferrals')}
         </h1>
         <p className="font-sans text-xs text-secondary mt-0.5">
-          Emergency escalations, facility reception & medical officer triage
+          {t('supervisorOverviewSubtitle')}
         </p>
       </section>
 
@@ -42,7 +42,7 @@ export const SupervisorReferralsScreen: React.FC = () => {
               <div>
                 <div className="flex items-center gap-2">
                   <span className="font-sans text-sm font-bold text-on-surface">
-                    {item.motherName} ({item.motherId})
+                    {formatName(item.motherName)} ({formatNumber(item.motherId)})
                   </span>
                   <span
                     className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
@@ -53,31 +53,31 @@ export const SupervisorReferralsScreen: React.FC = () => {
                         : 'bg-secondary-container text-on-secondary-container'
                     }`}
                   >
-                    {item.priority}
+                    {item.priority === 'emergency' ? t('alertSeverityHigh') : item.priority === 'urgent' ? t('alertSeverityModerate') : t('alertSeverityRoutine')}
                   </span>
                 </div>
                 <span className="font-sans text-xs text-secondary block mt-0.5">
-                  Ref: {item.id}
+                  {formatNumber(`Ref: ${item.id}`)}
                 </span>
               </div>
               <span className="font-sans text-xs text-secondary">
-                {item.createdAt}
+                {formatNumber(item.createdAt)}
               </span>
             </div>
 
             <div className="p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/30 text-xs space-y-1">
               <div className="flex items-center gap-1.5 font-semibold text-primary">
                 <span className="material-symbols-outlined text-[16px]">domain</span>
-                <span>{item.referredToFacility}</span>
+                <span>{localize(item.referredToFacility, item.translations?.referredToFacility)}</span>
               </div>
               <p className="text-tertiary">
-                <strong>{t('referralIndication')}:</strong> {item.reasonForReferral}
+                <strong>{t('referralIndication')}:</strong> {localize(item.reasonForReferral, item.translations?.reasonForReferral)}
               </p>
             </div>
 
             {item.supervisorRemarks && (
               <div className="p-2 rounded-lg bg-secondary-container/30 border border-outline-variant/30 text-[11px] text-tertiary">
-                <strong>{t('supervisorRemarkLabel')}:</strong> {item.supervisorRemarks}
+                <strong>{t('supervisorRemarkLabel')}:</strong> {localize(item.supervisorRemarks, item.translations?.supervisorRemarks)}
               </div>
             )}
 

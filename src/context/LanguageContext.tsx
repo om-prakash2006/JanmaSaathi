@@ -1,5 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { TRANSLATIONS, Language, CLINICAL_GLOSSARY } from '../i18n/translations';
+import {
+  TRANSLATIONS,
+  Language,
+  CLINICAL_GLOSSARY,
+  toLocalizedNumerals,
+  toLocalizedName,
+} from '../i18n/translations';
+import { localizeDynamicText, localizeField } from '../utils/dynamicLocalization';
 import { auth, db } from '../lib/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
@@ -10,6 +17,10 @@ interface LanguageContextType {
   setLanguage: (lang: Language) => void;
   t: (key: string, params?: Record<string, string | number>) => string;
   getGlossaryTerm: (termKey: keyof typeof CLINICAL_GLOSSARY) => string;
+  formatNumber: (num: number | string) => string;
+  formatName: (name: string) => string;
+  localize: (text: string | null | undefined, entityTranslations?: { en?: string; hi?: string; or?: string } | null) => string;
+  localizeField: <T extends Record<string, any>>(entity: T | null | undefined, fieldKey: keyof T) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -70,13 +81,35 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
+  const formatNumber = (num: number | string): string => {
+    return toLocalizedNumerals(num, language);
+  };
+
+  const formatName = (name: string): string => {
+    return toLocalizedName(name, language);
+  };
+
   const t = (key: string, params?: Record<string, string | number>): string => {
     let template = TRANSLATIONS[language]?.[key] || TRANSLATIONS.en?.[key] || key;
 
     if (params) {
       Object.entries(params).forEach(([paramKey, value]) => {
-        template = template.replace(new RegExp(`{\\s*${paramKey}\\s*}`, 'g'), String(value));
+        let valStr = String(value);
+
+        // Localize numbers or names passed as parameters
+        if (typeof value === 'number' || /^[0-9+.\-/]+$/.test(valStr)) {
+          valStr = toLocalizedNumerals(valStr, language);
+        } else {
+          valStr = toLocalizedName(valStr, language);
+        }
+
+        template = template.replace(new RegExp(`{\\s*${paramKey}\\s*}`, 'g'), valStr);
       });
+    }
+
+    if (language !== 'en') {
+      template = toLocalizedNumerals(template, language);
+      template = toLocalizedName(template, language);
     }
 
     return template;
@@ -88,8 +121,33 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return entry[language] || entry.en;
   };
 
+  const localize = (
+    text: string | null | undefined,
+    entityTranslations?: { en?: string; hi?: string; or?: string } | null
+  ): string => {
+    return localizeDynamicText(text, language, entityTranslations);
+  };
+
+  const localizeFieldFn = <T extends Record<string, any>>(
+    entity: T | null | undefined,
+    fieldKey: keyof T
+  ): string => {
+    return localizeField(entity, fieldKey, language);
+  };
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t, getGlossaryTerm }}>
+    <LanguageContext.Provider
+      value={{
+        language,
+        setLanguage,
+        t,
+        getGlossaryTerm,
+        formatNumber,
+        formatName,
+        localize,
+        localizeField: localizeFieldFn,
+      }}
+    >
       {children}
     </LanguageContext.Provider>
   );

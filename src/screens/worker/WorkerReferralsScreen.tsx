@@ -11,7 +11,7 @@ export const WorkerReferralsScreen: React.FC<WorkerReferralsScreenProps> = ({
   initialMotherId,
 }) => {
   const { referrals, mothers, workers, addReferral } = useData();
-  const { t } = useLanguage();
+  const { t, formatName, formatNumber, localize } = useLanguage();
   const worker = workers[0]; // Sunita Devi
 
   const [isModalOpen, setIsModalOpen] = useState(!!initialMotherId);
@@ -108,7 +108,7 @@ export const WorkerReferralsScreen: React.FC<WorkerReferralsScreenProps> = ({
               <div>
                 <div className="flex items-center gap-2">
                   <span className="font-sans text-sm font-bold text-on-surface">
-                    {item.motherName}
+                    {formatName(item.motherName)}
                   </span>
                   <span
                     className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
@@ -119,26 +119,31 @@ export const WorkerReferralsScreen: React.FC<WorkerReferralsScreenProps> = ({
                         : 'bg-secondary-container text-on-secondary-container'
                     }`}
                   >
-                    {item.priority}
+                    {item.priority === 'emergency' ? t('alertSeverityHigh') : item.priority === 'urgent' ? t('alertSeverityModerate') : t('alertSeverityRoutine')}
                   </span>
                 </div>
                 <span className="font-sans text-xs text-secondary block mt-0.5">
-                  ID: {item.motherId} • Ref: {item.id}
+                  {formatNumber(`ID: ${item.motherId}`)} • {formatNumber(`Ref: ${item.id}`)}
                 </span>
               </div>
               <span className="font-sans text-xs text-secondary">
-                {item.createdAt}
+                {formatNumber(item.createdAt)}
               </span>
             </div>
 
             <div className="p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/30 space-y-1 text-xs">
               <div className="flex items-center gap-1.5 text-primary font-semibold">
                 <span className="material-symbols-outlined text-[16px]">domain</span>
-                <span>{item.referredToFacility}</span>
+                <span>{localize(item.referredToFacility, item.translations?.referredToFacility)}</span>
               </div>
               <p className="text-tertiary">
-                <strong className="text-secondary font-medium">{t('referralReason')}:</strong> {item.reasonForReferral}
+                <strong className="text-secondary font-medium">{t('referralReason')}:</strong> {localize(item.reasonForReferral, item.translations?.reasonForReferral)}
               </p>
+              {item.supervisorRemarks && (
+                <p className="text-secondary mt-1 pt-1 border-t border-outline-variant/20">
+                  <strong className="text-primary font-medium">{t('supervisorRemarks')}:</strong> {localize(item.supervisorRemarks, item.translations?.supervisorRemarks)}
+                </p>
+              )}
             </div>
 
             <div className="pt-1 flex items-center justify-between text-xs border-t border-outline-variant/30">
@@ -149,7 +154,7 @@ export const WorkerReferralsScreen: React.FC<WorkerReferralsScreenProps> = ({
                     : 'bg-primary-container/10 text-primary-container border border-primary-container/30'
                 }`}
               >
-                {item.status.replace('_', ' ')}
+                {localize(item.status.replace('_', ' '))}
               </span>
             </div>
           </div>

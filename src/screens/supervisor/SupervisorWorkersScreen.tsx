@@ -10,7 +10,7 @@ export const SupervisorWorkersScreen: React.FC<SupervisorWorkersScreenProps> = (
   onStartAssign,
 }) => {
   const { workers } = useData();
-  const { t } = useLanguage();
+  const { t, formatName, formatNumber, localize } = useLanguage();
   const [search, setSearch] = useState('');
 
   const filteredWorkers = workers.filter(
@@ -77,18 +77,18 @@ export const SupervisorWorkersScreen: React.FC<SupervisorWorkersScreenProps> = (
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-sans text-sm font-bold text-on-surface">
-                      {worker.name}
+                      {formatName(worker.name)}
                     </span>
                     <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-secondary-container text-on-secondary-container">
                       {t('roleWorker')}
                     </span>
                   </div>
                   <span className="font-sans text-xs text-secondary block mt-0.5">
-                    {t('staffCodeLabel')}: {worker.staffCode}
+                    {t('staffCodeLabel')}: {formatNumber(worker.staffCode)}
                   </span>
                   <span className="font-sans text-xs text-secondary flex items-center gap-1 mt-0.5">
                     <span className="material-symbols-outlined text-[14px]">call</span>
-                    {worker.phone}
+                    {formatNumber(worker.phone)}
                   </span>
                 </div>
               </div>
@@ -109,11 +109,11 @@ export const SupervisorWorkersScreen: React.FC<SupervisorWorkersScreenProps> = (
             <div className="p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/30 space-y-1 text-xs text-secondary">
               <div className="flex items-center justify-between">
                 <span>{t('facilityLabel')}:</span>
-                <strong className="text-on-surface">{worker.assignedSubCentre}</strong>
+                <strong className="text-on-surface">{localize(worker.assignedSubCentre)}</strong>
               </div>
               <div className="flex items-center justify-between">
                 <span>{t('assignedMothers')}:</span>
-                <strong className="text-primary">{worker.activeMothersCount}</strong>
+                <strong className="text-primary">{formatNumber(worker.activeMothersCount)}</strong>
               </div>
             </div>
 

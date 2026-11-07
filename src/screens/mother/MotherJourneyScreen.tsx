@@ -4,7 +4,7 @@ import { useLanguage } from '../../context/LanguageContext';
 
 export const MotherJourneyScreen: React.FC = () => {
   const { mothers, healthUpdates } = useData();
-  const { t } = useLanguage();
+  const { t, formatName, formatNumber, localize } = useLanguage();
   const mother = mothers[0]; // Priya
   const [selectedRecord, setSelectedRecord] = useState<string | null>(null);
   const [previewDoc, setPreviewDoc] = useState<{
@@ -18,50 +18,50 @@ export const MotherJourneyScreen: React.FC = () => {
   const timelineEvents = [
     {
       id: 'EVT-01',
-      date: '12 Nov 2026',
+      date: formatNumber('12 Nov 2026'),
       title: t('anc3CheckupTitle'),
       subtitle: t('anc3CheckupSubtitle'),
-      provider: `${mother.assignedWorkerName} (${t('roleWorker')})`,
+      provider: `${formatName(mother.assignedWorkerName)} (${t('roleWorker')})`,
       status: t('statusScheduled'),
       statusType: 'upcoming',
       details: t('anc3CheckupDetails'),
     },
     ...healthUpdates.filter((u) => u.motherId === mother.id).map((u) => ({
       id: u.healthUpdateId,
-      date: u.submittedAt.split('·')[0].trim(),
+      date: formatNumber(u.submittedAt.split('·')[0].trim()),
       title: u.reviewStatus === 'reviewed' ? t('updateReviewedTitle') : t('selfReportedCheckinTitle'),
-      subtitle: u.observations,
-      provider: u.reviewedBy || `${t('statusPending')} (${t('roleWorker')})`,
+      subtitle: localize(u.observations, u.translations?.observations),
+      provider: u.reviewedBy ? formatName(u.reviewedBy) : `${t('statusPending')} (${t('roleWorker')})`,
       status: u.reviewStatus === 'reviewed' ? t('statusReviewed') : t('statusPending'),
       statusType: u.reviewStatus === 'reviewed' ? 'completed' : 'pending',
-      details: u.reviewNotes || u.notes,
+      details: localize(u.reviewNotes || u.notes, u.translations?.reviewNotes || u.translations?.notes),
     })),
     {
       id: 'EVT-04',
-      date: '17 Sep 2026',
+      date: formatNumber('17 Sep 2026'),
       title: t('anc2CheckupTitle'),
       subtitle: t('anc2CheckupSubtitle'),
-      provider: `Dr. Sharma / ${mother.assignedWorkerName}`,
+      provider: `Dr. Sharma / ${formatName(mother.assignedWorkerName)}`,
       status: t('statusCompleted'),
       statusType: 'completed',
       details: t('anc2CheckupDetails'),
     },
     {
       id: 'EVT-05',
-      date: '16 Jul 2026',
+      date: formatNumber('16 Jul 2026'),
       title: t('anc1CheckupTitle'),
       subtitle: t('anc3CheckupSubtitle'),
-      provider: `${mother.assignedWorkerName} (${t('roleWorker')})`,
+      provider: `${formatName(mother.assignedWorkerName)} (${t('roleWorker')})`,
       status: t('statusCompleted'),
       statusType: 'completed',
       details: t('anc1CheckupDetails'),
     },
     {
       id: 'EVT-06',
-      date: '15 Jun 2026',
+      date: formatNumber('15 Jun 2026'),
       title: t('regMcpIssuedTitle'),
       subtitle: t('anc3CheckupSubtitle'),
-      provider: `${mother.assignedWorkerName} (${t('roleWorker')})`,
+      provider: `${formatName(mother.assignedWorkerName)} (${t('roleWorker')})`,
       status: t('statusCompleted'),
       statusType: 'completed',
       details: t('regMcpIssuedDetails'),
@@ -125,11 +125,11 @@ export const MotherJourneyScreen: React.FC = () => {
         <div className="grid grid-cols-2 gap-space-sm pt-space-xs">
           <div className="bg-surface-container-lowest p-space-sm rounded-lg border border-outline-variant/30 flex flex-col">
             <span className="font-sans text-[11px] text-secondary">{t('eddLabel')}</span>
-            <span className="font-sans text-xs font-bold text-on-surface mt-0.5">{mother.edd}</span>
+            <span className="font-sans text-xs font-bold text-on-surface mt-0.5">{formatNumber(mother.edd)}</span>
           </div>
           <div className="bg-surface-container-lowest p-space-sm rounded-lg border border-outline-variant/30 flex flex-col">
             <span className="font-sans text-[11px] text-secondary">{t('yourHealthWorker')}</span>
-            <span className="font-sans text-xs font-bold text-on-surface mt-0.5">{mother.assignedWorkerName}</span>
+            <span className="font-sans text-xs font-bold text-on-surface mt-0.5">{formatName(mother.assignedWorkerName)}</span>
           </div>
         </div>
       </section>

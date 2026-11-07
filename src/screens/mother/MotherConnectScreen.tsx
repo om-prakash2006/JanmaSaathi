@@ -4,7 +4,7 @@ import { useLanguage } from '../../context/LanguageContext';
 
 export const MotherConnectScreen: React.FC = () => {
   const { mothers, healthUpdates, messages, sendMessage } = useData();
-  const { t } = useLanguage();
+  const { t, formatName, localize } = useLanguage();
   const mother = mothers[0]; // Priya
   const priyaUpdates = healthUpdates.filter((u) => u.motherId === mother.id);
   const [inputText, setInputText] = useState('');
@@ -50,7 +50,7 @@ export const MotherConnectScreen: React.FC = () => {
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
                 <span className="font-sans text-base font-bold text-on-surface">
-                  {mother.assignedWorkerName}
+                  {formatName(mother.assignedWorkerName)}
                 </span>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-secondary-container text-on-secondary-container flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
@@ -61,7 +61,7 @@ export const MotherConnectScreen: React.FC = () => {
                 {t('yourHealthWorker')}
               </span>
               <span className="font-sans text-xs text-secondary">
-                {mother.village}, {mother.hamlet}
+                {formatName(mother.village)}, {formatName(mother.hamlet)}
               </span>
             </div>
           </div>
@@ -90,7 +90,7 @@ export const MotherConnectScreen: React.FC = () => {
 
         {callbackRequested && (
           <div className="p-2.5 rounded-lg bg-primary-container/10 border border-primary-container/30 text-xs text-primary-container text-center font-medium">
-            {t('callbackSentNotice', { name: mother.assignedWorkerName })}
+            {t('callbackSentNotice', { name: formatName(mother.assignedWorkerName) })}
           </div>
         )}
       </section>
@@ -126,13 +126,13 @@ export const MotherConnectScreen: React.FC = () => {
               </div>
 
               <p className="font-sans text-xs text-on-surface">
-                <strong className="text-secondary font-medium">{t('clinicalNotes')}:</strong> {item.observations}
+                <strong className="text-secondary font-medium">{t('clinicalNotes')}:</strong> {localize(item.observations, item.translations?.observations)}
               </p>
 
               {item.reviewNotes && (
                 <div className="p-2.5 rounded-lg bg-surface-container-lowest border border-outline-variant/30 text-xs text-tertiary">
-                  <span className="font-semibold text-primary block mb-0.5">{mother.assignedWorkerName}:</span>
-                  <p className="italic font-serif">"{item.reviewNotes}"</p>
+                  <span className="font-semibold text-primary block mb-0.5">{formatName(mother.assignedWorkerName)}:</span>
+                  <p className="italic font-serif">"{localize(item.reviewNotes, item.translations?.reviewNotes)}"</p>
                 </div>
               )}
             </div>
@@ -152,32 +152,43 @@ export const MotherConnectScreen: React.FC = () => {
 
         {/* Message Thread */}
         <div className="bg-surface-container-low rounded-xl p-space-md border border-outline-variant/40 shadow-sm space-y-3">
-          {messages.map((msg) => {
-            const isMe = msg.senderRole === 'mother';
-            return (
-              <div
-                key={msg.id}
-                className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}
-              >
-                <span className="text-[10px] text-secondary mb-0.5 px-1">
-                  {isMe ? `${t('roleMother')} (${mother.name})` : `${mother.assignedWorkerName} (${t('roleWorker')})`}
-                </span>
+          {messages
+            .filter((m) => m.motherId === mother.id || m.senderId === mother.id)
+            .map((msg) => {
+              const isMe = msg.senderRole === 'mother';
+              const isPending = msg.syncStatus === 'pending_sync' || (msg as any).syncState === 'pending_sync';
+              const isFailed = msg.syncStatus === 'failed' || (msg as any).syncState === 'conflict';
+              return (
                 <div
-                  className={`max-w-[85%] p-3 rounded-2xl text-xs leading-relaxed ${
-                    isMe
-                      ? 'bg-primary-container text-on-primary rounded-br-none shadow-sm'
-                      : 'bg-surface-container-lowest text-on-surface rounded-bl-none border border-outline-variant/40'
-                  }`}
+                  key={msg.id}
+                  className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}
                 >
-                  {msg.text}
+                  <span className="text-[10px] text-secondary mb-0.5 px-1">
+                    {isMe ? `${t('roleMother')} (${formatName(mother.name)})` : `${formatName(mother.assignedWorkerName)} (${t('roleWorker')})`}
+                  </span>
+                  <div
+                    className={`max-w-[85%] p-3 rounded-2xl text-xs leading-relaxed ${
+                      isMe
+                        ? 'bg-primary-container text-on-primary rounded-br-none shadow-sm'
+                        : 'bg-surface-container-lowest text-on-surface rounded-bl-none border border-outline-variant/40'
+                    }`}
+                  >
+                    {localize(msg.text, msg.translations?.text)}
+                  </div>
+                  <div className="text-[10px] text-secondary mt-0.5 px-1 flex items-center gap-1.5">
+                    {isFailed ? (
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-red-100 text-red-900 border border-red-300 flex items-center gap-0.5">
+                        <span className="material-symbols-outlined text-[10px]">error</span>
+                        Sync Failed
+                      </span>
+                    ) : !isPending ? (
+                      <span className="material-symbols-outlined text-[12px] text-emerald-600">done_all</span>
+                    ) : null}
+                    <span>{msg.timestamp}</span>
+                  </div>
                 </div>
-                <span className="text-[10px] text-secondary mt-0.5 px-1 flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[12px]">done_all</span>
-                  {msg.timestamp}
-                </span>
-              </div>
-            );
-          })}
+              );
+            })}
 
           {/* Suggested Inquiries */}
           <div className="pt-2">

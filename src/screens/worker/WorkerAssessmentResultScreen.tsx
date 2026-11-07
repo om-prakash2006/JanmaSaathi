@@ -17,7 +17,7 @@ export const WorkerAssessmentResultScreen: React.FC<WorkerAssessmentResultScreen
   onReturnToAssessments,
   onScheduleVisit,
 }) => {
-  const { t, language } = useLanguage();
+  const { t, language, formatName, formatNumber, localize } = useLanguage();
 
   // Fallback / re-hydrate explanation and clinical screening if missing
   const modelExplanation: PredictionExplanation | null = useMemo(() => {
@@ -116,11 +116,11 @@ export const WorkerAssessmentResultScreen: React.FC<WorkerAssessmentResultScreen
               {t('screeningResult')}
             </span>
             <h1 className="font-serif text-2xl text-on-surface font-normal leading-tight">
-              {assessment.motherName}
+              {formatName(assessment.motherName)}
             </h1>
             <p className="font-sans text-xs text-secondary mt-0.5">
-              MCP ID: <strong className="text-on-surface">{assessment.motherId}</strong> •{' '}
-              {t('gestationalAge')}: {assessment.gestationalWeek} {t('weeksLabel') || 'weeks'}
+              MCP ID: <strong className="text-on-surface">{formatNumber(assessment.motherId)}</strong> •{' '}
+              {t('gestationalAge')}: {formatNumber(assessment.gestationalWeek)} {t('weeksLabel') || 'weeks'}
             </p>
           </div>
         </div>
@@ -130,13 +130,13 @@ export const WorkerAssessmentResultScreen: React.FC<WorkerAssessmentResultScreen
           <div className="bg-surface-container-lowest p-2.5 rounded-xl border border-outline-variant/30 flex flex-col">
             <span className="font-sans text-[11px] text-secondary">{t('assessmentId')}</span>
             <span className="font-sans text-xs font-bold text-on-surface truncate">
-              {assessment.id}
+              {formatNumber(assessment.id)}
             </span>
           </div>
           <div className="bg-surface-container-lowest p-2.5 rounded-xl border border-outline-variant/30 flex flex-col">
             <span className="font-sans text-[11px] text-secondary">{t('timestamp')}</span>
             <span className="font-sans text-xs font-bold text-on-surface truncate">
-              {assessment.recordedAt || assessment.assessedAt?.slice(0, 10)}
+              {formatNumber(assessment.recordedAt || assessment.assessedAt?.slice(0, 10) || 'Recent')}
             </span>
           </div>
         </div>

@@ -11,7 +11,7 @@ export const MotherWellnessScreen: React.FC<MotherWellnessScreenProps> = ({
   onNavigateToConnect,
 }) => {
   const { mothers, appointments } = useData();
-  const { t, language } = useLanguage();
+  const { t, language, formatName, formatNumber, localize } = useLanguage();
   const mother = mothers[0]; // Priya Sharma (verified maternal record)
   const nextAppt = appointments.find((a) => a.motherId === mother?.id) || appointments[0];
 
@@ -510,10 +510,10 @@ export const MotherWellnessScreen: React.FC<MotherWellnessScreenProps> = ({
               </span>
             </div>
             <p className="text-xs font-bold text-on-surface">
-              {nextAppt.title} • {nextAppt.date} ({nextAppt.time})
+              {localize(nextAppt.title, nextAppt.translations?.title)} • {formatNumber(nextAppt.date)} ({formatNumber(nextAppt.time)})
             </p>
             <p className="text-[11px] text-secondary">
-              {nextAppt.facility} • {t('yourHealthWorker')}: {mother?.assignedWorkerName ?? 'Sunita Devi'}
+              {localize(nextAppt.facility, nextAppt.translations?.facility)} • {t('yourHealthWorker')}: {formatName(mother?.assignedWorkerName ?? 'Sunita Devi')}
             </p>
           </div>
         )}
@@ -649,7 +649,7 @@ export const MotherWellnessScreen: React.FC<MotherWellnessScreenProps> = ({
               <div>
                 <span className="font-sans text-xs font-bold text-primary-container block">{t('contactHealthWorkerBtn')}</span>
                 <span className="font-sans text-[11px] text-secondary">
-                  {mother?.assignedWorkerName ?? 'Sunita Devi'} • Rampur Sub-Centre
+                  {formatName(mother?.assignedWorkerName ?? 'Sunita Devi')} • {localize('Rampur Sub-Centre')}
                 </span>
               </div>
             </div>

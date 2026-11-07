@@ -21,10 +21,11 @@ export type StoreName =
   | 'appointmentDrafts'
   | 'messageDrafts'
   | 'syncMetadata'
-  | 'localPreferences';
+  | 'localPreferences'
+  | 'translationCache';
 
 const DB_NAME = 'JanmaSaathi_OfflineDB_v1';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 // In-memory fallback map for non-browser Node.js test environments
 const memoryFallbackStore: Record<StoreName, Map<string, any>> = {
@@ -36,6 +37,7 @@ const memoryFallbackStore: Record<StoreName, Map<string, any>> = {
   messageDrafts: new Map(),
   syncMetadata: new Map(),
   localPreferences: new Map(),
+  translationCache: new Map(),
 };
 
 let dbPromise: Promise<IDBDatabase> | null = null;
@@ -92,6 +94,7 @@ export function getJanmaSaathiDB(): Promise<IDBDatabase> {
         'messageDrafts',
         'syncMetadata',
         'localPreferences',
+        'translationCache',
       ];
 
       stores.forEach((storeName) => {
@@ -164,8 +167,24 @@ export async function saveLocalDraft<T extends { id: string }>(
   });
 }
 
+function matchesOwningUid(item: any, owningUid?: string): boolean {
+  if (!owningUid) return true;
+  return (
+    item.owningUid === owningUid ||
+    item.owningUid === 'shared' ||
+    item.owningUid === 'default-local-user' ||
+    item.creatingWorkerId === owningUid ||
+    item.workerId === owningUid ||
+    item.assignedWorkerId === owningUid ||
+    item.assignedHealthWorkerId === owningUid ||
+    item.motherId === owningUid ||
+    item.senderId === owningUid ||
+    item.recipientId === owningUid
+  );
+}
+
 /**
- * Get all records from a store scoped to an owning Firebase UID for strict user isolation.
+ * Get all records from a store scoped to an owning Firebase UID or staff/mother identity.
  */
 export async function getLocalDrafts<T>(
   storeName: StoreName,
@@ -175,8 +194,7 @@ export async function getLocalDrafts<T>(
 
   if (typeof window === 'undefined' || !window.indexedDB) {
     const results = Array.from(memoryFallbackStore[storeName].values()) as (T & OfflineRecordMetadata)[];
-    if (!owningUid) return results;
-    return results.filter((item) => item.owningUid === owningUid || item.owningUid === 'shared');
+    return results.filter((item) => matchesOwningUid(item, owningUid));
   }
 
   return new Promise((resolve, reject) => {
@@ -186,26 +204,19 @@ export async function getLocalDrafts<T>(
 
     getReq.onsuccess = () => {
       const results = (getReq.result || []) as (T & OfflineRecordMetadata)[];
-      if (!owningUid) {
-        resolve(results);
-      } else {
-        const filtered = results.filter(
-          (item) => item.owningUid === owningUid || item.owningUid === 'shared'
-        );
-        resolve(filtered);
-      }
+      const filtered = results.filter((item) => matchesOwningUid(item, owningUid));
+      resolve(filtered);
     };
     getReq.onerror = () => reject(getReq.error);
   });
 }
 
 /**
- * Get all pending synchronization records across stores for a given owning UID.
+ * Get all pending synchronization records across stores for a given owning UID or device-wide.
  */
 export async function getAllPendingSyncRecords(
   owningUid?: string
 ): Promise<{ storeName: StoreName; record: OfflineRecordMetadata & any }[]> {
-  const db = await getJanmaSaathiDB();
   const stores: StoreName[] = [
     'maternalProfiles',
     'assessmentDrafts',
@@ -300,4 +311,74 @@ export async function deleteLocalDraft(storeName: StoreName, id: string): Promis
 export async function getUnsyncedCountForUser(owningUid: string): Promise<number> {
   const pending = await getAllPendingSyncRecords(owningUid);
   return pending.length;
+}
+
+export interface CachedTranslationRecord {
+  id: string; // `${textHash}_${lang}`
+  sourceText: string;
+  targetLang: string;
+  translatedText: string;
+  cachedAt: string;
+}
+
+/**
+ * Cache a dynamic translation in IndexedDB for offline access across refreshes and restarts.
+ */
+export async function saveCachedTranslation(
+  sourceText: string,
+  targetLang: string,
+  translatedText: string
+): Promise<void> {
+  const db = await getJanmaSaathiDB();
+  const id = `${targetLang}:${sourceText.trim()}`;
+  const record: CachedTranslationRecord = {
+    id,
+    sourceText,
+    targetLang,
+    translatedText,
+    cachedAt: new Date().toISOString(),
+  };
+
+  if (typeof window === 'undefined' || !window.indexedDB) {
+    memoryFallbackStore.translationCache.set(id, record);
+    return;
+  }
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction('translationCache', 'readwrite');
+    const store = transaction.objectStore('translationCache');
+    const putReq = store.put(record);
+    putReq.onsuccess = () => resolve();
+    putReq.onerror = () => reject(putReq.error);
+  });
+}
+
+/**
+ * Retrieve a cached dynamic translation from IndexedDB.
+ */
+export async function getCachedTranslation(
+  sourceText: string,
+  targetLang: string
+): Promise<string | null> {
+  const db = await getJanmaSaathiDB();
+  const id = `${targetLang}:${sourceText.trim()}`;
+
+  if (typeof window === 'undefined' || !window.indexedDB) {
+    const hit = memoryFallbackStore.translationCache.get(id);
+    return hit ? hit.translatedText : null;
+  }
+
+  return new Promise((resolve) => {
+    try {
+      const transaction = db.transaction('translationCache', 'readonly');
+      const store = transaction.objectStore('translationCache');
+      const getReq = store.get(id);
+      getReq.onsuccess = () => {
+        resolve(getReq.result ? getReq.result.translatedText : null);
+      };
+      getReq.onerror = () => resolve(null);
+    } catch {
+      resolve(null);
+    }
+  });
 }

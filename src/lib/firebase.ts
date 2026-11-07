@@ -63,9 +63,17 @@ export const auth = getAuth(app);
 export const storage = getStorage(app);
 
 // Connectivity validation mandated by architecture
-export async function validateFirestoreConnection(): Promise<boolean> {
+export async function validateFirestoreConnection(timeoutMs = 3000): Promise<boolean> {
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+    return false;
+  }
+
   try {
-    await getDocFromServer(doc(db, 'test', 'connection'));
+    const checkPromise = getDocFromServer(doc(db, 'test', 'connection'));
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('Firestore probe timeout')), timeoutMs)
+    );
+    await Promise.race([checkPromise, timeoutPromise]);
     return true;
   } catch (error) {
     if (error instanceof Error && error.message.includes('the client is offline')) {
@@ -75,4 +83,4 @@ export async function validateFirestoreConnection(): Promise<boolean> {
   }
 }
 
-validateFirestoreConnection();
+validateFirestoreConnection().catch(() => {});

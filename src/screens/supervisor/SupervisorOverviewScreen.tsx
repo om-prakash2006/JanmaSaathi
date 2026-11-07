@@ -16,7 +16,7 @@ export const SupervisorOverviewScreen: React.FC<SupervisorOverviewScreenProps> =
   onNavigateToReports,
 }) => {
   const { supervisor, workers, mothers, referrals, assessments } = useData();
-  const { t } = useLanguage();
+  const { t, formatName, formatNumber, localize } = useLanguage();
 
   const unassignedWorkers = workers.filter((w) => w.status === 'unassigned');
   const pendingReports = assessments.filter((a) => a.supervisorReviewStatus === 'pending');
@@ -29,11 +29,11 @@ export const SupervisorOverviewScreen: React.FC<SupervisorOverviewScreenProps> =
         <div className="flex items-center justify-between flex-wrap gap-1">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container/60 text-tertiary font-sans text-xs">
             <span className="material-symbols-outlined text-[15px] text-primary-container">shield</span>
-            {supervisor.district}
+            {localize(supervisor.district)}
           </span>
           <span className="font-sans text-xs text-on-surface-variant flex items-center gap-1">
             <span className="material-symbols-outlined text-[15px] text-primary-container">apartment</span>
-            {supervisor.block}
+            {localize(supervisor.block)}
           </span>
         </div>
         <div className="pt-space-xs">
@@ -95,10 +95,10 @@ export const SupervisorOverviewScreen: React.FC<SupervisorOverviewScreenProps> =
             </div>
             <div className="flex items-baseline gap-1">
               <span className="font-serif text-2xl text-tertiary font-bold tracking-tight">
-                {workers.length}
+                {formatNumber(workers.length)}
               </span>
               <span className="font-sans text-xs text-secondary">
-                {t('unassignedCount', { count: unassignedWorkers.length })}
+                {t('unassignedCount', { count: formatNumber(unassignedWorkers.length) })}
               </span>
             </div>
           </div>
@@ -110,7 +110,7 @@ export const SupervisorOverviewScreen: React.FC<SupervisorOverviewScreenProps> =
             </div>
             <div className="flex items-baseline gap-1">
               <span className="font-serif text-2xl text-tertiary font-bold tracking-tight">
-                {mothers.length}
+                {formatNumber(mothers.length)}
               </span>
             </div>
           </div>
@@ -125,7 +125,7 @@ export const SupervisorOverviewScreen: React.FC<SupervisorOverviewScreenProps> =
             </div>
             <div className="flex items-baseline gap-1">
               <span className="font-serif text-2xl text-primary-container font-bold tracking-tight">
-                {pendingReports.length}
+                {formatNumber(pendingReports.length)}
               </span>
             </div>
           </div>
@@ -140,7 +140,7 @@ export const SupervisorOverviewScreen: React.FC<SupervisorOverviewScreenProps> =
             </div>
             <div className="flex items-baseline gap-1">
               <span className="font-serif text-2xl text-tertiary font-bold tracking-tight">
-                {activeReferrals.length}
+                {formatNumber(activeReferrals.length)}
               </span>
             </div>
           </div>
@@ -158,7 +158,7 @@ export const SupervisorOverviewScreen: React.FC<SupervisorOverviewScreenProps> =
             onClick={onNavigateToReferrals}
             className="font-sans text-xs font-semibold text-secondary hover:text-primary cursor-pointer"
           >
-            {t('viewDetails')} ({referrals.length})
+            {t('viewDetails')} ({formatNumber(referrals.length)})
           </button>
         </div>
 
@@ -171,10 +171,10 @@ export const SupervisorOverviewScreen: React.FC<SupervisorOverviewScreenProps> =
               <div className="flex items-center justify-between">
                 <div>
                   <span className="font-sans text-sm font-bold text-on-surface">
-                    {ref.motherName} ({ref.motherId})
+                    {formatName(ref.motherName)} ({formatNumber(ref.motherId)})
                   </span>
                   <span className="font-sans text-xs text-secondary block">
-                    {ref.workerName} • {ref.referredToFacility}
+                    {formatName(ref.workerName)} • {localize(ref.referredToFacility, ref.translations?.referredToFacility)}
                   </span>
                 </div>
                 <span
@@ -184,11 +184,11 @@ export const SupervisorOverviewScreen: React.FC<SupervisorOverviewScreenProps> =
                       : 'bg-primary-container text-on-primary'
                   }`}
                 >
-                  {ref.priority}
+                  {ref.priority === 'emergency' ? t('alertSeverityHigh') : ref.priority === 'urgent' ? t('alertSeverityModerate') : t('alertSeverityRoutine')}
                 </span>
               </div>
               <p className="font-sans text-xs text-tertiary">
-                {ref.reasonForReferral}
+                {localize(ref.reasonForReferral, ref.translations?.reasonForReferral)}
               </p>
               <div className="pt-1 flex justify-end">
                 <button

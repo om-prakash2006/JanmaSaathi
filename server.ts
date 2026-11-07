@@ -93,6 +93,39 @@ app.post('/api/auth/link-mother-account', (req, res) => {
   });
 });
 
+// API: Secure Content Translation Endpoint
+app.post('/api/translate', async (req, res) => {
+  const { text, targetLang } = req.body;
+  if (!text || !targetLang) {
+    return res.status(400).json({ success: false, error: 'Missing text or targetLang parameter.' });
+  }
+
+  const cleanText = String(text).trim();
+  const cleanLang = String(targetLang).trim().toLowerCase();
+
+  if (cleanLang === 'en') {
+    return res.json({ success: true, translatedText: cleanText, sourceLanguage: 'en', targetLang: 'en' });
+  }
+
+  try {
+    const { localizeDynamicText } = await import('./src/utils/dynamicLocalization.ts');
+    const translated = localizeDynamicText(cleanText, cleanLang as 'hi' | 'or');
+    return res.json({
+      success: true,
+      translatedText: translated,
+      sourceLanguage: 'en',
+      targetLang: cleanLang,
+      cached: true,
+    });
+  } catch (err: any) {
+    return res.status(500).json({
+      success: false,
+      error: 'Translation processing failed.',
+      fallback: cleanText,
+    });
+  }
+});
+
 // API: ML Explainable Risk Screening Endpoint
 app.post('/api/predict', async (req, res) => {
   try {

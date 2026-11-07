@@ -1,5 +1,69 @@
 export type Language = 'en' | 'hi' | 'or';
 
+export const NAME_DICTIONARY: Record<string, Record<Language, string>> = {
+  // Persons
+  'Priya Sharma': { en: 'Priya Sharma', hi: 'प्रिया शर्मा', or: 'ପ୍ରିୟା ଶର୍ମା' },
+  'Sunita Patel': { en: 'Sunita Patel', hi: 'सुनीता पटेल', or: 'ସୁନୀତା ପଟେଲ' },
+  'Ananya Roy': { en: 'Ananya Roy', hi: 'अनन्या रॉय', or: 'ଅନନ୍ୟା ରୟ' },
+  'Kavita Verma': { en: 'Kavita Verma', hi: 'कविता वर्मा', or: 'କବିତା ବର୍ମା' },
+  'Meena Devi': { en: 'Meena Devi', hi: 'मीना देवी', or: 'ମୀନା ଦେବୀ' },
+  'Ritu Singh': { en: 'Ritu Singh', hi: 'रितु सिंह', or: 'ରିତୁ ସିଂ' },
+  'Shanti Devi': { en: 'Shanti Devi', hi: 'शांति देवी', or: 'ଶାନ୍ତି ଦେବୀ' },
+  'Geeta Bai': { en: 'Geeta Bai', hi: 'गीता बाई', or: 'ଗୀତା ବାଈ' },
+  'Pooja Sahu': { en: 'Pooja Sahu', hi: 'पूजा साहू', or: 'ପୂଜା ସାହୂ' },
+  'Lata Das': { en: 'Lata Das', hi: 'लता दास', or: 'ଲତା ଦାସ' },
+  'Sunita Devi': { en: 'Sunita Devi', hi: 'सुनीता देवी', or: 'ସୁନୀତା ଦେବୀ' },
+  'Sunita Devi (Health Worker)': { en: 'Sunita Devi (Health Worker)', hi: 'सुनीता देवी (स्वास्थ्य कार्यकर्ता)', or: 'ସୁନୀତା ଦେବୀ (ସ୍ୱାସ୍ଥ୍ୟ କର୍ମୀ)' },
+  'Anita Sharma': { en: 'Anita Sharma', hi: 'अनीता शर्मा', or: 'ଅନୀତା ଶର୍ମା' },
+  'Rekha Verma': { en: 'Rekha Verma', hi: 'रेखा वर्मा', or: 'ରେଖା ବର୍ମା' },
+  'Pooja Rani': { en: 'Pooja Rani', hi: 'पूजा रानी', or: 'ପୂଜା ରାନୀ' },
+  'Dr. Rajesh Kumar': { en: 'Dr. Rajesh Kumar', hi: 'डॉ. राजेश कुमार', or: 'ଡକ୍ଟର ରାଜେଶ କୁମାର' },
+
+  // Places & Facilities
+  'Rampur': { en: 'Rampur', hi: 'रामपुर', or: 'ରାମପୁର' },
+  'Village Rampur': { en: 'Village Rampur', hi: 'ग्राम रामपुर', or: 'ଗ୍ରାମ ରାମପୁର' },
+  'Bilaspur': { en: 'Bilaspur', hi: 'बिलासपुर', or: 'ବିଲାସପୁର' },
+  'Sector 4': { en: 'Sector 4', hi: 'सेक्टर ४', or: 'ସେକ୍ଟର ୪' },
+  'Sector 3 East': { en: 'Sector 3 East', hi: 'सेक्टर ३ पूर्व', or: 'ସେକ୍ଟର ୩ ପୂର୍ବ' },
+  'Sector 4 North': { en: 'Sector 4 North', hi: 'सेक्टर ४ उत्तर', or: 'ସେକ୍ଟର ୪ ଉତ୍ତର' },
+  'Sub-Centre Rampur Health Post': { en: 'Sub-Centre Rampur Health Post', hi: 'उप-स्वास्थ्य केंद्र रामपुर', or: 'ଉପ-ସ୍ୱାସ୍ଥ୍ୟ କେନ୍ଦ୍ର ରାମପୁର' },
+  'District Hospital Rampur': { en: 'District Hospital Rampur', hi: 'जिला अस्पताल रामपुर', or: 'ଜିଲ୍ଲା ଡାକ୍ତରଖାନା ରାମପୁର' },
+  'Community Health Centre (CHC) Bilaspur': { en: 'Community Health Centre (CHC) Bilaspur', hi: 'सामुदायिक स्वास्थ्य केंद्र (CHC) बिलासपुर', or: 'ଗୋଷ୍ଠୀ ସ୍ୱାସ୍ଥ୍ୟ କେନ୍ଦ୍ର (CHC) ବିଲାସପୁର' },
+};
+
+export function toLocalizedNumerals(input: string | number, lang: Language): string {
+  const str = String(input);
+  if (lang === 'en') return str;
+
+  const devanagariDigits: Record<string, string> = {
+    '0': '०', '1': '१', '2': '२', '3': '३', '4': '४',
+    '5': '५', '6': '६', '7': '७', '8': '८', '9': '९'
+  };
+
+  const odiaDigits: Record<string, string> = {
+    '0': '୦', '1': '୧', '2': '୨', '3': '୩', '4': '୪',
+    '5': '୫', '6': '୬', '7': '୭', '8': '୮', '9': '୯'
+  };
+
+  const map = lang === 'hi' ? devanagariDigits : odiaDigits;
+  return str.replace(/[0-9]/g, (digit) => map[digit] || digit);
+}
+
+export function toLocalizedName(name: string, lang: Language): string {
+  if (!name || lang === 'en') return name;
+  const entry = NAME_DICTIONARY[name];
+  if (entry) return entry[lang] || entry.en;
+
+  let result = name;
+  Object.entries(NAME_DICTIONARY).forEach(([key, dict]) => {
+    if (result.includes(key)) {
+      result = result.replace(new RegExp(key, 'g'), dict[lang] || dict.en);
+    }
+  });
+
+  return result;
+}
+
 export const CLINICAL_GLOSSARY = {
   gestationalAge: {
     en: 'Gestational Age',

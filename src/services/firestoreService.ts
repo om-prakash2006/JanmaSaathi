@@ -427,6 +427,17 @@ export async function createDirectMessage(message: DirectMessage): Promise<Direc
   return message;
 }
 
+export async function createAppointmentRecord(appointment: Appointment): Promise<Appointment> {
+  const docRef = doc(db, COLLECTIONS.APPOINTMENTS, appointment.id);
+  const payload = {
+    ...cleanData(appointment),
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  };
+  await setDoc(docRef, payload);
+  return appointment;
+}
+
 export async function createOrUpdateAssignment(
   assignment: VillageAllocation,
   allocatedMotherIds?: string[]

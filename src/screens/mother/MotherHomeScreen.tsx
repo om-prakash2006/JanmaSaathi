@@ -13,7 +13,7 @@ export const MotherHomeScreen: React.FC<MotherHomeScreenProps> = ({
   onNavigateToConnect,
 }) => {
   const { mothers, healthUpdates, appointments, addHealthUpdate } = useData();
-  const { t } = useLanguage();
+  const { t, formatName, formatNumber, localize } = useLanguage();
   const mother = mothers[0]; // Priya Sharma
   const priyaUpdates = healthUpdates.filter((u) => u.motherId === mother.id);
   const nextAppt = appointments.find((a) => a.motherId === mother.id) || appointments[0];
@@ -172,27 +172,29 @@ export const MotherHomeScreen: React.FC<MotherHomeScreenProps> = ({
           <div className="flex items-start gap-space-md">
             <div className="w-12 h-14 rounded-xl bg-secondary-container flex flex-col items-center justify-center shrink-0 text-on-secondary-container">
               <span className="font-sans text-[11px] font-bold uppercase tracking-wide leading-none">
-                {nextAppt.month}
+                {localize(nextAppt.month)}
               </span>
               <span className="font-serif text-lg font-bold leading-tight mt-0.5">
-                {nextAppt.day}
+                {formatNumber(nextAppt.day)}
               </span>
             </div>
             <div className="flex flex-col min-w-0">
               <div className="text-primary font-sans text-sm font-bold">
-                {nextAppt.date}
+                {formatNumber(nextAppt.date)}
               </div>
               <span className="font-sans text-xs text-secondary font-medium mt-0.5">
-                {nextAppt.time}
+                {formatNumber(nextAppt.time)}
               </span>
               <p className="font-sans text-xs text-tertiary mt-1">
-                {nextAppt.title}
+                {localize(nextAppt.title, nextAppt.translations?.title)}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-space-xs text-secondary bg-surface-container-high px-space-md py-space-sm rounded-lg">
             <span className="material-symbols-outlined text-[20px] shrink-0 text-primary">location_on</span>
-            <span className="font-sans text-xs truncate">{nextAppt.facility}</span>
+            <span className="font-sans text-xs truncate">
+              {localize(nextAppt.facility, nextAppt.translations?.facility)}
+            </span>
           </div>
           <div className="pt-space-xs flex justify-end">
             <button
@@ -225,7 +227,7 @@ export const MotherHomeScreen: React.FC<MotherHomeScreenProps> = ({
               className="bg-surface-container rounded-xl p-space-md border border-outline-variant/30 shadow-sm flex flex-col space-y-1.5"
             >
               <div className="flex items-center justify-between">
-                <span className="font-sans text-xs text-secondary">{item.submittedAt}</span>
+                <span className="font-sans text-xs text-secondary">{formatNumber(item.submittedAt)}</span>
                 {item.reviewStatus === 'reviewed' ? (
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-secondary-container text-on-secondary-container">
                     <span className="material-symbols-outlined text-[13px]">verified</span>
@@ -239,10 +241,10 @@ export const MotherHomeScreen: React.FC<MotherHomeScreenProps> = ({
                 )}
               </div>
               <p className="font-sans text-sm font-semibold text-on-surface">
-                {item.observations}
+                {localize(item.observations, item.translations?.observations)}
               </p>
               <p className="font-sans text-xs text-secondary">
-                {item.reviewNotes ? item.reviewNotes : item.notes}
+                {localize(item.reviewNotes ? item.reviewNotes : item.notes, item.translations?.reviewNotes || item.translations?.notes)}
               </p>
             </div>
           ))}
@@ -262,10 +264,10 @@ export const MotherHomeScreen: React.FC<MotherHomeScreenProps> = ({
             </div>
             <div className="flex flex-col">
               <span className="font-sans text-base font-bold text-on-surface">
-                {mother.assignedWorkerName}
+                {formatName(mother.assignedWorkerName)}
               </span>
               <span className="font-sans text-xs text-secondary">
-                {mother.village}, {mother.hamlet}
+                {formatName(mother.village)}, {formatName(mother.hamlet)}
               </span>
             </div>
           </div>
@@ -274,7 +276,7 @@ export const MotherHomeScreen: React.FC<MotherHomeScreenProps> = ({
             <div className="p-3 bg-secondary-container/40 rounded-lg border border-outline-variant text-xs text-on-surface flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-[18px] text-primary-container">check_circle</span>
-                <span>{t('callbackSentNotice', { name: mother.assignedWorkerName })}</span>
+                <span>{t('callbackSentNotice', { name: formatName(mother.assignedWorkerName) })}</span>
               </div>
               <button
                 onClick={() => setCallbackRequested(false)}

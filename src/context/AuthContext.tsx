@@ -12,6 +12,7 @@ import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import { Role, User } from '../types';
 import { DEMO_ACCOUNTS } from '../data/centralDemoData';
+import { triggerBackgroundSync } from '../utils/syncManager';
 
 interface AuthContextType {
   role: Role | null;
@@ -185,6 +186,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(activeUser);
       setRole(selectedRole);
       localStorage.setItem(AUTH_FALLBACK_KEY, JSON.stringify(activeUser));
+      triggerBackgroundSync(activeUser.id).catch(() => {});
 
       return { success: true };
     } catch (err: any) {
@@ -247,6 +249,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(activeUser);
       setRole(roleToAssume);
       localStorage.setItem(AUTH_FALLBACK_KEY, JSON.stringify(activeUser));
+      triggerBackgroundSync(activeUser.id).catch(() => {});
       return { success: true };
     } catch (err: any) {
       console.error('Google Sign-In error:', err);

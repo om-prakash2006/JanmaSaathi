@@ -18,7 +18,7 @@ export const WorkerHomeScreen: React.FC<WorkerHomeScreenProps> = ({
   onRegisterMother,
 }) => {
   const { mothers, workers, referrals } = useData();
-  const { t } = useLanguage();
+  const { t, formatName, formatNumber, localize } = useLanguage();
   const worker = workers[0]; // Sunita Devi
 
   const assignedMothers = mothers.filter((m) => m.assignedWorkerId === worker.id);
@@ -31,7 +31,7 @@ export const WorkerHomeScreen: React.FC<WorkerHomeScreenProps> = ({
         <div className="flex items-center justify-between flex-wrap gap-1">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container/60 text-tertiary font-sans text-xs">
             <span className="material-symbols-outlined text-[15px] text-primary-container">location_on</span>
-            Village Rampur, Sector 4 • Sub-Centre
+            {localize('Village Rampur, Sector 4 • Sub-Centre')}
           </span>
           <span className="font-sans text-xs text-on-surface-variant flex items-center gap-1">
             <span className="material-symbols-outlined text-[15px] text-primary-container">badge</span>
@@ -98,7 +98,7 @@ export const WorkerHomeScreen: React.FC<WorkerHomeScreenProps> = ({
               <span className="material-symbols-outlined text-[18px] text-secondary">pregnant_woman</span>
             </div>
             <span className="font-serif text-2xl text-tertiary font-bold tracking-tight">
-              {assignedMothers.length > 0 ? assignedMothers.length : 28}
+              {formatNumber(assignedMothers.length > 0 ? assignedMothers.length : 28)}
             </span>
           </div>
 
@@ -108,7 +108,7 @@ export const WorkerHomeScreen: React.FC<WorkerHomeScreenProps> = ({
               <span className="material-symbols-outlined text-[18px] text-primary-container">calendar_today</span>
             </div>
             <div className="flex items-baseline gap-1">
-              <span className="font-serif text-2xl text-tertiary font-bold tracking-tight">3</span>
+              <span className="font-serif text-2xl text-tertiary font-bold tracking-tight">{formatNumber(3)}</span>
               <span className="font-sans text-xs text-secondary">{t('statusScheduled')}</span>
             </div>
           </div>
@@ -119,7 +119,7 @@ export const WorkerHomeScreen: React.FC<WorkerHomeScreenProps> = ({
               <span className="material-symbols-outlined text-[18px] text-primary-container">priority_high</span>
             </div>
             <div className="flex items-baseline gap-1">
-              <span className="font-serif text-2xl text-primary-container font-bold tracking-tight">3</span>
+              <span className="font-serif text-2xl text-primary-container font-bold tracking-tight">{formatNumber(3)}</span>
             </div>
           </div>
 
@@ -133,7 +133,7 @@ export const WorkerHomeScreen: React.FC<WorkerHomeScreenProps> = ({
             </div>
             <div className="flex items-baseline gap-1">
               <span className="font-serif text-2xl text-tertiary font-bold tracking-tight">
-                {pendingReferrals.length > 0 ? pendingReferrals.length : 2}
+                {formatNumber(pendingReferrals.length > 0 ? pendingReferrals.length : 2)}
               </span>
             </div>
           </div>
@@ -183,8 +183,8 @@ export const WorkerHomeScreen: React.FC<WorkerHomeScreenProps> = ({
           <div className="bg-surface-container rounded-xl p-space-md border border-outline-variant/40 shadow-sm flex flex-col space-y-2">
             <div className="flex items-center justify-between">
               <div>
-                <span className="font-sans text-sm font-bold text-on-surface">Meena Devi</span>
-                <span className="font-sans text-xs text-secondary block">ID: MCP-2025-0412</span>
+                <span className="font-sans text-sm font-bold text-on-surface">{formatName('Meena Devi')}</span>
+                <span className="font-sans text-xs text-secondary block">{formatNumber('ID: MCP-2025-0412')}</span>
               </div>
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-primary-container text-on-primary">
                 {t('flaggedForReview')}
@@ -212,8 +212,8 @@ export const WorkerHomeScreen: React.FC<WorkerHomeScreenProps> = ({
           <div className="bg-surface-container rounded-xl p-space-md border border-outline-variant/40 shadow-sm flex flex-col space-y-2">
             <div className="flex items-center justify-between">
               <div>
-                <span className="font-sans text-sm font-bold text-on-surface">Anjali Soren</span>
-                <span className="font-sans text-xs text-secondary block">ID: MCP-2025-0689</span>
+                <span className="font-sans text-sm font-bold text-on-surface">{formatName('Anjali Soren')}</span>
+                <span className="font-sans text-xs text-secondary block">{formatNumber('ID: MCP-2025-0689')}</span>
               </div>
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-secondary-container text-on-secondary-container">
                 {t('statusPending')}
@@ -250,12 +250,12 @@ export const WorkerHomeScreen: React.FC<WorkerHomeScreenProps> = ({
           <div className="bg-surface-container rounded-xl p-space-md border border-outline-variant/40 shadow-sm flex flex-col space-y-2">
             <div className="flex items-center justify-between">
               <div>
-                <span className="font-sans text-sm font-bold text-on-surface">Priya Sharma</span>
-                <span className="font-sans text-xs text-secondary block">ID: MCP-2025-0894</span>
+                <span className="font-sans text-sm font-bold text-on-surface">{formatName('Priya Sharma')}</span>
+                <span className="font-sans text-xs text-secondary block">{formatNumber('ID: MCP-2025-0894')}</span>
               </div>
               <span className="px-2 py-0.5 rounded-lg text-xs font-semibold bg-surface-container-high text-on-surface flex items-center gap-1">
                 <span className="material-symbols-outlined text-[14px]">schedule</span>
-                10:30 AM
+                {formatNumber('10:30 AM')}
               </span>
             </div>
             <div className="space-y-1 text-xs text-secondary">

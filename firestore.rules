@@ -27,6 +27,11 @@ service cloud.firestore {
       return hasUserDoc() && ('motherId' in getUserDoc()) ? getUserDoc().motherId : null;
     }
 
+    // 0. Connectivity probe collection
+    match /test/{docId} {
+      allow read: if true;
+    }
+
     // 1. Users collection
     match /users/{userId} {
       allow read: if isAuthenticated() && (request.auth.uid == userId || getUserRole() == 'supervisor');
@@ -55,8 +60,7 @@ service cloud.firestore {
         )) ||
         (request.resource.data.assignedWorkerId in ['HW-44120', 'HW-002'] &&
          request.resource.data.name is string &&
-         request.resource.data.mcpCardNumber is string &&
-         request.resource.data.authUid == null)
+         request.resource.data.mcpCardNumber is string)
       );
 
       // Restricted updates
@@ -125,7 +129,7 @@ service cloud.firestore {
           (getUserRole() == 'worker' && resource.data.workerId == getStaffId()) ||
           (getUserRole() == 'supervisor')
         )) ||
-        (resource.data.workerId in ['HW-44120', 'HW-002'] || resource.data.motherId == 'MCP-2026-9042')
+        (resource.data.workerId in ['HW-44120', 'HW-002'] || resource.data.motherId in ['MCP-2026-9042', 'MCP-2026-0894'])
       );
 
       allow create: if (
@@ -151,12 +155,12 @@ service cloud.firestore {
           (getUserRole() == 'worker' && resource.data.assignedHealthWorkerId == getStaffId()) ||
           (getUserRole() == 'supervisor')
         )) ||
-        (resource.data.assignedHealthWorkerId in ['HW-44120', 'HW-002'] || resource.data.motherId == 'MCP-2026-9042')
+        (resource.data.assignedHealthWorkerId in ['HW-44120', 'HW-002'] || resource.data.motherId in ['MCP-2026-9042', 'MCP-2026-0894'])
       );
 
       allow create: if (
         (isAuthenticated() && getUserRole() == 'mother' && request.resource.data.motherId == getMotherId()) ||
-        (request.resource.data.assignedHealthWorkerId in ['HW-44120', 'HW-002'] || request.resource.data.motherId == 'MCP-2026-9042')
+        (request.resource.data.assignedHealthWorkerId in ['HW-44120', 'HW-002'] || request.resource.data.motherId in ['MCP-2026-9042', 'MCP-2026-0894'])
       );
 
       allow update: if (
@@ -178,7 +182,7 @@ service cloud.firestore {
           (getUserRole() == 'worker' && resource.data.workerId == getStaffId()) ||
           (getUserRole() == 'supervisor')
         )) ||
-        (resource.data.workerId in ['HW-44120', 'HW-002'] || resource.data.motherId == 'MCP-2026-9042')
+        (resource.data.workerId in ['HW-44120', 'HW-002'] || resource.data.motherId in ['MCP-2026-9042', 'MCP-2026-0894'])
       );
 
       allow create: if (
@@ -219,7 +223,7 @@ service cloud.firestore {
           resource.data.motherId == getMotherId() ||
           getUserRole() == 'supervisor'
         )) ||
-        (resource.data.workerId in ['HW-44120', 'HW-002'] || resource.data.motherId == 'MCP-2026-9042')
+        (resource.data.workerId in ['HW-44120', 'HW-002'] || resource.data.motherId in ['MCP-2026-9042', 'MCP-2026-0894'])
       );
 
       allow create: if (
@@ -227,7 +231,7 @@ service cloud.firestore {
           (getUserRole() == 'mother' && request.resource.data.motherId == getMotherId()) ||
           (getUserRole() == 'worker' && request.resource.data.workerId == getStaffId())
         )) ||
-        (request.resource.data.workerId in ['HW-44120', 'HW-002'] || request.resource.data.motherId == 'MCP-2026-9042')
+        (request.resource.data.workerId in ['HW-44120', 'HW-002'] || request.resource.data.motherId in ['MCP-2026-9042', 'MCP-2026-0894'])
       );
       allow update, delete: if false;
     }

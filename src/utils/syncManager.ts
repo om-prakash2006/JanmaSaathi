@@ -4,14 +4,15 @@ import {
   createHealthUpdateRecord,
   createReferralRecord,
   createDirectMessage,
+  createAppointmentRecord,
 } from '../services/firestoreService';
 import {
   getAllPendingSyncRecords,
   updateLocalSyncState,
+  saveLocalDraft,
   StoreName,
-  OfflineRecordMetadata,
 } from './indexedDB';
-import { validateFirestoreConnection } from '../lib/firebase';
+import { auth, validateFirestoreConnection } from '../lib/firebase';
 import { evaluateMaternalRiskLocally } from '../ml/mlEngine';
 
 export interface SyncStatus {
@@ -45,12 +46,12 @@ export function subscribeSyncStatus(listener: (status: SyncStatus) => void): () 
  * Verify genuine backend reachability before attempting synchronization.
  */
 export async function isBackendReachable(): Promise<boolean> {
-  if (typeof navigator !== 'undefined' && !navigator.onLine) {
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) {
     return false;
   }
 
   try {
-    const isFirestoreAvailable = await validateFirestoreConnection();
+    const isFirestoreAvailable = await validateFirestoreConnection(3000);
     if (isFirestoreAvailable) return true;
 
     // Secondary reachability check via Express server /api/health
@@ -78,6 +79,18 @@ export async function triggerBackgroundSync(owningUid?: string): Promise<{
     return { success: false, processedCount: 0, errors: ['Backend unreachable'] };
   }
 
+  // Ensure Firebase Auth state is ready before proceeding with Firestore sync
+  if (auth && typeof auth.authStateReady === 'function') {
+    try {
+      await Promise.race([
+        auth.authStateReady(),
+        new Promise((resolve) => setTimeout(resolve, 2000)),
+      ]);
+    } catch {
+      // Non-blocking timeout for auth state readiness
+    }
+  }
+
   currentSyncStatus.isSyncing = true;
   notifyListeners();
 
@@ -96,16 +109,21 @@ export async function triggerBackgroundSync(owningUid?: string): Promise<{
       return { success: true, processedCount: 0, errors: [] };
     }
 
-    // 1. Dependency Ordering: Mothers -> Assessments -> HealthUpdates -> Referrals -> Messages
+    console.info(
+      `[JanmaSaathi Sync] Sync cycle initiated. Found ${pendingItems.length} pending record(s) across local stores.`
+    );
+
+    // 1. Dependency Ordering: Mothers -> Assessments -> HealthUpdates -> Referrals -> Appointments -> Messages
     const storePriority: Record<StoreName, number> = {
       maternalProfiles: 1,
       assessmentDrafts: 2,
       healthUpdateDrafts: 3,
       referralDrafts: 4,
-      appointmentDrafts: 4,
-      messageDrafts: 5,
-      syncMetadata: 6,
-      localPreferences: 7,
+      appointmentDrafts: 5,
+      messageDrafts: 6,
+      syncMetadata: 7,
+      localPreferences: 8,
+      translationCache: 9,
     };
 
     pendingItems.sort(
@@ -113,11 +131,15 @@ export async function triggerBackgroundSync(owningUid?: string): Promise<{
     );
 
     for (const { storeName, record } of pendingItems) {
+      const recordId = record.id || (record as any).healthUpdateId;
       try {
+        console.info(`[JanmaSaathi Sync] Uploading ${storeName} record [ID: ${recordId}]...`);
+
         if (storeName === 'maternalProfiles') {
           // Idempotent Mother registration write to Firestore
           await createMotherRecord(record);
-          await updateLocalSyncState(storeName, record.id, 'synced');
+          await updateLocalSyncState(storeName, recordId, 'synced');
+          console.info(`[JanmaSaathi Sync] Upload succeeded for ${storeName} [ID: ${recordId}]. Marked as synced.`);
           processedCount++;
         } else if (storeName === 'assessmentDrafts') {
           // Check if prediction requires server re-validation
@@ -166,31 +188,50 @@ export async function triggerBackgroundSync(owningUid?: string): Promise<{
           }
 
           await createAssessmentRecord(finalAssessment);
-          await updateLocalSyncState(storeName, record.id, 'synced');
+          await updateLocalSyncState(storeName, recordId, 'synced');
+          console.info(`[JanmaSaathi Sync] Upload succeeded for ${storeName} [ID: ${recordId}]. Marked as synced.`);
           processedCount++;
         } else if (storeName === 'healthUpdateDrafts') {
           await createHealthUpdateRecord(record);
-          await updateLocalSyncState(storeName, record.id, 'synced');
+          await updateLocalSyncState(storeName, recordId, 'synced');
+          console.info(`[JanmaSaathi Sync] Upload succeeded for ${storeName} [ID: ${recordId}]. Marked as synced.`);
           processedCount++;
         } else if (storeName === 'referralDrafts') {
           await createReferralRecord(record);
-          await updateLocalSyncState(storeName, record.id, 'synced');
+          await updateLocalSyncState(storeName, recordId, 'synced');
+          console.info(`[JanmaSaathi Sync] Upload succeeded for ${storeName} [ID: ${recordId}]. Marked as synced.`);
+          processedCount++;
+        } else if (storeName === 'appointmentDrafts') {
+          await createAppointmentRecord(record);
+          await updateLocalSyncState(storeName, recordId, 'synced');
+          console.info(`[JanmaSaathi Sync] Upload succeeded for ${storeName} [ID: ${recordId}]. Marked as synced.`);
           processedCount++;
         } else if (storeName === 'messageDrafts') {
-          await createDirectMessage(record);
-          await updateLocalSyncState(storeName, record.id, 'synced');
+          const syncedRecord = {
+            ...record,
+            delivered: true,
+            syncStatus: 'delivered' as const,
+            syncState: 'synced' as const,
+            lastAttemptAt: new Date().toISOString(),
+          };
+          await createDirectMessage(syncedRecord);
+          await updateLocalSyncState(storeName, recordId, 'synced');
+          await saveLocalDraft(storeName, syncedRecord);
+          console.info(`[JanmaSaathi Sync] Upload succeeded for ${storeName} [ID: ${recordId}]. Marked as synced.`);
           processedCount++;
         }
       } catch (itemErr: any) {
-        console.warn(`Sync error on item ${record.id} in store ${storeName}:`, itemErr);
         const errMsg = itemErr.message || String(itemErr);
-        errors.push(`Store ${storeName} record ${record.id}: ${errMsg}`);
+        console.warn(
+          `[JanmaSaathi Sync] Upload failed for ${storeName} [ID: ${recordId}]: ${errMsg}. Preserved local draft.`
+        );
+        errors.push(`Store ${storeName} record ${recordId}: ${errMsg}`);
 
         // Handle permanent permission / validation errors by marking as auth_error or conflict
         if (errMsg.includes('permission') || errMsg.includes('PERMISSION_DENIED')) {
-          await updateLocalSyncState(storeName, record.id, 'auth_error', errMsg);
+          await updateLocalSyncState(storeName, recordId, 'auth_error', errMsg);
         } else {
-          await updateLocalSyncState(storeName, record.id, 'conflict', errMsg);
+          await updateLocalSyncState(storeName, recordId, 'conflict', errMsg);
         }
       }
     }
@@ -204,6 +245,18 @@ export async function triggerBackgroundSync(owningUid?: string): Promise<{
     const remaining = await getAllPendingSyncRecords(owningUid);
     currentSyncStatus.pendingCount = remaining.length;
     notifyListeners();
+
+    console.info(
+      `[JanmaSaathi Sync] Sync cycle finished. ${processedCount} synced successfully, ${errors.length} failed. Total pending remaining: ${remaining.length}.`
+    );
+
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(
+        new CustomEvent('janmasaathi:synced', {
+          detail: { processedCount, errors, remainingCount: remaining.length },
+        })
+      );
+    }
   }
 
   return {
@@ -219,21 +272,35 @@ export async function triggerBackgroundSync(owningUid?: string): Promise<{
 export function initAutoSyncTriggers(owningUidProvider: () => string | undefined) {
   if (typeof window === 'undefined') return;
 
+  const runSync = () => {
+    triggerBackgroundSync(owningUidProvider()).catch(() => {});
+  };
+
   // 1. Browser online event
   window.addEventListener('online', () => {
-    console.log('Browser online event triggered sync.');
-    triggerBackgroundSync(owningUidProvider());
+    console.info('[JanmaSaathi Sync Trigger] Network online event detected. Initiating sync...');
+    runSync();
   });
 
-  // 2. Visibility change event (when returning to active window)
+  // 2. Visibility change event (when user switches back to application tab)
   window.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
-      triggerBackgroundSync(owningUidProvider());
+      console.info('[JanmaSaathi Sync Trigger] Tab resumed/visible. Checking pending syncs...');
+      runSync();
     }
   });
 
-  // 3. Initial startup sync check
-  setTimeout(() => {
-    triggerBackgroundSync(owningUidProvider());
-  }, 3000);
+  // 3. Window focus event
+  window.addEventListener('focus', () => {
+    runSync();
+  });
+
+  // 4. Mobile / PWA pageshow event
+  window.addEventListener('pageshow', () => {
+    runSync();
+  });
+
+  // 5. Initial application startup sync checks
+  setTimeout(runSync, 1500);
+  setTimeout(runSync, 6000);
 }

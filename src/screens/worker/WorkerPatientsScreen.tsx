@@ -24,7 +24,7 @@ export const WorkerPatientsScreen: React.FC<WorkerPatientsScreenProps> = ({
     reviewHealthUpdate,
     registerMother,
   } = useData();
-  const { t } = useLanguage();
+  const { t, formatName, formatNumber, localize } = useLanguage();
   const worker = workers[0] || { id: 'HW-44120', name: 'Sunita Devi' };
 
   // Filter & Search states
@@ -83,12 +83,14 @@ export const WorkerPatientsScreen: React.FC<WorkerPatientsScreenProps> = ({
         hu.observations.toLowerCase().includes('headache') ||
         hu.observations.toLowerCase().includes('bleeding') ||
         hu.observations.toLowerCase().includes('severe');
+      const obsText = localize(hu.observations, hu.translations?.observations);
+      const notesText = hu.notes ? localize(hu.notes, hu.translations?.notes) : '';
       list.push({
         id: hu.healthUpdateId,
-        title: isHigh ? 'Reported Symptoms Requiring Review' : 'Maternal Health Update Check-in',
-        description: `${hu.observations} ${hu.notes ? `(${hu.notes})` : ''}`,
+        title: isHigh ? localize('Reported Symptoms Requiring Review') : localize('Maternal Health Update Check-in'),
+        description: `${obsText} ${notesText ? `(${notesText})` : ''}`,
         severity: isHigh ? 'high' : 'moderate',
-        timestamp: hu.submittedAt,
+        timestamp: formatNumber(hu.submittedAt),
         isReviewed: !isPending,
         sourceUpdateId: hu.healthUpdateId,
       });
@@ -100,10 +102,10 @@ export const WorkerPatientsScreen: React.FC<WorkerPatientsScreenProps> = ({
       if (asmt.ruleBasedDangerIdentified || asmt.systolicBP >= 140 || asmt.diastolicBP >= 90) {
         list.push({
           id: `alert-${asmt.id}`,
-          title: asmt.systolicBP >= 140 ? 'Elevated Blood Pressure Alert' : 'Clinical Assessment Flagged',
-          description: `Vitals recorded: BP ${asmt.systolicBP}/${asmt.diastolicBP} mmHg, HR ${asmt.heartRate} bpm. Protocol follow-up scheduled.`,
+          title: asmt.systolicBP >= 140 ? localize('Elevated Blood Pressure Alert') : localize('Clinical Assessment Flagged'),
+          description: localize(`Vitals recorded: BP ${formatNumber(asmt.systolicBP)}/${formatNumber(asmt.diastolicBP)} mmHg, HR ${formatNumber(asmt.heartRate)} bpm. Protocol follow-up scheduled.`),
           severity: 'high',
-          timestamp: asmt.recordedAt,
+          timestamp: formatNumber(asmt.recordedAt),
           isReviewed: asmt.supervisorReviewStatus === 'signed_off' || locallyReviewedAlertIds.includes(`alert-${asmt.id}`),
         });
       }
@@ -112,12 +114,15 @@ export const WorkerPatientsScreen: React.FC<WorkerPatientsScreenProps> = ({
     // 3. Upcoming or missed appointments
     const motherAppts = appointments.filter((a) => a.motherId === m.id);
     motherAppts.forEach((apt) => {
+      const aptTitle = localize(apt.title, apt.translations?.title);
+      const aptFacility = localize(apt.facility, apt.translations?.facility);
+      const aptNotes = apt.notes ? localize(apt.notes, apt.translations?.notes) : '';
       list.push({
         id: `apt-${apt.id}`,
-        title: apt.title,
-        description: `${apt.date} (${apt.time}) at ${apt.facility}. Notes: ${apt.notes}`,
+        title: aptTitle,
+        description: `${formatNumber(apt.date)} (${formatNumber(apt.time)}) at ${aptFacility}. ${aptNotes ? `${localize('Notes')}: ${aptNotes}` : ''}`,
         severity: apt.title.toLowerCase().includes('urgent') ? 'high' : 'routine',
-        timestamp: apt.date,
+        timestamp: formatNumber(apt.date),
         isReviewed: locallyReviewedAlertIds.includes(`apt-${apt.id}`),
       });
     });
@@ -126,10 +131,10 @@ export const WorkerPatientsScreen: React.FC<WorkerPatientsScreenProps> = ({
     if (m.lastVisitSummary && (m.lastVisitSummary.includes('Elevated') || m.lastVisitSummary.includes('Missed') || m.lastVisitSummary.includes('due'))) {
       list.push({
         id: `visit-${m.id}`,
-        title: m.lastVisitSummary.includes('Missed') ? 'Missed Antenatal Checkup' : 'Priority Follow-up Flag',
-        description: m.lastVisitSummary,
+        title: m.lastVisitSummary.includes('Missed') ? localize('Missed Antenatal Checkup') : localize('Priority Follow-up Flag'),
+        description: localize(m.lastVisitSummary, m.translations?.lastVisitSummary),
         severity: m.riskCategory === 'high' ? 'high' : 'moderate',
-        timestamp: m.lastVisitDate || 'Recent',
+        timestamp: formatNumber(m.lastVisitDate || 'Recent'),
         isReviewed: locallyReviewedAlertIds.includes(`visit-${m.id}`),
       });
     }
@@ -386,7 +391,7 @@ export const WorkerPatientsScreen: React.FC<WorkerPatientsScreenProps> = ({
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-sans text-sm font-bold text-on-surface">
-                      {mother.name}
+                      {formatName(mother.name)}
                     </span>
                     {mother.riskCategory === 'high' ? (
                       <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary-container text-on-primary flex items-center gap-0.5">
@@ -404,20 +409,20 @@ export const WorkerPatientsScreen: React.FC<WorkerPatientsScreenProps> = ({
                     )}
                   </div>
                   <span className="font-sans text-xs text-secondary block mt-0.5">
-                    ID: {mother.id} • Age: {mother.age} yrs
+                    {formatNumber(`ID: ${mother.id}`)} • {localize('Age')}: {formatNumber(mother.age)} yrs
                   </span>
                   <span className="font-sans text-xs text-secondary flex items-center gap-1 mt-0.5">
                     <span className="material-symbols-outlined text-[14px]">location_on</span>
-                    {mother.village}, {mother.hamlet}
+                    {formatName(mother.village)}, {formatName(mother.hamlet)}
                   </span>
                 </div>
 
                 <div className="text-right">
                   <span className="font-serif text-sm font-bold text-primary">
-                    Week {mother.gestationalAgeWeeks}
+                    {t('weekLabel', { num: mother.gestationalAgeWeeks })}
                   </span>
                   <span className="font-sans text-[11px] text-secondary block">
-                    EDD: {mother.edd}
+                    {t('eddLabel')}: {formatNumber(mother.edd)}
                   </span>
                 </div>
               </div>
@@ -462,12 +467,12 @@ export const WorkerPatientsScreen: React.FC<WorkerPatientsScreenProps> = ({
                   <div className="text-[11px] text-secondary leading-snug flex items-baseline justify-between gap-2">
                     <p className="truncate flex-1">
                       <strong className="text-on-surface font-semibold">
-                        {latestMsg.senderRole === 'worker' ? 'You:' : `${mother.name}:`}
+                        {latestMsg.senderRole === 'worker' ? `${t('you')}:` : `${formatName(mother.name)}:`}
                       </strong>{' '}
-                      {latestMsg.text}
+                      {localize(latestMsg.text, latestMsg.translations?.text)}
                     </p>
                     <span className="text-[10px] text-secondary shrink-0">
-                      {latestMsg.timestamp}
+                      {formatNumber(latestMsg.timestamp)}
                     </span>
                   </div>
                 ) : (
@@ -577,14 +582,14 @@ export const WorkerPatientsScreen: React.FC<WorkerPatientsScreenProps> = ({
                 <div>
                   <div className="flex items-center gap-1.5">
                     <span className="font-serif text-sm font-bold text-on-surface">
-                      {activeChatMother.name}
+                      {formatName(activeChatMother.name)}
                     </span>
                     <span className="text-[10px] text-secondary font-medium">
-                      ({activeChatMother.id})
+                      ({formatNumber(activeChatMother.id)})
                     </span>
                   </div>
                   <span className="font-sans text-[10px] text-secondary block">
-                    Week {activeChatMother.gestationalAgeWeeks} • {activeChatMother.hamlet} • Worker: {worker.name}
+                    {t('weekLabel', { num: activeChatMother.gestationalAgeWeeks })} • {formatName(activeChatMother.hamlet)} • {t('roleWorker')}: {formatName(worker.name)}
                   </span>
                 </div>
               </div>
@@ -602,6 +607,8 @@ export const WorkerPatientsScreen: React.FC<WorkerPatientsScreenProps> = ({
             <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-surface-container-low">
               {getMotherMessages(activeChatMother.id).map((msg) => {
                 const isWorker = msg.senderRole === 'worker';
+                const isPending = msg.syncStatus === 'pending_sync' || (msg as any).syncState === 'pending_sync';
+                const isFailed = msg.syncStatus === 'failed' || (msg as any).syncState === 'conflict';
                 return (
                   <div
                     key={msg.id}
@@ -609,8 +616,8 @@ export const WorkerPatientsScreen: React.FC<WorkerPatientsScreenProps> = ({
                   >
                     <span className="text-[10px] text-secondary mb-0.5 px-1">
                       {isWorker
-                        ? `${worker.name} (${t('roleWorker')})`
-                        : `${activeChatMother.name} (${t('roleMother')})`}
+                        ? `${formatName(worker.name)} (${t('roleWorker')})`
+                        : `${formatName(activeChatMother.name)} (${t('roleMother')})`}
                     </span>
                     <div
                       className={`max-w-[85%] p-3 rounded-2xl text-xs leading-relaxed ${
@@ -619,12 +626,19 @@ export const WorkerPatientsScreen: React.FC<WorkerPatientsScreenProps> = ({
                           : 'bg-surface-container-lowest text-on-surface rounded-bl-none border border-outline-variant/40'
                       }`}
                     >
-                      {msg.text}
+                      {localize(msg.text, msg.translations?.text)}
                     </div>
-                    <span className="text-[10px] text-secondary mt-0.5 px-1 flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[12px]">done_all</span>
-                      {msg.timestamp}
-                    </span>
+                    <div className="text-[10px] text-secondary mt-0.5 px-1 flex items-center gap-1.5">
+                      {isFailed ? (
+                        <span className="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-red-100 text-red-900 border border-red-300 flex items-center gap-0.5">
+                          <span className="material-symbols-outlined text-[10px]">error</span>
+                          {localize('Sync Failed')}
+                        </span>
+                      ) : !isPending ? (
+                        <span className="material-symbols-outlined text-[12px] text-emerald-600">done_all</span>
+                      ) : null}
+                      <span>{formatNumber(msg.timestamp)}</span>
+                    </div>
                   </div>
                 );
               })}
@@ -647,10 +661,10 @@ export const WorkerPatientsScreen: React.FC<WorkerPatientsScreenProps> = ({
                 <button
                   key={idx}
                   type="button"
-                  onClick={() => handleQuickAdvice(pill)}
+                  onClick={() => handleQuickAdvice(localize(pill))}
                   className="px-2.5 py-1 rounded-full text-[10px] font-medium bg-surface-container-highest text-on-surface border border-outline-variant/50 hover:border-primary-container shrink-0 cursor-pointer"
                 >
-                  {pill}
+                  {localize(pill)}
                 </button>
               ))}
             </div>

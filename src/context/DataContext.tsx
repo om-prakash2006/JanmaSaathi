@@ -43,10 +43,12 @@ import {
   createOrUpdateAssignment,
   logAuditEvent,
 } from '../services/firestoreService';
-import { saveLocalDraft, getLocalDrafts } from '../utils/indexedDB';
+import { saveLocalDraft, getLocalDrafts, updateLocalSyncState } from '../utils/indexedDB';
 import { triggerBackgroundSync, initAutoSyncTriggers } from '../utils/syncManager';
 import { evaluateMaternalRiskLocally } from '../ml/mlEngine';
 import { evaluateClinicalObservations } from '../ml/clinicalScreening';
+import { localizeDynamicText } from '../utils/dynamicLocalization';
+import { useAuth } from './AuthContext';
 
 interface DataContextType {
   supervisor: Supervisor;
@@ -136,64 +138,83 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
   const [dbError, setDbError] = useState<string | null>(null);
 
+  const { user } = useAuth();
+
   // 1. Restore local IndexedDB drafts & fallback cache on mount
-  useEffect(() => {
-    async function restoreLocalData() {
-      try {
-        // Load IndexedDB stores
-        const localMothers = await getLocalDrafts<Mother>('maternalProfiles');
-        const localAssessments = await getLocalDrafts<MaternalAssessment>('assessmentDrafts');
-        const localUpdates = await getLocalDrafts<HealthUpdate>('healthUpdateDrafts');
-        const localRefs = await getLocalDrafts<Referral>('referralDrafts');
-        const localMsgs = await getLocalDrafts<DirectMessage>('messageDrafts');
+  const restoreLocalData = useCallback(async () => {
+    try {
+      // Load IndexedDB stores
+      const localMothers = await getLocalDrafts<Mother>('maternalProfiles');
+      const localAssessments = await getLocalDrafts<MaternalAssessment>('assessmentDrafts');
+      const localUpdates = await getLocalDrafts<HealthUpdate>('healthUpdateDrafts');
+      const localRefs = await getLocalDrafts<Referral>('referralDrafts');
+      const localMsgs = await getLocalDrafts<DirectMessage>('messageDrafts');
 
-        if (localMothers.length > 0) {
-          setMothers((prev) => {
-            const existingIds = new Set(prev.map((m) => m.id));
-            const newDrafts = localMothers.filter((m) => !existingIds.has(m.id));
-            return [...newDrafts, ...prev];
-          });
-        }
-
-        if (localAssessments.length > 0) {
-          setAssessments((prev) => {
-            const existingIds = new Set(prev.map((a) => a.id));
-            const newDrafts = localAssessments.filter((a) => !existingIds.has(a.id));
-            return [...newDrafts, ...prev];
-          });
-        }
-
-        if (localUpdates.length > 0) {
-          setHealthUpdates((prev) => {
-            const existingIds = new Set(prev.map((u) => u.healthUpdateId));
-            const newDrafts = localUpdates.filter((u) => !existingIds.has(u.healthUpdateId));
-            return [...newDrafts, ...prev];
-          });
-        }
-
-        if (localRefs.length > 0) {
-          setReferrals((prev) => {
-            const existingIds = new Set(prev.map((r) => r.id));
-            const newDrafts = localRefs.filter((r) => !existingIds.has(r.id));
-            return [...newDrafts, ...prev];
-          });
-        }
-
-        if (localMsgs.length > 0) {
-          setMessages((prev) => {
-            const existingIds = new Set(prev.map((m) => m.id));
-            const newDrafts = localMsgs.filter((m) => !existingIds.has(m.id));
-            return [...newDrafts, ...prev];
-          });
-        }
-      } catch (err) {
-        console.warn('IndexedDB local restoration notice:', err);
+      if (localMothers.length > 0) {
+        setMothers((prev) => {
+          const existingIds = new Set(prev.map((m) => m.id));
+          const newDrafts = localMothers.filter((m) => !existingIds.has(m.id));
+          return [...newDrafts, ...prev];
+        });
       }
-    }
 
-    restoreLocalData();
-    initAutoSyncTriggers(() => undefined);
+      if (localAssessments.length > 0) {
+        setAssessments((prev) => {
+          const existingIds = new Set(prev.map((a) => a.id));
+          const newDrafts = localAssessments.filter((a) => !existingIds.has(a.id));
+          return [...newDrafts, ...prev];
+        });
+      }
+
+      if (localUpdates.length > 0) {
+        setHealthUpdates((prev) => {
+          const existingIds = new Set(prev.map((u) => u.healthUpdateId));
+          const newDrafts = localUpdates.filter((u) => !existingIds.has(u.healthUpdateId));
+          return [...newDrafts, ...prev];
+        });
+      }
+
+      if (localRefs.length > 0) {
+        setReferrals((prev) => {
+          const existingIds = new Set(prev.map((r) => r.id));
+          const newDrafts = localRefs.filter((r) => !existingIds.has(r.id));
+          return [...newDrafts, ...prev];
+        });
+      }
+
+      if (localMsgs.length > 0) {
+        setMessages((prev) => {
+          const existingIds = new Set(prev.map((m) => m.id));
+          const newDrafts = localMsgs.filter((m) => !existingIds.has(m.id));
+          return [...newDrafts, ...prev];
+        });
+      }
+    } catch (err) {
+      console.warn('IndexedDB local restoration notice:', err);
+    }
   }, []);
+
+  useEffect(() => {
+    restoreLocalData();
+    initAutoSyncTriggers(() => user?.id);
+
+    const handleSyncedEvent = () => {
+      restoreLocalData();
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('janmasaathi:synced', handleSyncedEvent);
+      return () => {
+        window.removeEventListener('janmasaathi:synced', handleSyncedEvent);
+      };
+    }
+  }, [restoreLocalData, user]);
+
+  useEffect(() => {
+    if (user?.id) {
+      triggerBackgroundSync(user.id);
+    }
+  }, [user]);
 
   // 2. Connect real-time Firestore listeners
   useEffect(() => {
@@ -363,6 +384,20 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         reviewStatus: 'pending',
         submittedBy: data.submittedBy || 'mother-auth-user',
         isSynthetic: false,
+        sourceLanguage: 'en',
+        originalText: data.observations,
+        translations: {
+          observations: {
+            en: data.observations,
+            hi: localizeDynamicText(data.observations, 'hi'),
+            or: localizeDynamicText(data.observations, 'or'),
+          },
+          notes: {
+            en: data.notes,
+            hi: localizeDynamicText(data.notes, 'hi'),
+            or: localizeDynamicText(data.notes, 'or'),
+          },
+        },
       };
 
       // Save to IndexedDB object store
@@ -374,6 +409,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setTimeout(() => reject(new Error('Firestore write timeout')), 1500)
           );
           await Promise.race([createHealthUpdateRecord(newUpdate), timeoutPromise]);
+          await updateLocalSyncState('healthUpdateDrafts', newUpdateId, 'synced');
           try {
             await logAuditEvent('CREATE_HEALTH_UPDATE', data.motherId, 'mother', 'healthUpdates', newUpdateId, {
               observations: data.observations,
@@ -497,6 +533,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setTimeout(() => reject(new Error('Firestore write timeout')), 1500)
           );
           await Promise.race([createAssessmentRecord(newAssessment), timeoutPromise]);
+          await updateLocalSyncState('assessmentDrafts', newId, 'synced');
           try {
             await logAuditEvent('CREATE_ASSESSMENT', assessmentData.workerId, 'worker', 'assessments', newId, {
               motherId: assessmentData.motherId,
@@ -589,6 +626,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setTimeout(() => reject(new Error('Firestore write timeout')), 1500)
           );
           await Promise.race([createReferralRecord(newReferral), timeoutPromise]);
+          await updateLocalSyncState('referralDrafts', newId, 'synced');
           try {
             await logAuditEvent('CREATE_REFERRAL', referralData.workerId, 'worker', 'referrals', newId, {
               motherId: referralData.motherId,
@@ -698,31 +736,80 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       senderName: string,
       motherId?: string
     ): Promise<void> => {
-      const newMsgId = `MSG-${Date.now().toString().slice(-5)}`;
+      const newMsgId = `MSG-${Date.now().toString().slice(-5)}-${Math.floor(Math.random() * 1000)}`;
       const targetMotherId = motherId || (senderRole === 'mother' ? senderId : 'MCP-2026-0894');
 
-      const newMsg: DirectMessage = {
+      const isOnline = typeof navigator !== 'undefined' && navigator.onLine;
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      let newMsg: DirectMessage = {
         id: newMsgId,
         senderId,
         senderName,
         senderRole,
         motherId: targetMotherId,
         text,
-        timestamp: 'Just now',
-        delivered: true,
+        timestamp: timeStr,
+        delivered: false,
         read: false,
+        syncStatus: 'pending_sync',
+        retryCount: 0,
+        lastAttemptAt: new Date().toISOString(),
+        sourceLanguage: 'en',
+        originalText: text,
+        translations: {
+          text: {
+            en: text,
+            hi: localizeDynamicText(text, 'hi'),
+            or: localizeDynamicText(text, 'or'),
+          },
+        },
       };
 
-      await saveLocalDraft('messageDrafts', newMsg);
+      // 1. Store locally in IndexedDB first before network attempt
+      await saveLocalDraft('messageDrafts', {
+        ...newMsg,
+        owningUid: senderId,
+        relatedMotherId: targetMotherId,
+        syncState: 'pending_sync',
+      });
 
-      try {
-        await createDirectMessage(newMsg);
-      } catch (err) {
-        console.warn('Message saved locally (queued for offline sync):', err);
-      }
-
+      // 2. Immediately update local React state for instantaneous UI feedback
       setMessages((prev) => [...prev, newMsg]);
-      triggerBackgroundSync();
+
+      // 3. Attempt non-blocking network transmission if online
+      if (isOnline) {
+        try {
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Firestore write timeout')), 1500)
+          );
+          const syncedMessage: DirectMessage = {
+            ...newMsg,
+            delivered: true,
+            syncStatus: 'delivered',
+          };
+          await Promise.race([createDirectMessage(syncedMessage), timeoutPromise]);
+
+          // Mark synced in IndexedDB object store
+          await saveLocalDraft('messageDrafts', {
+            ...syncedMessage,
+            owningUid: senderId,
+            relatedMotherId: targetMotherId,
+            syncState: 'synced',
+          });
+
+          // Update status in React state
+          setMessages((prev) =>
+            prev.map((m) => (m.id === newMsgId ? syncedMessage : m))
+          );
+        } catch (err) {
+          console.warn('Direct message saved locally (queued for offline sync):', err);
+          triggerBackgroundSync();
+        }
+      } else {
+        console.log('Offline mode active: message saved locally in IndexedDB draft queue');
+        triggerBackgroundSync();
+      }
     },
     []
   );
@@ -754,6 +841,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       try {
         await createMotherRecord(newMother);
+        await updateLocalSyncState('maternalProfiles', newId, 'synced');
         try {
           await logAuditEvent('REGISTER_MOTHER', motherData.assignedWorkerId, 'worker', 'mothers', newId, {
             mcpCardNumber: motherData.mcpCardNumber,
