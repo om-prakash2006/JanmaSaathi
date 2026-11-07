@@ -41,6 +41,9 @@ follow-up. It is being developed in alignment with **PS-03: MaaSuraksha
 -   [Known Limitations and
     Verification](#known-limitations-and-verification)
 -   [Project Structure](#project-structure)
+-   [Contributing](#contributing)
+-   [Problem Statement Reference](#problem-statement-reference)
+-   [Contact](#contact)
 
 ------------------------------------------------------------------------
 
@@ -763,3 +766,16 @@ Hackathon Problem Statement Assignments brief, pages 9--10.
 offline-capable tool to record maternal danger signs, understand
 assistive screening information and support referral, with later
 synchronization to an authorized supervisor dashboard.
+
+------------------------------------------------------------------------
+
+## 📄 Contact
+
+### Developer: OM PRAKASH BEHERA
+- **Email:** [ommbehera46@gmail.com](mailto:ommbehera46@gmail.com)
+- **GitHub:** [https://github.com/om-prakash2006](https://github.com/om-prakash2006)
+
+### Developer: PRATYUSH KUMAR SATAPATHY
+- **Email:** [pratyushsatapathy123@gmail.com](mailto:pratyushsatapathy123@gmail.com)
+- **GitHub:** [https://github.com/pratyushsatapathy123-source](https://github.com/pratyushsatapathy123-source)
+
