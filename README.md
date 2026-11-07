@@ -2,6 +2,12 @@
 
 ### Offline-First Maternal Risk Screening & Referral Support
 
+[![Live Demo](https://img.shields.io/badge/Live%20Application-janma--saathi.vercel.app-890149?style=for-the-badge&logo=vercel)](https://janma-saathi.vercel.app)
+[![PS-03 Compliant](https://img.shields.io/badge/Hackathon-PS--03%20MaaSuraksha-006A4E?style=for-the-badge)](https://janma-saathi.vercel.app)
+[![PWA Ready](https://img.shields.io/badge/PWA-Offline--First-blue?style=for-the-badge)](https://janma-saathi.vercel.app)
+
+**Live Application URL:** [https://janma-saathi.vercel.app](https://janma-saathi.vercel.app)
+
 JanmaSaathi is a maternal-care support application designed to help
 trained village health workers record maternal observations, review
 assistive risk-screening information, and support timely referral and
@@ -18,6 +24,7 @@ follow-up. It is being developed in alignment with **PS-03: MaaSuraksha
 
 ## Table of Contents
 
+-   [Live Deployment](#live-deployment)
 -   [Problem and Objective](#problem-and-objective)
 -   [Core Workflow](#core-workflow)
 -   [User Roles](#user-roles)
@@ -34,6 +41,19 @@ follow-up. It is being developed in alignment with **PS-03: MaaSuraksha
 -   [Known Limitations and
     Verification](#known-limitations-and-verification)
 -   [Project Structure](#project-structure)
+
+------------------------------------------------------------------------
+
+## Live Deployment
+
+The JanmaSaathi application is actively deployed and accessible at:
+
+🔗 **[https://janma-saathi.vercel.app](https://janma-saathi.vercel.app)**
+
+- **Hosting Platform:** Vercel
+- **PWA Installability:** Fully installable as a standalone app on Android (Chrome), iOS (Safari "Add to Home Screen"), and Desktop
+- **Trilingual Interface:** English, Hindi (हिन्दी), and Odia (ଓଡ଼ିଆ) with instant live toggling
+- **Offline Support:** Tested for full offline assessment capture, local Decision Tree ML risk scoring, and automated sync upon reconnection
 
 ------------------------------------------------------------------------
 
@@ -376,40 +396,23 @@ tokens or real patient records.
 
 ## Technology Stack
 
-The exact stack must match the checked-in project files. Update this
-section after inspecting the repository and confirming the actual
-dependencies.
+The table below reflects the verified, checked-in architecture of the JanmaSaathi application:
 
-  -----------------------------------------------------------------------
-  Layer                               Project implementation
-  ----------------------------------- -----------------------------------
-  Frontend                            Confirm from frontend source and
-                                      `package.json`
-
-  PWA                                 Confirm manifest, service worker
-                                      and caching implementation
-
-  Local persistence                   Confirm implemented local
-                                      database/storage layer
-
-  Backend/API                         Confirm actual server framework and
-                                      API routes
-
-  Database                            Confirm configured database and
-                                      schema
-
-  ML                                  Confirm model framework, model
-                                      artifact and inference runtime
-
-  Explainability                      Confirm implemented
-                                      model-appropriate explanation
-                                      method
-
-  Localization                        English, Hindi and Odia resources,
-                                      if present in the codebase
-  -----------------------------------------------------------------------
-
-Do not describe a planned technology as an implemented dependency.
+| Layer | Repository Implementation | Details |
+|---|---|---|
+| **Live Web App** | Vercel Deployment | Hosted and accessible at [https://janma-saathi.vercel.app](https://janma-saathi.vercel.app) |
+| **Frontend Framework** | React 19 (`react@^19.0.1`, `react-dom@^19.0.1`) | Functional components, custom hooks, React context architecture |
+| **Language & Tooling** | TypeScript 5+ & Vite 8 | Strict typing, esbuild bundling, `@vitejs/plugin-react` |
+| **Styling & UI** | Tailwind CSS v4 (`@tailwindcss/vite`) | Modern CSS theme tokens, DM Sans & DM Serif typography, Lucide React icons, Motion animations |
+| **PWA & Offline Cache** | `vite-plugin-pwa` + Workbox | Web App Manifest (`manifest.webmanifest`), precaching, standalone display, Android & iOS installability |
+| **Local Persistence** | IndexedDB (`JanmaSaathi_OfflineDB_v1`) | 6 dedicated object stores: `assessmentDrafts`, `maternalProfiles`, `healthUpdateDrafts`, `referralDrafts`, `appointmentDrafts`, `messageDrafts` |
+| **Backend Server** | Full-Stack Express (`server.ts`) | Node.js Express server mounting Vite middlewares, serving `/api/predict` ML revalidation & `/api/health` probes |
+| **Database & Auth** | Google Cloud Firestore & Firebase Auth | Dedicated database `ai-studio-janmasaathi-8e8b2a1f-7b17-42e6-bc8e-284c5c28d2df`, multi-tab persistent cache, Email/Password & Google Sign-In, fine-grained `firestore.rules` |
+| **Machine Learning** | Client & Server Decision Tree Engine | Pre-trained Decision Tree model (`model_v1.0.0.json`) benchmarked on UCI Maternal Health Risk dataset (86.8% test accuracy, 0.865 macro F1 score) |
+| **Clinical Safety Engine** | Rule-Based Screening (`clinicalScreening.ts`) | Independent screening for maternal emergencies (eclampsia, hemorrhage, severe anemia, fetal distress) ensuring clinical signs are never masked |
+| **Explainability** | Decision Path Tracing & Feature Impact | Explicit feature impact analysis (`increases_risk` / `lowers_risk`), exact thresholds, and delta values grounded in clinical measurements |
+| **Localization** | Trilingual Engine (English, Hindi, Odia) | Comprehensive static translation dictionaries (`translations.ts`), dynamic runtime localization (`dynamicLocalization.ts`), Odia (୦-୯) and Devanagari (०-९) numeral transliteration |
+| **AI Studio Services** | `@google/genai` (Gemini API) | Server-side Gemini integration capability for assistive synthesis |
 
 ------------------------------------------------------------------------
 
@@ -545,28 +548,15 @@ development.
 
 ## Environment Configuration
 
-Document only variables actually used by the project.
+The repository uses the following environment variables (defined in `.env.example`):
 
-  --------------------------------------------------------------------------------
-  Variable                     Purpose                     Required
-  ---------------------------- --------------------------- -----------------------
-  `<FRONTEND_API_BASE_URL>`    Backend API address, if     Depends on deployment
-                               configured                  
+| Variable | Purpose | Required / Default |
+|---|---|---|
+| `GEMINI_API_KEY` | Server-side Gemini API key for assistive clinical features and AI Studio capabilities. | Optional for core ML/PWA workflows; injected automatically in AI Studio. |
+| `APP_URL` | Canonical origin / host address of the deployment (e.g. `https://janma-saathi.vercel.app`). | Optional; defaults to current host URL. |
+| `PORT` | Local and production Express dev server port. | Default: `3000`. |
 
-  `<DATABASE_CONFIGURATION>`   Database                    Depends on backend
-                               connection/configuration,   
-                               if required by backend      
-
-  `<AUTH_CONFIGURATION>`       Authentication              Depends on
-                               provider/configuration, if  implementation
-                               used                        
-
-  `<ML_MODEL_PATH>`            Local model artifact        Depends on ML runtime
-                               location, if configurable   
-  --------------------------------------------------------------------------------
-
-Replace placeholders with real variable names and remove rows that do
-not apply. Never place secret values in this README.
+> **Note on Firebase configuration:** Firebase project credentials (`outr-janmasaathi`) and Firestore database ID (`ai-studio-janmasaathi-8e8b2a1f-7b17-42e6-bc8e-284c5c28d2df`) are configured via `firebase-applet-config.json` and loaded securely through `src/lib/firebase.ts`. Never commit private service account keys or passwords to version control.
 
 ------------------------------------------------------------------------
 
@@ -648,28 +638,103 @@ Clearly label any incomplete feature as **Planned**, **In progress** or
 
 ## Project Structure
 
-Update this section to reflect the actual repository. A typical
-organization might look like:
+The repository is organized as an offline-first Progressive Web Application with a co-located Node.js Express server for local ML revalidation:
 
 ``` text
 janmasaathi/
-├── public/                 # Static assets and PWA assets
-├── src/                    # Frontend application
-│   ├── components/         # Shared UI components
-│   ├── pages/              # Application screens
-│   ├── features/           # Role-specific workflows
-│   ├── localization/       # Language resources
-│   ├── services/           # API and application services
-│   ├── offline/            # Local storage and sync logic
-│   └── ...
-├── backend/                # Present only if backend is in this repository
-├── .env.example            # Example configuration, if provided
-├── package.json
-└── README.md
+├── public/                                  # Static PWA, icons and branding assets
+│   ├── assets/                              # Application media and sample assets
+│   ├── apple-touch-icon.png                 # iOS home screen touch icon
+│   ├── emblem.png                           # National Health Mission / Government emblem
+│   ├── favicon.ico                          # Application browser favicon
+│   ├── manifest.webmanifest                 # Web App Manifest for mobile installability
+│   ├── pwa-192x192.png                      # Standard PWA launcher icon
+│   ├── pwa-512x512.png                      # High-resolution splash icon
+│   └── pwa-maskable-512x512.png             # Adaptive maskable PWA icon
+├── scripts/                                 # Verification, ML training & audit suites
+│   ├── testExplainableAiAndScreening.ts     # ML inference and clinical danger-sign verification
+│   ├── testOfflineMessaging.ts              # IndexedDB offline chat and sync verification
+│   ├── testOfflineSubmissionFlow.ts         # Offline assessment capture & local ML verification
+│   ├── train_maternal_models.py             # Python model training script on UCI benchmark dataset
+│   ├── trainAndAuditML.ts                   # Decision Tree benchmark & model JSON exporter
+│   ├── verifyDynamicLocalizationE2E.ts      # Trilingual E2E localization verification
+│   └── verifyTranslationParity.ts           # Translation dictionary audit suite
+├── src/                                     # Full-stack frontend source code
+│   ├── components/                          # Reusable UI components
+│   │   ├── layout/                          # Role-specific layouts & navigation
+│   │   │   ├── GlobalHeader.tsx             # Header bar with language, role, and profile
+│   │   │   ├── MotherBottomNav.tsx          # Mother tab navigation bar
+│   │   │   ├── WorkerBottomNav.tsx          # Health worker tab navigation bar
+│   │   │   └── SupervisorBottomNav.tsx      # Medical officer tab navigation bar
+│   │   ├── OfflineIndicator.tsx             # Real-time connection status banner & sync counter
+│   │   └── PWAInstallButton.tsx             # In-app native PWA install button
+│   ├── context/                             # React application state contexts
+│   │   ├── AuthContext.tsx                  # Role authentication, Firebase Auth & Google login
+│   │   ├── DataContext.tsx                  # Central reactive data store & live Firestore listeners
+│   │   └── LanguageContext.tsx              # Trilingual language switcher (EN, HI, OR)
+│   ├── data/                                # Central seed and demo roster data
+│   │   └── centralDemoData.ts               # Demo users, clinical records & allocations
+│   ├── hooks/                               # Custom React hooks
+│   │   └── usePWAInstall.ts                 # PWA install prompt event handler
+│   ├── i18n/                                # Multilingual translation dictionaries
+│   │   └── translations.ts                  # Static translation dictionaries (English, Hindi, Odia)
+│   ├── lib/                                 # Core library integrations
+│   │   └── firebase.ts                      # Firebase SDK, Firestore persistent cache, Auth, Storage
+│   ├── ml/                                  # Machine learning & clinical screening engine
+│   │   ├── clinicalScreening.ts             # Clinical danger-sign rule engine
+│   │   ├── evaluation_report.json           # UCI benchmark accuracy, F1 & confusion matrix
+│   │   ├── mlEngine.ts                      # Offline decision tree inference & explainability
+│   │   └── model_v1.0.0.json                # Pre-trained decision tree model artifact
+│   ├── screens/                             # Role-based application screens
+│   │   ├── auth/                            # Authentication
+│   │   │   └── LoginScreen.tsx              # 3-role portal login & Google Sign-In
+│   │   ├── mother/                          # Mother experience screens
+│   │   │   ├── MotherConnectScreen.tsx      # Offline-first messaging with ASHA worker
+│   │   │   ├── MotherHomeScreen.tsx         # Week milestone & danger alerts
+│   │   │   ├── MotherJourneyScreen.tsx      # Trimester milestones & visit history
+│   │   │   ├── MotherProfileScreen.tsx      # MCP card info & emergency contacts
+│   │   │   └── MotherWellnessScreen.tsx     # Nutrition & pregnancy care guidance
+│   │   ├── supervisor/                      # Medical Officer / Supervisor screens
+│   │   │   ├── SupervisorAssignScreen.tsx   # Worker village/hamlet allocation wizard
+│   │   │   ├── SupervisorMoreScreen.tsx     # Administrative tools & status
+│   │   │   ├── SupervisorOverviewScreen.tsx # High-risk case monitoring dashboard
+│   │   │   ├── SupervisorReferralsScreen.tsx# Referral tracking & status approvals
+│   │   │   ├── SupervisorReportsScreen.tsx  # Anemia & gestational health analytics
+│   │   │   └── SupervisorWorkersScreen.tsx  # Worker performance & caseload oversight
+│   │   └── worker/                          # Health Worker (ASHA / ANM) screens
+│   │       ├── WorkerAssessmentResultScreen.tsx # Explainable screening result & referral
+│   │       ├── WorkerHomeScreen.tsx         # Field dashboard & pending cases
+│   │       ├── WorkerMoreScreen.tsx         # Sync manager & offline diagnostics
+│   │       ├── WorkerNewAssessmentScreen.tsx# Vitals entry, danger signs & voice input
+│   │       ├── WorkerPatientsScreen.tsx     # Mother roster & registration
+│   │       └── WorkerReferralsScreen.tsx    # Facility referral management
+│   ├── services/                            # Cloud Firestore & API services
+│   │   └── firestoreService.ts              # Real-time listeners & CRUD mutations
+│   ├── types/                               # TypeScript domain definitions
+│   │   └── index.ts                         # Clinical, user & assessment interfaces
+│   ├── utils/                               # Storage, synchronization & localization
+│   │   ├── dynamicLocalization.ts           # Runtime translation & script transliteration
+│   │   ├── indexedDB.ts                     # Offline IndexedDB object store management
+│   │   ├── offlineQueue.ts                  # Durable offline mutation queue
+│   │   └── syncManager.ts                   # Background sync orchestrator & auto-triggers
+│   ├── App.tsx                              # Root router & role coordinator
+│   ├── index.css                            # Tailwind CSS styling & theme definition
+│   ├── main.tsx                             # React entry point
+│   ├── pwa.ts                               # Service worker registration
+│   └── vite-env.d.ts                        # Vite client type declarations
+├── .env.example                             # Environment variable template
+├── firebase-applet-config.json              # Firebase project configuration
+├── firebase-blueprint.json                  # Firestore schema blueprint
+├── firestore.rules                          # Role-based Firestore security rules
+├── storage.rules                            # Firebase Storage security rules
+├── index.html                               # Mobile-first HTML5 entry point
+├── metadata.json                            # AI Studio app metadata & capabilities
+├── package.json                             # Dependencies & build scripts
+├── server.ts                                # Express backend & Vite middleware server
+├── tsconfig.json                            # TypeScript compiler configuration
+├── vite.config.ts                           # Vite & Workbox PWA configuration
+└── README.md                                # Project documentation
 ```
-
-Do not create empty folders solely to match this example. Replace it
-with the actual project structure.
 
 ------------------------------------------------------------------------
 
